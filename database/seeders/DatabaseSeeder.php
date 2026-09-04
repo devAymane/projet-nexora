@@ -136,7 +136,6 @@ class DatabaseSeeder extends Seeder
 
         foreach ($users as $user) {
             $service = $services->random();
-
             $key = $user->id . '-' . $service->id;
 
             if (! in_array($key, $favoritePairs, true)) {
@@ -149,5 +148,13 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Laratrust Roles & Permissions
+        |--------------------------------------------------------------------------
+        */
+
+        $this->call(LaratrustSeeder::class);
     }
 }
