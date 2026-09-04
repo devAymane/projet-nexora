@@ -55,24 +55,26 @@ class ReservationController extends Controller
         return view('reservations.create', compact('services'));
     }
 
-    public function store(StoreReservationRequest $request): RedirectResponse
-    {
-        $this->authorize('create', Reservation::class);
+public function store(StoreReservationRequest $request): RedirectResponse
+{
+    $this->authorize('create', Reservation::class);
 
-        $reservation = Reservation::create([
-            'user_id' => $request->user()->id,
-            'service_id' => $request->validated('service_id'),
-            'date' => $request->validated('date'),
-            'message' => $request->validated('message'),
-            'statut' => 'en_attente',
-        ]);
+    $reservation = Reservation::create([
+        'user_id' => $request->user()->id,
+        'service_id' => $request->validated('service_id'),
+        'date' => $request->validated('date'),
+        'message' => $request->validated('message'),
+        'statut' => 'en_attente',
+    ]);
 
-        event(new ReservationCreated($reservation));
+    event(new ReservationCreated($reservation));
 
-        return redirect()
-            ->route('reservations.index')
-            ->with('success', 'Réservation créée avec succès.');
-    }
+    return redirect()
+        ->route('reservations.index')
+        ->with('success', 'Réservation créée avec succès.');
+}
+
+
 
     public function show(Reservation $reservation): View
     {
