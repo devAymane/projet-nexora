@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Avis;
 use App\Policies\AvisPolicy;
+use App\Models\Favorite;
+use App\Policies\FavoritePolicy;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -31,5 +33,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Reservation::class, ReservationPolicy::class);
             Gate::policy(Reservation::class, ReservationPolicy::class);
     Gate::policy(Avis::class, AvisPolicy::class);
+    Gate::policy(Favorite::class, FavoritePolicy::class);
     }
 }
