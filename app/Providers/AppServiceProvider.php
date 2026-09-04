@@ -16,7 +16,10 @@ use App\Models\Avis;
 use App\Policies\AvisPolicy;
 use App\Models\Favorite;
 use App\Policies\FavoritePolicy;
-
+use App\Models\Conversation;
+use App\Models\Message;
+use App\Policies\ConversationPolicy;
+use App\Policies\MessagePolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -34,5 +37,7 @@ class AppServiceProvider extends ServiceProvider
             Gate::policy(Reservation::class, ReservationPolicy::class);
     Gate::policy(Avis::class, AvisPolicy::class);
     Gate::policy(Favorite::class, FavoritePolicy::class);
+    Gate::policy(Conversation::class, ConversationPolicy::class);
+Gate::policy(Message::class, MessagePolicy::class);
     }
 }

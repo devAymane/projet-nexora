@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Message;
+use App\Models\User;
+
+class MessagePolicy
+{
+    public function before(User $user, string $ability): ?bool
+    {
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        return null;
+    }
+
+    public function view(User $user, Message $message): bool
+    {
+        return $message->conversation->client_id === $user->id
+            || $message->conversation->provider_id === $user->id;
+    }
+
+    public function create(User $user): bool
+    {
+        return $user->hasRole('client') || $user->hasRole('provider');
+    }
+
+    public function update(User $user, Message $message): bool
+    {
+        return $message->user_id === $user->id;
+    }
+}
