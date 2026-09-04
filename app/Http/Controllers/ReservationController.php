@@ -13,6 +13,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
+
+
+
+
 class ReservationController extends Controller
 {
     public function index(Request $request): View
@@ -42,18 +46,28 @@ class ReservationController extends Controller
         return view('reservations.index', compact('reservations'));
     }
 
-    public function create(): View
-    {
-        $this->authorize('create', Reservation::class);
+public function create(Request $request): View
+{
+    $this->authorize('create', Reservation::class);
 
-        $services = Service::with('category')
+    $service = null;
+
+    if ($request->filled('service_id')) {
+        $service = Service::with(['category', 'user'])
+            ->where('id', $request->input('service_id'))
             ->where('statut', 'publie')
             ->where('disponibilite', true)
-            ->latest()
-            ->get();
-
-        return view('reservations.create', compact('services'));
+            ->firstOrFail();
     }
+
+    $services = Service::with('category')
+        ->where('statut', 'publie')
+        ->where('disponibilite', true)
+        ->latest()
+        ->get();
+
+    return view('reservations.create', compact('services', 'service'));
+}
 
 public function store(StoreReservationRequest $request): RedirectResponse
 {

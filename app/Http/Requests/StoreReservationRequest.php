@@ -8,7 +8,7 @@ class StoreReservationRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->hasRole('client') ?? false;
+        return $this->user()?->hasRole('client') === true;
     }
 
     public function rules(): array
