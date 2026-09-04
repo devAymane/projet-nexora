@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -129,4 +129,22 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/services/{service}', [ServiceController::class, 'destroy'])
         ->name('services.destroy');
+});
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Categories Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'nexora.role:admin'])->group(function () {
+
+    Route::resource('categories', CategoryController::class);
+
 });
