@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReservationController;
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -167,4 +168,43 @@ Route::middleware(['auth', 'nexora.role:admin'])->group(function () {
 
     Route::patch('/users/{user}/role', [UserController::class, 'updateRole'])
         ->name('users.update-role');
+});
+
+
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Reservations Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::get('/reservations', [ReservationController::class, 'index'])
+        ->name('reservations.index');
+
+    Route::get('/reservations/create', [ReservationController::class, 'create'])
+        ->name('reservations.create');
+
+    Route::post('/reservations', [ReservationController::class, 'store'])
+        ->name('reservations.store');
+
+    Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])
+        ->name('reservations.show');
+
+    Route::patch('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
+        ->name('reservations.cancel');
+
+    Route::patch('/reservations/{reservation}/accept', [ReservationController::class, 'accept'])
+        ->name('reservations.accept');
+
+    Route::patch('/reservations/{reservation}/refuse', [ReservationController::class, 'refuse'])
+        ->name('reservations.refuse');
+
+    Route::patch('/reservations/{reservation}/complete', [ReservationController::class, 'complete'])
+        ->name('reservations.complete');
 });
