@@ -208,3 +208,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/reservations/{reservation}/complete', [ReservationController::class, 'complete'])
         ->name('reservations.complete');
 });
+
+
+
+
+
+
+
+Route::patch('/reservations/{reservation}/complete', [ReservationController::class, 'complete'])
+    ->name('reservations.complete');

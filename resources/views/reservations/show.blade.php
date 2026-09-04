@@ -29,7 +29,6 @@
                 </div>
             @endif
 
-
             {{-- Main card --}}
             <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
@@ -48,10 +47,8 @@
                             </p>
                         </div>
 
-
                         {{-- Status --}}
                         @php
-
                             $statusClasses = [
                                 'en_attente' => 'bg-amber-100 text-amber-700',
                                 'acceptee' => 'bg-blue-100 text-blue-700',
@@ -67,9 +64,7 @@
                                 'terminee' => 'Terminée',
                                 'annulee' => 'Annulée',
                             ];
-
                         @endphp
-
 
                         <span
                             class="inline-flex w-fit rounded-full px-4 py-2 text-sm font-semibold {{ $statusClasses[$reservation->statut] ?? 'bg-slate-100 text-slate-600' }}"
@@ -84,7 +79,6 @@
 
                 {{-- ================= INFORMATION ================= --}}
                 <div class="grid gap-6 p-6 sm:grid-cols-2">
-
 
                     {{-- SERVICE --}}
                     <div class="rounded-xl bg-slate-50 p-5">
@@ -105,7 +99,6 @@
                                 </p>
                             </div>
 
-
                             <div>
                                 <span class="text-slate-500">
                                     Catégorie
@@ -116,7 +109,6 @@
                                 </p>
                             </div>
 
-
                             <div>
                                 <span class="text-slate-500">
                                     Ville
@@ -126,7 +118,6 @@
                                     {{ $reservation->service->ville }}
                                 </p>
                             </div>
-
 
                             <div>
                                 <span class="text-slate-500">
@@ -152,7 +143,6 @@
 
                         <div class="space-y-4 text-sm">
 
-
                             <div>
                                 <span class="text-slate-500">
                                     Date prévue
@@ -162,7 +152,6 @@
                                     {{ $reservation->date->format('d/m/Y à H:i') }}
                                 </p>
                             </div>
-
 
                             <div>
                                 <span class="text-slate-500">
@@ -175,7 +164,6 @@
                                 </p>
                             </div>
 
-
                             <div>
                                 <span class="text-slate-500">
                                     Prestataire
@@ -186,7 +174,6 @@
                                     {{ $reservation->service->user->nom }}
                                 </p>
                             </div>
-
 
                             <div>
                                 <span class="text-slate-500">
@@ -247,7 +234,6 @@
 
                             </div>
 
-
                             @if ($reservation->avis->commentaire)
 
                                 <p class="mt-2 text-sm text-slate-600">
@@ -263,152 +249,105 @@
                 @endif
 
 
-{{-- ================= ACTIONS ================= --}}
-<div class="border-t border-slate-200 px-6 py-5">
+                {{-- ================= ACTIONS ================= --}}
+                <div class="border-t border-slate-200 px-6 py-5">
 
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
-        {{-- Retour --}}
-        <a
-            href="{{ route('reservations.index') }}"
-            class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-        >
-            Retour aux réservations
-        </a>
-
-
-        {{-- Actions --}}
-        <div class="flex flex-col gap-3 sm:flex-row">
-
-            {{-- CLIENT : ANNULER --}}
-            @if (auth()->user()->hasRole('client') && $reservation->statut === 'en_attente')
-
-                <form
-                    method="POST"
-                    action="{{ route('reservations.cancel', $reservation->id) }}"
-                >
-                    @csrf
-                    @method('PATCH')
-
-                    <button
-                        type="submit"
-                        class="inline-flex items-center justify-center rounded-xl bg-red-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-red-700"
-                        onclick="return confirm('Voulez-vous vraiment annuler cette réservation ?')"
-                    >
-                        Annuler la réservation
-                    </button>
-                </form>
-
-            @endif
+                        {{-- Retour --}}
+                        <a
+                            href="{{ route('reservations.index') }}"
+                            class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                        >
+                            Retour aux réservations
+                        </a>
 
 
-            {{-- PROVIDER : ACCEPTER --}}
-            @if (auth()->user()->hasRole('provider') && $reservation->statut === 'en_attente')
-
-                <form
-                    method="POST"
-                    action="{{ route('reservations.accept', $reservation->id) }}"
-                >
-                    @csrf
-                    @method('PATCH')
-
-                    <button
-                        type="submit"
-                        class="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-slate-900 shadow-sm transition hover:bg-emerald-400"
-                        onclick="return confirm('Voulez-vous accepter cette réservation ?')"
-                    >
-                        Accepter la réservation
-                    </button>
-                </form>
-
-
-                {{-- PROVIDER : REFUSER --}}
-                <form
-                    method="POST"
-                    action="{{ route('reservations.refuse', $reservation->id) }}"
-                >
-                    @csrf
-                    @method('PATCH')
-
-                    <button
-                        type="submit"
-                        class="inline-flex items-center justify-center rounded-xl bg-red-600 px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-red-700"
-                        onclick="return confirm('Voulez-vous vraiment refuser cette réservation ?')"
-                    >
-                        Refuser la réservation
-                    </button>
-                </form>
-
-            @endif
-
-        </div>
-
-    </div>
-
-</div>
-
-         
-
-
-                        {{-- Actions buttons --}}
+                        {{-- Actions --}}
                         <div class="flex flex-col gap-3 sm:flex-row">
 
-
                             {{-- CLIENT : ANNULER --}}
-                            @if (auth()->user()->hasRole('client'))
+                            @if (auth()->user()->hasRole('client') && $reservation->statut === 'en_attente')
 
-                                @if ($reservation->statut === 'en_attente')
+                                <form
+                                    method="POST"
+                                    action="{{ route('reservations.cancel', $reservation->id) }}"
+                                >
+                                    @csrf
+                                    @method('PATCH')
 
-                                    <form
-                                        method="POST"
-                                        action="{{ route('reservations.cancel', $reservation) }}"
+                                    <button
+                                        type="submit"
+                                        class="inline-flex items-center justify-center rounded-xl bg-red-600 px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-red-700"
+                                        onclick="return confirm('Voulez-vous vraiment annuler cette réservation ?')"
                                     >
-
-                                        @csrf
-                                        @method('PATCH')
-
-                                        <button
-                                            type="submit"
-                                            class="inline-flex w-full items-center justify-center rounded-xl bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 sm:w-auto"
-                                            onclick="return confirm('Voulez-vous vraiment annuler cette réservation ?')"
-                                        >
-                                            Annuler la réservation
-                                        </button>
-
-                                    </form>
-
-                                @endif
+                                        Annuler la réservation
+                                    </button>
+                                </form>
 
                             @endif
 
 
                             {{-- PROVIDER : ACCEPTER --}}
-                            @if (auth()->user()->hasRole('provider'))
+                            @if (auth()->user()->hasRole('provider') && $reservation->statut === 'en_attente')
 
-                                @if ($reservation->statut === 'en_attente')
+                                <form
+                                    method="POST"
+                                    action="{{ route('reservations.accept', $reservation->id) }}"
+                                >
+                                    @csrf
+                                    @method('PATCH')
 
-                                    <form
-                                        method="POST"
-                                        action="{{ route('reservations.accept', $reservation) }}"
+                                    <button
+                                        type="submit"
+                                        class="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-slate-900 shadow-sm transition hover:bg-emerald-400"
+                                        onclick="return confirm('Voulez-vous accepter cette réservation ?')"
                                     >
+                                        Accepter la réservation
+                                    </button>
+                                </form>
 
-                                        @csrf
-                                        @method('PATCH')
 
-                                        <button
-                                            type="submit"
-                                            class="inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 sm:w-auto"
-                                            onclick="return confirm('Voulez-vous accepter cette réservation ?')"
-                                        >
-                                            Accepter la réservation
-                                        </button>
+                                {{-- PROVIDER : REFUSER --}}
+                                <form
+                                    method="POST"
+                                    action="{{ route('reservations.refuse', $reservation->id) }}"
+                                >
+                                    @csrf
+                                    @method('PATCH')
 
-                                    </form>
-
-                                @endif
+                                    <button
+                                        type="submit"
+                                        class="inline-flex items-center justify-center rounded-xl bg-red-600 px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-red-700"
+                                        onclick="return confirm('Voulez-vous vraiment refuser cette réservation ?')"
+                                    >
+                                        Refuser la réservation
+                                    </button>
+                                </form>
 
                             @endif
 
+
+                            {{-- PROVIDER : TERMINER --}}
+                            @if (auth()->user()->hasRole('provider') && $reservation->statut === 'acceptee')
+
+                                <form
+                                    method="POST"
+                                    action="{{ route('reservations.complete', $reservation->id) }}"
+                                >
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <button
+                                        type="submit"
+                                        class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
+                                        onclick="return confirm('Voulez-vous marquer cette réservation comme terminée ?')"
+                                    >
+                                        Terminer la réservation
+                                    </button>
+                                </form>
+
+                            @endif
 
                         </div>
 

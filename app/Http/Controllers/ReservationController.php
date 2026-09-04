@@ -154,23 +154,23 @@ class ReservationController extends Controller
     /**
      * Marquer une réservation comme terminée.
      */
-    public function complete(Reservation $reservation): RedirectResponse
-    {
-        $this->authorize('manage', $reservation);
+public function complete(Reservation $reservation): RedirectResponse
+{
+    $this->authorize('manage', $reservation);
 
-        if ($reservation->statut !== 'acceptee') {
-            return back()->with(
-                'error',
-                'Seule une réservation acceptée peut être marquée comme terminée.'
-            );
-        }
-
-        $reservation->update([
-            'statut' => 'terminee',
-        ]);
-
-        return redirect()
-            ->route('reservations.index')
-            ->with('success', 'Réservation marquée comme terminée.');
+    if ($reservation->statut !== 'acceptee') {
+        return back()->with(
+            'error',
+            'Seule une réservation acceptée peut être marquée comme terminée.'
+        );
     }
+
+    $reservation->update([
+        'statut' => 'terminee',
+    ]);
+
+    return redirect()
+        ->route('reservations.index')
+        ->with('success', 'Réservation marquée comme terminée.');
+}
 }
