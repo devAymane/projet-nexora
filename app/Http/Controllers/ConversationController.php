@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
+
 class ConversationController extends Controller
 {
     public function index(Request $request): View
@@ -32,7 +33,7 @@ class ConversationController extends Controller
         return view('conversations.index', compact('conversations'));
     }
 
-    public function create(Request $request, User $user): View
+ public function create(Request $request, User $user): RedirectResponse
     {
         Gate::authorize('create', Conversation::class);
 
