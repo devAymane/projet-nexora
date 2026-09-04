@@ -3,8 +3,8 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -146,5 +146,25 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'nexora.role:admin'])->group(function () {
 
     Route::resource('categories', CategoryController::class);
+
+});
+
+
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Users Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'nexora.role:admin'])->group(function () {
+
+    Route::resource('users', UserController::class);
 
 });
