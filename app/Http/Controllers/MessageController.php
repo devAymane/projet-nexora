@@ -2,9 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conversation;
+use App\Models\Message;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class MessageController extends Controller
 {
-    //
+    public function store(Request $request, Conversation $conversation): RedirectResponse
+    {
+        Gate::authorize('view', $conversation);
+
+        Gate::authorize('create', Message::class);
+
+        $validated = $request->validate([
+            'contenu' => ['required', 'string', 'max:5000'],
+        ]);
+
+        $conversation->messages()->create([
+            'user_id' => $request->user()->id,
+            'contenu' => $validated['contenu'],
+            'lu' => false,
+            'date_envoi' => now(),
+        ]);
+
+        return back()->with('success', 'Message envoyé.');
+    }
+
+    public function read(Request $request, Message $message): RedirectResponse
+    {
+        Gate::authorize('view', $message);
+
+        $message->update([
+            'lu' => true,
+        ]);
+
+        return back();
+    }
 }

@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\AvisController;
 use App\Http\Controllers\FavoriteController;
-
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\MessageController;
 
 
 
@@ -213,6 +214,24 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/reservations/{reservation}/complete', [ReservationController::class, 'complete'])
         ->name('reservations.complete');
+
+
+        // Conversations
+Route::get('/conversations', [ConversationController::class, 'index'])
+    ->name('conversations.index');
+
+Route::get('/conversations/create/{user}', [ConversationController::class, 'create'])
+    ->name('conversations.create');
+
+Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])
+    ->name('conversations.show');
+
+// Messages
+Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])
+    ->name('messages.store');
+
+Route::patch('/messages/{message}/read', [MessageController::class, 'read'])
+    ->name('messages.read');
 });
 
 
