@@ -162,9 +162,9 @@ Route::middleware(['auth', 'nexora.role:admin'])->group(function () {
 | Users Routes
 |--------------------------------------------------------------------------
 */
-
 Route::middleware(['auth', 'nexora.role:admin'])->group(function () {
-
     Route::resource('users', UserController::class);
 
+    Route::patch('/users/{user}/role', [UserController::class, 'updateRole'])
+        ->name('users.update-role');
 });

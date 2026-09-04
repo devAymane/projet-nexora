@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
+use App\Http\Requests\UpdateUserRoleRequest;
 
 class UserController extends Controller
 {
@@ -148,4 +149,31 @@ class UserController extends Controller
             ->route('users.index')
             ->with('success', 'Utilisateur supprimé avec succès.');
     }
+
+
+
+
+
+
+
+
+    
+    public function updateRole(
+    UpdateUserRoleRequest $request,
+    User $user
+): RedirectResponse {
+    $user->syncRoles([$request->validated('role')]);
+
+    return redirect()
+        ->route('users.show', $user)
+        ->with('success', 'Rôle utilisateur modifié avec succès.');
 }
+}
+
+
+
+
+
+
+
+
