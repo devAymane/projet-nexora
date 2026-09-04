@@ -44,6 +44,186 @@
             @endif
 
 
+            {{-- Validation errors --}}
+            @if($errors->any())
+
+                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    <ul class="list-disc space-y-1 pl-5">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+
+            @endif
+
+
+            {{-- Search & Filters --}}
+            <div class="mb-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+
+                <form method="GET" action="{{ route('services.index') }}">
+
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
+
+                        {{-- Search --}}
+                        <div class="lg:col-span-2">
+
+                            <label class="mb-1 block text-sm font-medium text-slate-700">
+                                Recherche
+                            </label>
+
+                            <input
+                                type="text"
+                                name="search"
+                                value="{{ request('search') }}"
+                                placeholder="Rechercher un service..."
+                                class="w-full rounded-xl border-slate-300 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            >
+
+                        </div>
+
+
+                        {{-- Category --}}
+                        <div>
+
+                            <label class="mb-1 block text-sm font-medium text-slate-700">
+                                Catégorie
+                            </label>
+
+                            <select
+                                name="category"
+                                class="w-full rounded-xl border-slate-300 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            >
+
+                                <option value="">
+                                    Toutes
+                                </option>
+
+                                @foreach($categories as $category)
+
+                                    <option
+                                        value="{{ $category->id }}"
+                                        @selected(request('category') == $category->id)
+                                    >
+                                        {{ $category->nom }}
+                                    </option>
+
+                                @endforeach
+
+                            </select>
+
+                        </div>
+
+
+                        {{-- City --}}
+                        <div>
+
+                            <label class="mb-1 block text-sm font-medium text-slate-700">
+                                Ville
+                            </label>
+
+                            <select
+                                name="ville"
+                                class="w-full rounded-xl border-slate-300 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            >
+
+                                <option value="">
+                                    Toutes
+                                </option>
+
+                                @foreach($villes as $ville)
+
+                                    <option
+                                        value="{{ $ville }}"
+                                        @selected(request('ville') === $ville)
+                                    >
+                                        {{ $ville }}
+                                    </option>
+
+                                @endforeach
+
+                            </select>
+
+                        </div>
+
+
+                        {{-- Minimum price --}}
+                        <div>
+
+                            <label class="mb-1 block text-sm font-medium text-slate-700">
+                                Prix minimum
+                            </label>
+
+                            <input
+                                type="number"
+                                name="prix_min"
+                                value="{{ request('prix_min') }}"
+                                min="0"
+                                step="0.01"
+                                placeholder="0"
+                                class="w-full rounded-xl border-slate-300 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            >
+
+                        </div>
+
+
+                        {{-- Maximum price --}}
+                        <div>
+
+                            <label class="mb-1 block text-sm font-medium text-slate-700">
+                                Prix maximum
+                            </label>
+
+                            <input
+                                type="number"
+                                name="prix_max"
+                                value="{{ request('prix_max') }}"
+                                min="0"
+                                step="0.01"
+                                placeholder="2000"
+                                class="w-full rounded-xl border-slate-300 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Filter buttons --}}
+                    <div class="mt-5 flex flex-col gap-3 sm:flex-row">
+
+                        <button
+                            type="submit"
+                            class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700"
+                        >
+                            Rechercher
+                        </button>
+
+                        <a
+                            href="{{ route('services.index') }}"
+                            class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                        >
+                            Réinitialiser
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            {{-- Result count --}}
+            <div class="mb-5 flex items-center justify-between">
+
+                <p class="text-sm text-slate-500">
+                    {{ $services->total() }}
+                    {{ $services->total() > 1 ? 'services trouvés' : 'service trouvé' }}
+                </p>
+
+            </div>
+
+
             {{-- Services --}}
             @if($services->count())
 
@@ -146,6 +326,7 @@
 
                                     <p class="mt-1 text-2xl font-bold text-indigo-600">
                                         {{ number_format($service->prix, 2, ',', ' ') }}
+
                                         <span class="text-base font-semibold">
                                             DH
                                         </span>
@@ -157,13 +338,65 @@
                                 {{-- Actions --}}
                                 <div class="mt-4 space-y-2">
 
-                                    {{-- Voir --}}
+                                    {{-- View --}}
                                     <a
                                         href="{{ route('services.show', $service) }}"
                                         class="flex w-full items-center justify-center rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700"
                                     >
                                         Voir le service
                                     </a>
+
+
+                                    {{-- Favorite --}}
+                                    @auth
+                                        @if(auth()->user()->hasRole('client'))
+
+                                            @php
+                                                $isFavorite = auth()->user()
+                                                    ->favorites()
+                                                    ->where('service_id', $service->id)
+                                                    ->exists();
+                                            @endphp
+
+                                            @if($isFavorite)
+
+                                                <form
+                                                    action="{{ route('favorites.destroy', $service) }}"
+                                                    method="POST"
+                                                >
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button
+                                                        type="submit"
+                                                        class="flex w-full items-center justify-center rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100"
+                                                    >
+                                                        ♥ Retirer des favoris
+                                                    </button>
+
+                                                </form>
+
+                                            @else
+
+                                                <form
+                                                    action="{{ route('favorites.store', $service) }}"
+                                                    method="POST"
+                                                >
+                                                    @csrf
+
+                                                    <button
+                                                        type="submit"
+                                                        class="flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                                                    >
+                                                        ♡ Ajouter aux favoris
+                                                    </button>
+
+                                                </form>
+
+                                            @endif
+
+                                        @endif
+                                    @endauth
 
 
                                     {{-- Owner / Admin actions --}}
@@ -235,29 +468,24 @@
 
                     <div class="mx-auto max-w-md">
 
+                        <div class="mb-4 text-4xl">
+                            🔍
+                        </div>
+
                         <h2 class="text-xl font-bold text-slate-900">
-                            Aucun service disponible
+                            Aucun service trouvé
                         </h2>
 
                         <p class="mt-2 text-sm leading-6 text-slate-500">
-                            Aucun service n'a encore été ajouté sur Nexora.
+                            Aucun service ne correspond à vos critères de recherche.
                         </p>
 
-
-                        @auth
-
-                            @if(auth()->user()->hasRole('provider'))
-
-                                <a
-                                    href="{{ route('services.create') }}"
-                                    class="mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700"
-                                >
-                                    + Ajouter un service
-                                </a>
-
-                            @endif
-
-                        @endauth
+                        <a
+                            href="{{ route('services.index') }}"
+                            class="mt-6 inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
+                        >
+                            Réinitialiser les filtres
+                        </a>
 
                     </div>
 

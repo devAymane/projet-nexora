@@ -11,15 +11,84 @@ use Illuminate\View\View;
 class ServiceController extends Controller
 {
     /**
-     * Display a listing of the services.
+     * Display a listing of published services.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $services = Service::with(['user', 'category'])
-            ->latest()
-            ->paginate(12);
+        $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'category' => ['nullable', 'integer', 'exists:categories,id'],
+            'ville' => ['nullable', 'string', 'max:100'],
+            'prix_min' => ['nullable', 'numeric', 'min:0'],
+            'prix_max' => ['nullable', 'numeric', 'gte:prix_min'],
+        ]);
 
-        return view('services.index', compact('services'));
+        $query = Service::with(['category', 'user'])
+            ->where('statut', 'publie');
+
+        // Recherche
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+
+            $query->where(function ($q) use ($search) {
+                $q->where('titre', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('ville', 'like', "%{$search}%");
+            });
+        }
+
+        // Catégorie
+        if ($request->filled('category')) {
+            $query->where(
+                'category_id',
+                $request->input('category')
+            );
+        }
+
+        // Ville
+        if ($request->filled('ville')) {
+            $query->where(
+                'ville',
+                $request->input('ville')
+            );
+        }
+
+        // Prix minimum
+        if ($request->filled('prix_min')) {
+            $query->where(
+                'prix',
+                '>=',
+                $request->input('prix_min')
+            );
+        }
+
+        // Prix maximum
+        if ($request->filled('prix_max')) {
+            $query->where(
+                'prix',
+                '<=',
+                $request->input('prix_max')
+            );
+        }
+
+        $services = $query
+            ->latest()
+            ->paginate(12)
+            ->withQueryString();
+
+        $categories = Category::orderBy('nom')->get();
+
+        $villes = Service::where('statut', 'publie')
+            ->whereNotNull('ville')
+            ->distinct()
+            ->orderBy('ville')
+            ->pluck('ville');
+
+        return view('services.index', compact(
+            'services',
+            'categories',
+            'villes'
+        ));
     }
 
     /**
@@ -52,31 +121,51 @@ class ServiceController extends Controller
         ]);
 
         $validated['user_id'] = $request->user()->id;
-        $validated['statut'] = 'brouillon';
-        $validated['disponibilite'] = $request->boolean('disponibilite');
 
+        // Nouveau service = brouillon
+        $validated['statut'] = 'brouillon';
+
+        $validated['disponibilite'] =
+            $request->boolean('disponibilite');
+
+        // Upload image
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store(
-                'services',
-                'public'
-            );
+            $validated['image'] = $request
+                ->file('image')
+                ->store('services', 'public');
         }
 
         Service::create($validated);
 
         return redirect()
             ->route('services.index')
-            ->with('success', 'Service créé avec succès.');
+            ->with(
+                'success',
+                'Service créé avec succès.'
+            );
     }
 
     /**
-     * Display the specified service.
+     * Display the specified published service.
      */
     public function show(Service $service): View
     {
-        $service->load(['user', 'category']);
+        // Uniquement les services publiés sont accessibles publiquement.
+        abort_unless(
+            $service->statut === 'publie',
+            404
+        );
 
-        return view('services.show', compact('service'));
+        $service->load([
+            'user',
+            'category',
+            'avis.user',
+        ]);
+
+        return view(
+            'services.show',
+            compact('service')
+        );
     }
 
     /**
@@ -88,7 +177,10 @@ class ServiceController extends Controller
 
         $categories = Category::orderBy('nom')->get();
 
-        return view('services.edit', compact('service', 'categories'));
+        return view(
+            'services.edit',
+            compact('service', 'categories')
+        );
     }
 
     /**
@@ -101,43 +193,86 @@ class ServiceController extends Controller
         $this->authorize('update', $service);
 
         $validated = $request->validate([
-            'category_id' => ['required', 'exists:categories,id'],
-            'titre' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'prix' => ['required', 'numeric', 'min:0'],
-            'ville' => ['required', 'string', 'max:255'],
-            'image' => ['nullable', 'image', 'max:2048'],
-            'disponibilite' => ['nullable', 'boolean'],
-            'statut' => ['required', 'in:brouillon,publie,suspendu'],
+            'category_id' => [
+                'required',
+                'exists:categories,id',
+            ],
+
+            'titre' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'description' => [
+                'required',
+                'string',
+            ],
+
+            'prix' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
+
+            'ville' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'image' => [
+                'nullable',
+                'image',
+                'max:2048',
+            ],
+
+            'disponibilite' => [
+                'nullable',
+                'boolean',
+            ],
+
+            'statut' => [
+                'required',
+                'in:brouillon,publie,suspendu',
+            ],
         ]);
 
-        $validated['disponibilite'] = $request->boolean('disponibilite');
+        $validated['disponibilite'] =
+            $request->boolean('disponibilite');
 
+        // Nouvelle image
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store(
-                'services',
-                'public'
-            );
+            $validated['image'] = $request
+                ->file('image')
+                ->store('services', 'public');
         }
 
         $service->update($validated);
 
         return redirect()
             ->route('services.index')
-            ->with('success', 'Service modifié avec succès.');
+            ->with(
+                'success',
+                'Service modifié avec succès.'
+            );
     }
 
     /**
      * Remove the specified service.
      */
-    public function destroy(Service $service): RedirectResponse
-    {
+    public function destroy(
+        Service $service
+    ): RedirectResponse {
         $this->authorize('delete', $service);
 
         $service->delete();
 
         return redirect()
             ->route('services.index')
-            ->with('success', 'Service supprimé avec succès.');
+            ->with(
+                'success',
+                'Service supprimé avec succès.'
+            );
     }
 }
