@@ -2,23 +2,37 @@
 
 namespace Database\Factories;
 
-use App\Models\Reservation;
+use App\Models\Service;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Reservation>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Reservation>
  */
 class ReservationFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
-            //
+            'user_id' => User::factory(),
+            'service_id' => Service::factory(),
+            'date' => fake()->dateTimeBetween('now', '+30 days'),
+            'message' => fake()->optional()->sentence(),
+            'statut' => fake()->randomElement([
+                'en_attente',
+                'acceptee',
+                'refusee',
+                'terminee',
+                'annulee',
+            ]),
         ];
+    }
+
+    public function terminee(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'statut' => 'terminee',
+            'date' => fake()->dateTimeBetween('-30 days', '-1 day'),
+        ]);
     }
 }
