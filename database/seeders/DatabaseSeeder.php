@@ -18,11 +18,40 @@ class DatabaseSeeder extends Seeder
     {
         /*
         |--------------------------------------------------------------------------
+        | Laratrust Roles & Permissions
+        |--------------------------------------------------------------------------
+        */
+
+        $this->call(LaratrustSeeder::class);
+
+        /*
+        |--------------------------------------------------------------------------
         | Users
         |--------------------------------------------------------------------------
         */
 
-        $users = User::factory(10)->create();
+        // Admin
+        $admin = User::factory()->create();
+        $admin->addRole('admin');
+
+        // Clients
+        $clients = User::factory(4)->create();
+
+        foreach ($clients as $client) {
+            $client->addRole('client');
+        }
+
+        // Providers
+        $providers = User::factory(5)->create();
+
+        foreach ($providers as $provider) {
+            $provider->addRole('provider');
+        }
+
+        // Tous les utilisateurs
+        $users = $clients
+            ->merge($providers)
+            ->push($admin);
 
         /*
         |--------------------------------------------------------------------------
@@ -39,7 +68,7 @@ class DatabaseSeeder extends Seeder
         */
 
         $services = Service::factory(15)->create([
-            'user_id' => fn () => $users->random()->id,
+            'user_id' => fn () => $providers->random()->id,
             'category_id' => fn () => $categories->random()->id,
         ]);
 
@@ -49,15 +78,17 @@ class DatabaseSeeder extends Seeder
         |--------------------------------------------------------------------------
         */
 
+        // 5 réservations en cours
         $reservations = Reservation::factory(5)->create([
-            'user_id' => fn () => $users->random()->id,
+            'user_id' => fn () => $clients->random()->id,
             'service_id' => fn () => $services->random()->id,
         ]);
 
+        // 5 réservations terminées
         $completedReservations = Reservation::factory(5)
             ->terminee()
             ->create([
-                'user_id' => fn () => $users->random()->id,
+                'user_id' => fn () => $clients->random()->id,
                 'service_id' => fn () => $services->random()->id,
             ]);
 
@@ -70,13 +101,17 @@ class DatabaseSeeder extends Seeder
         */
 
         $conversations = collect();
+        $conversationPairs = [];
 
         for ($i = 0; $i < 5; $i++) {
-            $client = $users->random();
+            do {
+                $client = $clients->random();
+                $provider = $providers->random();
 
-            $provider = $users
-                ->where('id', '!=', $client->id)
-                ->random();
+                $key = $client->id . '-' . $provider->id;
+            } while (in_array($key, $conversationPairs, true));
+
+            $conversationPairs[] = $key;
 
             $conversations->push(
                 Conversation::create([
@@ -104,7 +139,10 @@ class DatabaseSeeder extends Seeder
                     'user_id' => $participants->random(),
                     'contenu' => fake()->sentence(),
                     'lu' => fake()->boolean(),
-                    'date_envoi' => fake()->dateTimeBetween('-30 days', 'now'),
+                    'date_envoi' => fake()->dateTimeBetween(
+                        '-30 days',
+                        'now'
+                    ),
                 ]);
             }
         }
@@ -134,27 +172,20 @@ class DatabaseSeeder extends Seeder
 
         $favoritePairs = [];
 
-        foreach ($users as $user) {
+        foreach ($clients as $client) {
             $service = $services->random();
-            $key = $user->id . '-' . $service->id;
+
+            $key = $client->id . '-' . $service->id;
 
             if (! in_array($key, $favoritePairs, true)) {
                 $favoritePairs[] = $key;
 
                 Favorite::create([
-                    'user_id' => $user->id,
+                    'user_id' => $client->id,
                     'service_id' => $service->id,
                     'date' => now(),
                 ]);
             }
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Laratrust Roles & Permissions
-        |--------------------------------------------------------------------------
-        */
-
-        $this->call(LaratrustSeeder::class);
     }
 }
