@@ -4,9 +4,41 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Message extends Model
 {
-    /** @use HasFactory<\Database\Factories\MessageFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'conversation_id',
+        'user_id',
+        'contenu',
+        'lu',
+        'date_envoi',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'lu' => 'boolean',
+            'date_envoi' => 'datetime',
+        ];
+    }
+
+    /**
+     * Conversation du message.
+     */
+    public function conversation(): BelongsTo
+    {
+        return $this->belongsTo(Conversation::class);
+    }
+
+    /**
+     * Utilisateur qui a envoyé le message.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }
