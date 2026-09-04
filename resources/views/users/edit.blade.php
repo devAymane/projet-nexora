@@ -14,8 +14,23 @@
     <div class="py-8">
         <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
 
+            {{-- Success message --}}
+            @if (session('success'))
+                <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- Error message --}}
+            @if (session('error'))
+                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
 
+                {{-- Informations utilisateur --}}
                 <form
                     method="POST"
                     action="{{ route('users.update', $user) }}"
@@ -230,6 +245,64 @@
                     </div>
 
                 </form>
+
+                {{-- Gestion du rôle --}}
+                <div class="mt-8 border-t border-slate-200 pt-6">
+
+                    <div class="mb-4">
+                        <h3 class="text-base font-bold text-slate-800">
+                            Gestion du rôle
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            Modifier le rôle de cet utilisateur.
+                        </p>
+                    </div>
+
+                    <form
+                        method="POST"
+                        action="{{ route('users.update-role', $user) }}"
+                        class="flex flex-col gap-4 sm:flex-row sm:items-end"
+                    >
+                        @csrf
+                        @method('PATCH')
+
+                        <div class="w-full">
+                            <label for="role" class="block text-sm font-semibold text-slate-700">
+                                Rôle
+                            </label>
+
+                            <select
+                                id="role"
+                                name="role"
+                                class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            >
+                                @foreach (['client', 'provider', 'admin'] as $role)
+                                    <option
+                                        value="{{ $role }}"
+                                        @selected($user->hasRole($role))
+                                    >
+                                        {{ ucfirst($role) }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            @error('role')
+                                <p class="mt-1 text-sm text-red-600">
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                        >
+                            Modifier le rôle
+                        </button>
+                    </form>
+
+                </div>
 
             </div>
 
