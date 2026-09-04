@@ -10,7 +10,7 @@ use App\Http\Controllers\AvisController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\MessageController;
-
+use App\Http\Controllers\NotificationController;
 
 
 /*
@@ -232,6 +232,25 @@ Route::post('/conversations/{conversation}/messages', [MessageController::class,
 
 Route::patch('/messages/{message}/read', [MessageController::class, 'read'])
     ->name('messages.read');
+
+
+    /*
+|--------------------------------------------------------------------------
+| Notifications Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/notifications', [NotificationController::class, 'index'])
+    ->name('notifications.index');
+
+Route::patch('/notifications/{notification}/read', [NotificationController::class, 'read'])
+    ->name('notifications.read');
+
+Route::patch('/notifications/read-all', [NotificationController::class, 'readAll'])
+    ->name('notifications.readAll');
+
+
+
 });
 
 
