@@ -14,23 +14,9 @@ class StoreReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'service_id' => [
-                'required',
-                'integer',
-                'exists:services,id',
-            ],
-
-            'date' => [
-                'required',
-                'date',
-                'after:now',
-            ],
-
-            'message' => [
-                'nullable',
-                'string',
-                'max:1000',
-            ],
+            'service_id' => ['required', 'integer', 'exists:services,id'],
+            'date' => ['required', 'date', 'after:now'],
+            'message' => ['nullable', 'string', 'max:1000'],
         ];
     }
 }
