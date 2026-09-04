@@ -12,6 +12,9 @@ use App\Policies\ServicePolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use App\Models\Avis;
+use App\Policies\AvisPolicy;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,5 +29,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Category::class, CategoryPolicy::class);
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Reservation::class, ReservationPolicy::class);
+            Gate::policy(Reservation::class, ReservationPolicy::class);
+    Gate::policy(Avis::class, AvisPolicy::class);
     }
 }

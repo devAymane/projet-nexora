@@ -7,7 +7,9 @@ use App\Models\Avis;
 use App\Models\Reservation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
+
 
 class AvisController extends Controller
 {
@@ -16,7 +18,7 @@ class AvisController extends Controller
      */
     public function index(Request $request): View
     {
-        $this->authorize('viewAny', Avis::class);
+        Gate::authorize('viewAny', Avis::class);
 
         $user = $request->user();
 
@@ -46,17 +48,20 @@ class AvisController extends Controller
     /**
      * Show the form to create an avis.
      */
-    public function create(Reservation $reservation): View
-    {
-        $this->authorize('create', [Avis::class, $reservation]);
+public function create(Reservation $reservation): View
+{
+    Gate::forUser(auth()->user())->authorize(
+        'create',
+        [Avis::class, $reservation]
+    );
 
-        $reservation->load([
-            'service.category',
-            'service.user',
-        ]);
+    $reservation->load([
+        'service.category',
+        'service.user',
+    ]);
 
-        return view('avis.create', compact('reservation'));
-    }
+    return view('avis.create', compact('reservation'));
+}
 
     /**
      * Store a new avis.
@@ -67,7 +72,7 @@ class AvisController extends Controller
             $request->validated('reservation_id')
         );
 
-        $this->authorize('create', [Avis::class, $reservation]);
+        Gate::authorize('create', [Avis::class, $reservation]);
 
         Avis::create([
             'reservation_id' => $reservation->id,
