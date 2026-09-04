@@ -14,6 +14,8 @@ class CategoryController extends Controller
      */
     public function index(): View
     {
+        $this->authorize('viewAny', Category::class);
+
         $categories = Category::withCount('services')
             ->orderBy('nom')
             ->paginate(10);
@@ -26,6 +28,8 @@ class CategoryController extends Controller
      */
     public function create(): View
     {
+        $this->authorize('create', Category::class);
+
         return view('categories.create');
     }
 
@@ -34,6 +38,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $this->authorize('create', Category::class);
+
         $validated = $request->validate([
             'nom' => ['required', 'string', 'max:255', 'unique:categories,nom'],
             'description' => ['nullable', 'string'],
@@ -51,6 +57,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category): View
     {
+        $this->authorize('view', $category);
+
         $category->load([
             'services' => function ($query) {
                 $query->with(['user', 'category'])
@@ -66,6 +74,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category): View
     {
+        $this->authorize('update', $category);
+
         return view('categories.edit', compact('category'));
     }
 
@@ -76,6 +86,8 @@ class CategoryController extends Controller
         Request $request,
         Category $category
     ): RedirectResponse {
+        $this->authorize('update', $category);
+
         $validated = $request->validate([
             'nom' => [
                 'required',
@@ -98,10 +110,15 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category): RedirectResponse
     {
+        $this->authorize('delete', $category);
+
         if ($category->services()->exists()) {
             return redirect()
                 ->route('categories.index')
-                ->with('error', 'Impossible de supprimer cette catégorie car elle contient des services.');
+                ->with(
+                    'error',
+                    'Impossible de supprimer cette catégorie car elle contient des services.'
+                );
         }
 
         $category->delete();
