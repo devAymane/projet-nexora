@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\Reservation;
 use App\Models\Service;
 use App\Models\User;
 use App\Policies\CategoryPolicy;
+use App\Policies\ReservationPolicy;
 use App\Policies\ServicePolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -23,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Service::class, ServicePolicy::class);
         Gate::policy(Category::class, CategoryPolicy::class);
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Reservation::class, ReservationPolicy::class);
     }
 }
