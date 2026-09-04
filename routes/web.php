@@ -6,6 +6,12 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\AvisController;
+
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -217,3 +223,35 @@ Route::middleware('auth')->group(function () {
 
 Route::patch('/reservations/{reservation}/complete', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
+
+
+
+
+
+
+    /* Avis */
+Route::middleware('auth')->group(function () {
+    Route::get('/reservations/{reservation}/avis/create', [AvisController::class, 'create'])
+        ->name('avis.create');
+
+    Route::post('/avis', [AvisController::class, 'store'])
+        ->name('avis.store');
+});
+
+
+
+
+
+
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/avis', [AvisController::class, 'index'])
+        ->name('avis.index');
+
+    Route::get('/reservations/{reservation}/avis/create', [AvisController::class, 'create'])
+        ->name('avis.create');
+
+    Route::post('/avis', [AvisController::class, 'store'])
+        ->name('avis.store');
+});

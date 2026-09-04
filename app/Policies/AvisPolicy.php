@@ -8,9 +8,6 @@ use App\Models\User;
 
 class AvisPolicy
 {
-    /**
-     * Admin can do everything.
-     */
     public function before(User $user, string $ability): ?bool
     {
         if ($user->hasRole('admin')) {
@@ -20,9 +17,12 @@ class AvisPolicy
         return null;
     }
 
-    /**
-     * Can the client create an avis for this reservation?
-     */
+    public function viewAny(User $user): bool
+    {
+        return $user->hasRole('client')
+            || $user->hasRole('provider');
+    }
+
     public function create(User $user, Reservation $reservation): bool
     {
         return $user->hasRole('client')
@@ -31,9 +31,6 @@ class AvisPolicy
             && ! $reservation->avis()->exists();
     }
 
-    /**
-     * Can the user view this avis?
-     */
     public function view(User $user, Avis $avis): bool
     {
         return $avis->user_id === $user->id
