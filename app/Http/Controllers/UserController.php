@@ -15,6 +15,8 @@ class UserController extends Controller
      */
     public function index(): View
     {
+        $this->authorize('viewAny', User::class);
+
         $users = User::with('roles')
             ->latest()
             ->paginate(10);
@@ -27,6 +29,8 @@ class UserController extends Controller
      */
     public function create(): View
     {
+        $this->authorize('create', User::class);
+
         return view('users.create');
     }
 
@@ -35,6 +39,8 @@ class UserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $this->authorize('create', User::class);
+
         $validated = $request->validate([
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
@@ -62,6 +68,8 @@ class UserController extends Controller
      */
     public function show(User $user): View
     {
+        $this->authorize('view', $user);
+
         $user->load([
             'roles',
             'services',
@@ -76,6 +84,8 @@ class UserController extends Controller
      */
     public function edit(User $user): View
     {
+        $this->authorize('update', $user);
+
         $user->load('roles');
 
         return view('users.edit', compact('user'));
@@ -88,6 +98,8 @@ class UserController extends Controller
         Request $request,
         User $user
     ): RedirectResponse {
+        $this->authorize('update', $user);
+
         $validated = $request->validate([
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
@@ -122,6 +134,8 @@ class UserController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
+        $this->authorize('delete', $user);
+
         if (auth()->id() === $user->id) {
             return redirect()
                 ->route('users.index')
