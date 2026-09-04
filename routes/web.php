@@ -11,7 +11,9 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
-
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\ClientDashboardController;
+use App\Http\Controllers\ProviderDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +32,17 @@ Route::get('/', function () {
 */
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $user = request()->user();
+
+    if ($user->hasRole('admin')) {
+        return redirect()->route('admin.dashboard');
+    }
+
+    if ($user->hasRole('provider')) {
+        return redirect()->route('provider.dashboard');
+    }
+
+    return redirect()->route('client.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 /*
@@ -315,3 +327,27 @@ Route::post('/services/{service}/favorite', [FavoriteController::class, 'store']
 
 Route::delete('/services/{service}/favorite', [FavoriteController::class, 'destroy'])
     ->name('favorites.destroy');
+
+
+
+
+
+
+
+
+
+    Route::middleware(['auth', 'verified'])->group(function () {
+
+    Route::get('/client/dashboard', [ClientDashboardController::class, 'index'])
+        ->middleware('nexora.role:client')
+        ->name('client.dashboard');
+
+    Route::get('/provider/dashboard', [ProviderDashboardController::class, 'index'])
+        ->middleware('nexora.role:provider')
+        ->name('provider.dashboard');
+
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
+        ->middleware('nexora.role:admin')
+        ->name('admin.dashboard');
+
+});
