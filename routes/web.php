@@ -267,3 +267,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/services/{service}/favorite', [FavoriteController::class, 'destroy'])
         ->name('favorites.destroy');
 });
+
+
+Route::get('/favorites', [FavoriteController::class, 'index'])
+    ->name('favorites.index');
+
+Route::post('/services/{service}/favorite', [FavoriteController::class, 'store'])
+    ->name('favorites.store');
+
+Route::delete('/services/{service}/favorite', [FavoriteController::class, 'destroy'])
+    ->name('favorites.destroy');
