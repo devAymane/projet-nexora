@@ -2,25 +2,53 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRoleRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
-use App\Http\Requests\UpdateUserRoleRequest;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of users.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         $this->authorize('viewAny', User::class);
 
-        $users = User::with('roles')
+        $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'role' => ['nullable', 'in:admin,client,provider'],
+        ]);
+
+        $query = User::with('roles');
+
+        // Recherche par nom, prénom ou email
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+
+            $query->where(function ($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                    ->orWhere('prenom', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Filtre par rôle
+        if ($request->filled('role')) {
+            $role = $request->input('role');
+
+            $query->whereHas('roles', function ($q) use ($role) {
+                $q->where('name', $role);
+            });
+        }
+
+        $users = $query
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return view('users.index', compact('users'));
     }
@@ -57,6 +85,7 @@ class UserController extends Controller
 
         $user = User::create($validated);
 
+        // Par défaut, un utilisateur créé par l'admin devient client.
         $user->addRole('client');
 
         return redirect()
@@ -117,7 +146,7 @@ class UserController extends Controller
             'password' => ['nullable', 'confirmed', 'min:8'],
         ]);
 
-        if (! empty($validated['password'])) {
+        if (!empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         } else {
             unset($validated['password']);
@@ -133,14 +162,20 @@ class UserController extends Controller
     /**
      * Remove the specified user.
      */
-    public function destroy(User $user): RedirectResponse
-    {
+    public function destroy(
+        Request $request,
+        User $user
+    ): RedirectResponse {
         $this->authorize('delete', $user);
 
-        if (auth()->id() === $user->id) {
+        // Empêcher l'admin de supprimer son propre compte.
+        if ($request->user()->id === $user->id) {
             return redirect()
                 ->route('users.index')
-                ->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
+                ->with(
+                    'error',
+                    'Vous ne pouvez pas supprimer votre propre compte.'
+                );
         }
 
         $user->delete();
@@ -150,30 +185,35 @@ class UserController extends Controller
             ->with('success', 'Utilisateur supprimé avec succès.');
     }
 
-
-
-
-
-
-
-
-    
+    /**
+     * Update the role of a user.
+     */
     public function updateRole(
-    UpdateUserRoleRequest $request,
-    User $user
-): RedirectResponse {
-    $user->syncRoles([$request->validated('role')]);
+        UpdateUserRoleRequest $request,
+        User $user
+    ): RedirectResponse {
+        $this->authorize('update', $user);
 
-    return redirect()
-        ->route('users.show', $user)
-        ->with('success', 'Rôle utilisateur modifié avec succès.');
+        // Empêcher l'admin de modifier son propre rôle.
+        if ($request->user()->id === $user->id) {
+            return redirect()
+                ->route('users.index')
+                ->with(
+                    'error',
+                    'Vous ne pouvez pas modifier votre propre rôle.'
+                );
+        }
+
+        $role = $request->validated('role');
+
+        $user->syncRoles([$role]);
+
+        return redirect()
+            ->route('users.index')
+            ->with(
+                'success',
+                'Rôle de ' . $user->prenom . ' ' . $user->nom .
+                ' modifié avec succès.'
+            );
+    }
 }
-}
-
-
-
-
-
-
-
-

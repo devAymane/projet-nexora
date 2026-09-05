@@ -1,239 +1,464 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                <h2 class="text-2xl font-bold text-slate-800">
-                    Utilisateurs
-                </h2>
 
-                <p class="text-sm text-slate-500">
-                    Gestion des utilisateurs de la plateforme Nexora
-                </p>
-            </div>
+    <div class="min-h-screen bg-slate-50 py-8">
 
-            <a
-                href="{{ route('users.create') }}"
-                class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700"
-            >
-                + Ajouter un utilisateur
-            </a>
-        </div>
-    </x-slot>
-
-    <div class="py-8">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-            {{-- Messages --}}
-            @if (session('success'))
-                <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+            {{-- Header --}}
+            <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+                <div>
+                    <h1 class="text-3xl font-bold tracking-tight text-slate-900">
+                        Utilisateurs
+                    </h1>
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        Gérez les utilisateurs et leurs rôles sur Nexora.
+                    </p>
+                </div>
+
+                {{-- Add user --}}
+                <a
+                    href="{{ route('users.create') }}"
+                    class="inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 sm:w-auto"
+                >
+                    + Ajouter un utilisateur
+                </a>
+
+            </div>
+
+
+            {{-- Success message --}}
+            @if(session('success'))
+
+                <div class="mb-6 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
                     {{ session('success') }}
                 </div>
+
             @endif
 
-            @if (session('error'))
+
+            {{-- Error message --}}
+            @if(session('error'))
+
                 <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
                     {{ session('error') }}
                 </div>
+
             @endif
 
-            {{-- Statistiques --}}
-            <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
 
-                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                    <p class="text-sm font-medium text-slate-500">
-                        Total utilisateurs
-                    </p>
+            {{-- Search & Filters --}}
+            <div class="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
 
-                    <p class="mt-2 text-3xl font-bold text-slate-800">
-                        {{ $users->total() }}
-                    </p>
-                </div>
+                <form
+                    action="{{ route('users.index') }}"
+                    method="GET"
+                    class="grid grid-cols-1 gap-4 md:grid-cols-4"
+                >
 
-                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                    <p class="text-sm font-medium text-slate-500">
-                        Page actuelle
-                    </p>
+                    {{-- Search --}}
+                    <div class="md:col-span-2">
 
-                    <p class="mt-2 text-3xl font-bold text-indigo-600">
-                        {{ $users->count() }}
-                    </p>
-                </div>
+                        <label
+                            for="search"
+                            class="mb-2 block text-sm font-semibold text-slate-700"
+                        >
+                            Rechercher
+                        </label>
 
-                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                    <p class="text-sm font-medium text-slate-500">
-                        Pages
-                    </p>
+                        <input
+                            id="search"
+                            type="text"
+                            name="search"
+                            value="{{ request('search') }}"
+                            placeholder="Nom, prénom ou email..."
+                            class="w-full rounded-xl border-slate-300 px-4 py-2.5 text-sm shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500"
+                        >
 
-                    <p class="mt-2 text-3xl font-bold text-slate-800">
-                        {{ $users->lastPage() }}
-                    </p>
-                </div>
+                    </div>
+
+
+                    {{-- Role --}}
+                    <div>
+
+                        <label
+                            for="role"
+                            class="mb-2 block text-sm font-semibold text-slate-700"
+                        >
+                            Rôle
+                        </label>
+
+                        <select
+                            id="role"
+                            name="role"
+                            class="w-full rounded-xl border-slate-300 px-4 py-2.5 text-sm shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500"
+                        >
+
+                            <option value="">
+                                Tous les rôles
+                            </option>
+
+                            <option
+                                value="admin"
+                                @selected(request('role') === 'admin')
+                            >
+                                Administrateur
+                            </option>
+
+                            <option
+                                value="provider"
+                                @selected(request('role') === 'provider')
+                            >
+                                Prestataire
+                            </option>
+
+                            <option
+                                value="client"
+                                @selected(request('role') === 'client')
+                            >
+                                Client
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    {{-- Search buttons --}}
+                    <div class="flex items-end gap-2">
+
+                        <button
+                            type="submit"
+                            class="flex-1 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
+                        >
+                            Rechercher
+                        </button>
+
+                        <a
+                            href="{{ route('users.index') }}"
+                            class="rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-200"
+                        >
+                            Reset
+                        </a>
+
+                    </div>
+
+                </form>
 
             </div>
 
-            {{-- Tableau --}}
-            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-                <div class="overflow-x-auto">
+            {{-- Users --}}
+            @if($users->count())
 
-                    <table class="min-w-full divide-y divide-slate-200">
+                <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-                        <thead class="bg-slate-50">
-                            <tr>
+                    <div class="overflow-x-auto">
 
-                                <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                    Utilisateur
-                                </th>
+                        <table class="min-w-full divide-y divide-slate-200">
 
-                                <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                    Email
-                                </th>
-
-                                <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                    Rôle
-                                </th>
-
-                                <th class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                    Actions
-                                </th>
-
-                            </tr>
-                        </thead>
-
-                        <tbody class="divide-y divide-slate-100">
-
-                            @forelse ($users as $user)
-
-                                <tr class="transition hover:bg-slate-50">
-
-                                    {{-- Utilisateur --}}
-                                    <td class="whitespace-nowrap px-6 py-4">
-
-                                        <div class="flex items-center gap-3">
-
-                                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700">
-                                                {{ strtoupper(substr($user->prenom, 0, 1) . substr($user->nom, 0, 1)) }}
-                                            </div>
-
-                                            <div>
-                                                <p class="font-semibold text-slate-800">
-                                                    {{ $user->prenom }} {{ $user->nom }}
-                                                </p>
-
-                                                <p class="text-xs text-slate-500">
-                                                    ID #{{ $user->id }}
-                                                </p>
-                                            </div>
-
-                                        </div>
-
-                                    </td>
-
-                                    {{-- Email --}}
-                                    <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
-                                        {{ $user->email }}
-                                    </td>
-
-                                    {{-- Rôle --}}
-                                    <td class="whitespace-nowrap px-6 py-4">
-
-                                        @forelse ($user->roles as $role)
-
-                                            @php
-                                                $roleClasses = match ($role->name) {
-                                                    'admin' => 'bg-red-100 text-red-700',
-                                                    'provider' => 'bg-indigo-100 text-indigo-700',
-                                                    'client' => 'bg-emerald-100 text-emerald-700',
-                                                    default => 'bg-slate-100 text-slate-700',
-                                                };
-                                            @endphp
-
-                                            <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold {{ $roleClasses }}">
-                                                {{ ucfirst($role->name) }}
-                                            </span>
-
-                                        @empty
-
-                                            <span class="text-sm text-slate-400">
-                                                Aucun rôle
-                                            </span>
-
-                                        @endforelse
-
-                                    </td>
-
-                                    {{-- Actions --}}
-                                    <td class="whitespace-nowrap px-6 py-4 text-right">
-
-                                        <div class="flex justify-end gap-2">
-
-                                            <a
-                                                href="{{ route('users.show', $user) }}"
-                                                class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
-                                            >
-                                                Voir
-                                            </a>
-
-                                            <a
-                                                href="{{ route('users.edit', $user) }}"
-                                                class="rounded-lg px-3 py-2 text-sm font-medium text-indigo-600 transition hover:bg-indigo-50"
-                                            >
-                                                Modifier
-                                            </a>
-
-                                            @if (auth()->id() !== $user->id)
-                                                <form
-                                                    action="{{ route('users.destroy', $user) }}"
-                                                    method="POST"
-                                                    onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');"
-                                                >
-                                                    @csrf
-                                                    @method('DELETE')
-
-                                                    <button
-                                                        type="submit"
-                                                        class="rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
-                                                    >
-                                                        Supprimer
-                                                    </button>
-                                                </form>
-                                            @endif
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-
-                            @empty
+                            <thead class="bg-slate-50">
 
                                 <tr>
-                                    <td colspan="4" class="px-6 py-12 text-center">
 
-                                        <div class="text-slate-400">
-                                            Aucun utilisateur trouvé.
-                                        </div>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                        Utilisateur
+                                    </th>
 
-                                    </td>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                        Email
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                        Rôle
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                        Inscription
+                                    </th>
+
+                                    <th class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                        Actions
+                                    </th>
+
                                 </tr>
 
-                            @endforelse
+                            </thead>
 
-                        </tbody>
 
-                    </table>
+                            <tbody class="divide-y divide-slate-100 bg-white">
+
+                                @foreach($users as $user)
+
+                                    @php
+                                        $role = $user->roles->first()?->name;
+                                    @endphp
+
+                                    <tr class="transition hover:bg-slate-50">
+
+                                        {{-- User --}}
+                                        <td class="whitespace-nowrap px-6 py-5">
+
+                                            <div class="flex items-center gap-3">
+
+                                                {{-- Avatar --}}
+                                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white">
+                                                    {{ strtoupper(substr($user->prenom, 0, 1)) }}
+                                                </div>
+
+
+                                                <div>
+
+                                                    <div class="flex items-center gap-2">
+
+                                                        <p class="font-semibold text-slate-900">
+                                                            {{ $user->prenom }} {{ $user->nom }}
+                                                        </p>
+
+                                                        @if(auth()->id() === $user->id)
+
+                                                            <span class="rounded-full bg-slate-100 px-2 py-1 text-[10px] font-semibold text-slate-600">
+                                                                Compte actuel
+                                                            </span>
+
+                                                        @endif
+
+                                                    </div>
+
+                                                    <p class="text-xs text-slate-400">
+                                                        #{{ $user->id }}
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+
+                                        </td>
+
+
+                                        {{-- Email --}}
+                                        <td class="whitespace-nowrap px-6 py-5">
+
+                                            <p class="text-sm text-slate-500">
+                                                {{ $user->email }}
+                                            </p>
+
+                                        </td>
+
+
+                                        {{-- Role --}}
+                                        <td class="whitespace-nowrap px-6 py-5">
+
+                                            @if($role === 'admin')
+
+                                                <span class="inline-flex rounded-full bg-purple-50 px-3 py-1 text-xs font-semibold text-purple-600">
+                                                    Administrateur
+                                                </span>
+
+                                            @elseif($role === 'provider')
+
+                                                <span class="inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600">
+                                                    Prestataire
+                                                </span>
+
+                                            @else
+
+                                                <span class="inline-flex rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600">
+                                                    Client
+                                                </span>
+
+                                            @endif
+
+                                        </td>
+
+
+                                        {{-- Registration date --}}
+                                        <td class="whitespace-nowrap px-6 py-5">
+
+                                            <span class="text-sm text-slate-500">
+                                                {{ $user->created_at?->format('d/m/Y') }}
+                                            </span>
+
+                                        </td>
+
+
+                                        {{-- Actions --}}
+                                        <td class="whitespace-nowrap px-6 py-5">
+
+                                            <div class="flex justify-end gap-2">
+
+                                                {{-- Voir --}}
+                                                <a
+                                                    href="{{ route('users.show', $user) }}"
+                                                    class="rounded-lg bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200"
+                                                >
+                                                    Voir
+                                                </a>
+
+
+                                                {{-- Modifier informations --}}
+                                                <a
+                                                    href="{{ route('users.edit', $user) }}"
+                                                    class="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
+                                                >
+                                                    Modifier
+                                                </a>
+
+
+                                                @if(auth()->id() !== $user->id)
+
+                                                    {{-- Role form --}}
+                                                    <form
+                                                        action="{{ route('users.update-role', $user) }}"
+                                                        method="POST"
+                                                        class="flex items-center gap-2"
+                                                    >
+
+                                                        @csrf
+
+                                                        @method('PATCH')
+
+
+                                                        <select
+                                                            name="role"
+                                                            class="rounded-lg border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                        >
+
+                                                            <option
+                                                                value="client"
+                                                                @selected($role === 'client')
+                                                            >
+                                                                Client
+                                                            </option>
+
+                                                            <option
+                                                                value="provider"
+                                                                @selected($role === 'provider')
+                                                            >
+                                                                Prestataire
+                                                            </option>
+
+                                                            <option
+                                                                value="admin"
+                                                                @selected($role === 'admin')
+                                                            >
+                                                                Administrateur
+                                                            </option>
+
+                                                        </select>
+
+
+                                                        <button
+                                                            type="submit"
+                                                            class="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
+                                                        >
+                                                            Rôle
+                                                        </button>
+
+                                                    </form>
+
+
+                                                    {{-- Delete --}}
+                                                    <form
+                                                        action="{{ route('users.destroy', $user) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');"
+                                                    >
+
+                                                        @csrf
+
+                                                        @method('DELETE')
+
+                                                        <button
+                                                            type="submit"
+                                                            class="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+                                                        >
+                                                            Supprimer
+                                                        </button>
+
+                                                    </form>
+
+                                                @endif
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+                                @endforeach
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
 
+
                 {{-- Pagination --}}
-                @if ($users->hasPages())
-                    <div class="border-t border-slate-200 px-6 py-4">
+                @if($users->hasPages())
+
+                    <div class="mt-8">
                         {{ $users->links() }}
                     </div>
+
                 @endif
 
-            </div>
+
+            @else
+
+                {{-- Empty state --}}
+                <div class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center shadow-sm">
+
+                    <div class="mx-auto max-w-md">
+
+                        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+
+                            <svg
+                                class="h-7 w-7"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.8"
+                                    d="M15 19a4 4 0 00-8 0m4-6a4 4 0 100-8 4 4 0 000 8zm6 6a3 3 0 00-2.5-2.95M17 11a3 3 0 100-6"
+                                />
+                            </svg>
+
+                        </div>
+
+
+                        <h2 class="mt-5 text-xl font-bold text-slate-900">
+                            Aucun utilisateur
+                        </h2>
+
+
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            Aucun utilisateur ne correspond à votre recherche.
+                        </p>
+
+
+                        <a
+                            href="{{ route('users.create') }}"
+                            class="mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700"
+                        >
+                            + Ajouter un utilisateur
+                        </a>
+
+                    </div>
+
+                </div>
+
+            @endif
 
         </div>
+
     </div>
+
 </x-app-layout>

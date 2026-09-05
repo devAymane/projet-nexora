@@ -401,3 +401,20 @@ Route::middleware('auth')->group(function () {
     Route::patch('/reservations/{reservation}/complete', [ReservationController::class, 'complete'])
         ->name('reservations.complete');
 });
+
+
+
+
+Route::middleware(['auth', 'verified', 'nexora.role:admin'])
+    ->prefix('admin')
+    ->group(function () {
+
+        Route::get('/users', [UserController::class, 'index'])
+            ->name('users.index');
+
+        Route::patch('/users/{user}/role', [UserController::class, 'updateRole'])
+            ->name('users.update-role');
+
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])
+            ->name('users.destroy');
+    });
