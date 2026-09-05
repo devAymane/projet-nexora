@@ -36,9 +36,9 @@
             @endif
 
             {{-- Statistics --}}
-            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
 
-                {{-- Reservations --}}
+                {{-- Total reservations --}}
                 <div class="rounded-xl bg-white p-6 shadow-sm">
                     <p class="text-sm font-medium text-gray-500">
                         Mes réservations
@@ -50,7 +50,7 @@
 
                     <a href="{{ route('reservations.index') }}"
                        class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
-                        Voir mes réservations →
+                        Voir →
                     </a>
                 </div>
 
@@ -62,6 +62,22 @@
 
                     <p class="mt-2 text-3xl font-bold text-yellow-600">
                         {{ $stats['pending'] }}
+                    </p>
+
+                    <a href="{{ route('reservations.index') }}"
+                       class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                        Voir →
+                    </a>
+                </div>
+
+                {{-- Accepted --}}
+                <div class="rounded-xl bg-white p-6 shadow-sm">
+                    <p class="text-sm font-medium text-gray-500">
+                        Acceptées
+                    </p>
+
+                    <p class="mt-2 text-3xl font-bold text-blue-600">
+                        {{ $stats['accepted'] }}
                     </p>
 
                     <a href="{{ route('reservations.index') }}"
@@ -189,35 +205,25 @@
                                             </h4>
 
                                             @if ($reservation->statut === 'en_attente')
-
                                                 <span class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700">
                                                     En attente
                                                 </span>
-
                                             @elseif ($reservation->statut === 'acceptee')
-
                                                 <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
                                                     Acceptée
                                                 </span>
-
                                             @elseif ($reservation->statut === 'terminee')
-
                                                 <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
                                                     Terminée
                                                 </span>
-
                                             @elseif ($reservation->statut === 'refusee')
-
                                                 <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
                                                     Refusée
                                                 </span>
-
                                             @elseif ($reservation->statut === 'annulee')
-
                                                 <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
                                                     Annulée
                                                 </span>
-
                                             @endif
 
                                         </div>
@@ -251,12 +257,10 @@
                                     </div>
 
                                     <div>
-
                                         <a href="{{ route('reservations.show', $reservation) }}"
                                            class="inline-flex rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                                             Voir détails
                                         </a>
-
                                     </div>
 
                                 </div>
@@ -286,6 +290,98 @@
                         <a href="{{ route('services.index') }}"
                            class="mt-5 inline-flex rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-700">
                             Découvrir les services
+                        </a>
+
+                    </div>
+
+                @endif
+
+            </div>
+
+            {{-- Recent favorites --}}
+            <div class="overflow-hidden rounded-xl bg-white shadow-sm">
+
+                <div class="flex flex-col gap-3 border-b border-gray-200 p-6 sm:flex-row sm:items-center sm:justify-between">
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">
+                            Mes derniers favoris
+                        </h3>
+
+                        <p class="text-sm text-gray-500">
+                            Retrouvez rapidement les services que vous avez sauvegardés.
+                        </p>
+                    </div>
+
+                    <a href="{{ route('favorites.index') }}"
+                       class="text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                        Tous mes favoris →
+                    </a>
+
+                </div>
+
+                @if ($recentFavorites->count())
+
+                    <div class="grid grid-cols-1 gap-5 p-6 sm:grid-cols-2 lg:grid-cols-4">
+
+                        @foreach ($recentFavorites as $favorite)
+
+                            <div class="rounded-xl border border-gray-200 p-5 transition hover:-translate-y-1 hover:shadow-md">
+
+                                <div class="flex items-start justify-between gap-3">
+
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">
+                                            {{ $favorite->service->titre }}
+                                        </h4>
+
+                                        <p class="mt-1 text-sm text-gray-500">
+                                            {{ $favorite->service->category->nom }}
+                                        </p>
+                                    </div>
+
+                                    <span class="text-xl">❤️</span>
+
+                                </div>
+
+                                <p class="mt-4 text-lg font-bold text-gray-900">
+                                    {{ number_format($favorite->service->prix, 2) }} MAD
+                                </p>
+
+                                <p class="mt-1 text-sm text-gray-500">
+                                    {{ $favorite->service->ville }}
+                                </p>
+
+                                <a href="{{ route('services.show', $favorite->service) }}"
+                                   class="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+                                    Voir le service
+                                </a>
+
+                            </div>
+
+                        @endforeach
+
+                    </div>
+
+                @else
+
+                    <div class="p-10 text-center">
+
+                        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
+                            <span class="text-2xl">❤️</span>
+                        </div>
+
+                        <h4 class="mt-4 font-semibold text-gray-900">
+                            Aucun favori
+                        </h4>
+
+                        <p class="mt-1 text-sm text-gray-500">
+                            Vous n'avez pas encore ajouté de service à vos favoris.
+                        </p>
+
+                        <a href="{{ route('services.index') }}"
+                           class="mt-5 inline-flex rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-700">
+                            Explorer les services
                         </a>
 
                     </div>
