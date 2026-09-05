@@ -148,7 +148,140 @@
                                 </p>
 
                             </div>
+                         {{-- Avis clients --}}
+<div class="mt-8 rounded-xl bg-white p-6 shadow-sm">
 
+    <div class="flex flex-col gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:justify-between">
+
+        <div>
+            <h2 class="text-xl font-bold text-gray-900">
+                Avis clients
+            </h2>
+
+            <p class="mt-1 text-sm text-gray-500">
+                Découvrez les expériences des clients.
+            </p>
+        </div>
+
+        {{-- Average --}}
+        <div class="flex items-center gap-3">
+
+            @if ($service->avis->count() > 0)
+
+                <div class="text-right">
+                    <div class="flex items-center justify-end gap-1">
+                        <span class="text-xl font-bold text-gray-900">
+                            {{ number_format($service->avis->avg('note'), 1) }}
+                        </span>
+
+                        <span class="text-yellow-500">
+                            ★
+                        </span>
+                    </div>
+
+                    <p class="text-xs text-gray-500">
+                        {{ $service->avis->count() }}
+                        {{ $service->avis->count() > 1 ? 'avis' : 'avis' }}
+                    </p>
+                </div>
+
+            @else
+
+                <span class="rounded-full bg-gray-100 px-4 py-2 text-sm text-gray-500">
+                    Aucun avis
+
+                </span>
+
+            @endif
+
+        </div>
+
+    </div>
+
+
+    @if ($service->avis->count() > 0)
+
+        <div class="divide-y divide-gray-200">
+
+            @foreach ($service->avis as $avis)
+
+                <div class="py-6 first:pt-6 last:pb-0">
+
+                    <div class="flex items-start justify-between gap-4">
+
+                        <div class="flex items-center gap-3">
+
+                            {{-- Avatar --}}
+                            @if ($avis->user->photo)
+                                <img src="{{ asset('storage/' . $avis->user->photo) }}"
+                                     alt="{{ $avis->user->prenom }}"
+                                     class="h-10 w-10 rounded-full object-cover">
+                            @else
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 font-semibold text-indigo-700">
+                                    {{ strtoupper(substr($avis->user->prenom, 0, 1)) }}
+                                </div>
+                            @endif
+
+                            <div>
+                                <p class="font-semibold text-gray-900">
+                                    {{ $avis->user->prenom }}
+                                    {{ $avis->user->nom }}
+                                </p>
+
+                                <p class="text-xs text-gray-500">
+                                    {{ \Carbon\Carbon::parse($avis->date)->format('d/m/Y') }}
+                                </p>
+                            </div>
+
+                        </div>
+
+                        {{-- Stars --}}
+                        <div class="flex items-center gap-1 text-lg text-yellow-500">
+                            @for ($i = 1; $i <= 5; $i++)
+
+                                @if ($i <= $avis->note)
+                                    <span>★</span>
+                                @else
+                                    <span class="text-gray-300">★</span>
+                                @endif
+
+                            @endfor
+                        </div>
+
+                    </div>
+
+                    {{-- Comment --}}
+                    <p class="mt-4 text-sm leading-6 text-gray-600">
+                        {{ $avis->commentaire }}
+                    </p>
+
+                </div>
+
+            @endforeach
+
+        </div>
+
+    @else
+
+        <div class="py-10 text-center">
+
+            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
+                <span class="text-2xl">⭐</span>
+            </div>
+
+            <h3 class="mt-4 font-semibold text-gray-900">
+                Aucun avis pour le moment
+            </h3>
+
+            <p class="mt-1 text-sm text-gray-500">
+                Soyez le premier client à donner votre avis.
+            </p>
+
+        </div>
+
+    @endif
+
+</div>
 
                             {{-- Provider --}}
                             <div class="mt-8 border-t border-slate-100 pt-8">
