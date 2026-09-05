@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Avis;
 use App\Models\Reservation;
 use App\Models\Service;
 use Illuminate\Http\Request;
@@ -13,26 +14,35 @@ class ProviderDashboardController extends Controller
     {
         $user = $request->user();
 
+        $serviceIds = Service::where('user_id', $user->id)->pluck('id');
+
+        $providerReservations = Reservation::whereIn('service_id', $serviceIds);
+
         $stats = [
             'services' => Service::where('user_id', $user->id)->count(),
 
-            'pending' => Reservation::whereHas('service', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->where('statut', 'en_attente')->count(),
+            'pending' => (clone $providerReservations)
+                ->where('statut', 'en_attente')
+                ->count(),
 
-            'accepted' => Reservation::whereHas('service', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->where('statut', 'acceptee')->count(),
+            'accepted' => (clone $providerReservations)
+                ->where('statut', 'acceptee')
+                ->count(),
 
-            'completed' => Reservation::whereHas('service', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->where('statut', 'terminee')->count(),
+            'completed' => (clone $providerReservations)
+                ->where('statut', 'terminee')
+                ->count(),
+
+            'reviews' => Avis::whereIn('service_id', $serviceIds)->count(),
+
+            'rating' => round(
+                Avis::whereIn('service_id', $serviceIds)->avg('note') ?? 0,
+                1
+            ),
         ];
 
         $recentReservations = Reservation::with(['user', 'service'])
-            ->whereHas('service', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
+            ->whereIn('service_id', $serviceIds)
             ->latest('date')
             ->limit(5)
             ->get();

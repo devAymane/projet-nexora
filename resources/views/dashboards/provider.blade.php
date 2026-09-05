@@ -36,71 +36,105 @@
                 </div>
             @endif
 
-            {{-- Statistics --}}
-            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+       {{-- Statistics --}}
+<div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
 
-                <div class="rounded-xl bg-white p-6 shadow-sm">
-                    <p class="text-sm font-medium text-gray-500">
-                        Mes services
-                    </p>
+    {{-- Services --}}
+    <div class="rounded-xl bg-white p-6 shadow-sm">
+        <p class="text-sm font-medium text-gray-500">
+            Mes services
+        </p>
 
-                    <p class="mt-2 text-3xl font-bold text-gray-900">
-                        {{ $stats['services'] }}
-                    </p>
+        <p class="mt-2 text-3xl font-bold text-gray-900">
+            {{ $stats['services'] }}
+        </p>
 
-                    <a href="{{ route('services.index') }}"
-                       class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
-                        Voir mes services →
-                    </a>
-                </div>
+        <a href="{{ route('services.index') }}"
+           class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+            Voir mes services →
+        </a>
+    </div>
 
-                <div class="rounded-xl bg-white p-6 shadow-sm">
-                    <p class="text-sm font-medium text-gray-500">
-                        En attente
-                    </p>
+    {{-- Pending --}}
+    <div class="rounded-xl bg-white p-6 shadow-sm">
+        <p class="text-sm font-medium text-gray-500">
+            En attente
+        </p>
 
-                    <p class="mt-2 text-3xl font-bold text-yellow-600">
-                        {{ $stats['pending'] }}
-                    </p>
+        <p class="mt-2 text-3xl font-bold text-yellow-600">
+            {{ $stats['pending'] }}
+        </p>
 
-                    <a href="{{ route('reservations.index') }}"
-                       class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
-                        Gérer →
-                    </a>
-                </div>
+        <a href="{{ route('reservations.index') }}"
+           class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+            Gérer →
+        </a>
+    </div>
 
-                <div class="rounded-xl bg-white p-6 shadow-sm">
-                    <p class="text-sm font-medium text-gray-500">
-                        Acceptées
-                    </p>
+    {{-- Accepted --}}
+    <div class="rounded-xl bg-white p-6 shadow-sm">
+        <p class="text-sm font-medium text-gray-500">
+            Acceptées
+        </p>
 
-                    <p class="mt-2 text-3xl font-bold text-blue-600">
-                        {{ $stats['accepted'] }}
-                    </p>
+        <p class="mt-2 text-3xl font-bold text-blue-600">
+            {{ $stats['accepted'] }}
+        </p>
 
-                    <a href="{{ route('reservations.index') }}"
-                       class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
-                        Voir →
-                    </a>
-                </div>
+        <a href="{{ route('reservations.index') }}"
+           class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+            Voir →
+        </a>
+    </div>
 
-                <div class="rounded-xl bg-white p-6 shadow-sm">
-                    <p class="text-sm font-medium text-gray-500">
-                        Terminées
-                    </p>
+    {{-- Completed --}}
+    <div class="rounded-xl bg-white p-6 shadow-sm">
+        <p class="text-sm font-medium text-gray-500">
+            Terminées
+        </p>
 
-                    <p class="mt-2 text-3xl font-bold text-green-600">
-                        {{ $stats['completed'] }}
-                    </p>
+        <p class="mt-2 text-3xl font-bold text-green-600">
+            {{ $stats['completed'] }}
+        </p>
 
-                    <a href="{{ route('reservations.index') }}"
-                       class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
-                        Voir →
-                    </a>
-                </div>
+        <a href="{{ route('reservations.index') }}"
+           class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+            Voir →
+        </a>
+    </div>
 
-            </div>
+    {{-- Reviews --}}
+    <div class="rounded-xl bg-white p-6 shadow-sm">
+        <p class="text-sm font-medium text-gray-500">
+            Avis reçus
+        </p>
 
+        <p class="mt-2 text-3xl font-bold text-purple-600">
+            {{ $stats['reviews'] }}
+        </p>
+
+        <a href="{{ route('avis.index') }}"
+           class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+            Voir les avis →
+        </a>
+    </div>
+
+    {{-- Rating --}}
+    <div class="rounded-xl bg-white p-6 shadow-sm">
+        <p class="text-sm font-medium text-gray-500">
+            Note moyenne
+        </p>
+
+        <p class="mt-2 text-3xl font-bold text-orange-500">
+            {{ number_format($stats['rating'], 1) }}/5
+        </p>
+
+        <p class="mt-3 text-sm text-gray-500">
+            Basée sur {{ $stats['reviews'] }} avis
+        </p>
+    </div>
+
+</div>
             {{-- Recent reservations --}}
             <div class="overflow-hidden rounded-xl bg-white shadow-sm">
 
