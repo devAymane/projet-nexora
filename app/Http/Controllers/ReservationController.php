@@ -19,32 +19,34 @@ use Illuminate\View\View;
 
 class ReservationController extends Controller
 {
-    public function index(Request $request): View
-    {
-        $this->authorize('viewAny', Reservation::class);
+   public function index(Request $request): View
+{
+    $this->authorize('viewAny', Reservation::class);
 
-        $user = $request->user();
+    $user = $request->user();
 
-        $query = Reservation::with([
-            'user',
-            'service.category',
-            'service.user',
-        ]);
+    $query = Reservation::with([
+        'user',
+        'service.category',
+        'service.user',
+    ]);
 
-        if ($user->hasRole('provider')) {
-            $query->whereHas('service', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            });
-        } else {
+    if ($user->hasRole('admin')) {
+        // Admin voit toutes les réservations
+    } elseif ($user->hasRole('provider')) {
+        $query->whereHas('service', function ($query) use ($user) {
             $query->where('user_id', $user->id);
-        }
-
-        $reservations = $query
-            ->latest('date')
-            ->paginate(10);
-
-        return view('reservations.index', compact('reservations'));
+        });
+    } else {
+        $query->where('user_id', $user->id);
     }
+
+    $reservations = $query
+        ->latest('date')
+        ->paginate(10);
+
+    return view('reservations.index', compact('reservations'));
+}
 
 public function create(Request $request): View
 {
