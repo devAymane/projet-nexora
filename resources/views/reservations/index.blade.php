@@ -1,143 +1,141 @@
 <x-app-layout>
+
     <x-slot name="header">
-        <div>
-            <h2 class="text-2xl font-bold text-slate-800">
-                Mes réservations
+        <div class="flex flex-col gap-1">
+            <h2 class="text-xl font-semibold text-gray-800">
+                Mes conversations
             </h2>
 
-            <p class="mt-1 text-sm text-slate-500">
-                Consultez et gérez vos réservations.
+            <p class="text-sm text-gray-500">
+                Consultez vos conversations avec les clients et prestataires.
             </p>
         </div>
     </x-slot>
 
     <div class="py-8">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
 
             @if (session('success'))
-                <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                <div class="mb-6 rounded-lg bg-green-50 p-4 text-sm text-green-700">
                     {{ session('success') }}
                 </div>
             @endif
 
-            @if (session('error'))
-                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-                    {{ session('error') }}
+            @if ($conversations->count())
+
+                <div class="overflow-hidden rounded-xl bg-white shadow-sm">
+
+                    <div class="divide-y divide-gray-200">
+
+                        @foreach ($conversations as $conversation)
+
+                            @php
+                                $user = auth()->id() === $conversation->client_id
+                                    ? $conversation->provider
+                                    : $conversation->client;
+
+                                $lastMessage = $conversation->messages->first();
+                            @endphp
+
+                            <a href="{{ route('conversations.show', $conversation) }}"
+                               class="block p-5 transition hover:bg-gray-50">
+
+                                <div class="flex items-center gap-4">
+
+                                    {{-- Avatar --}}
+                                    @if ($user->photo)
+                                        <img src="{{ asset('storage/' . $user->photo) }}"
+                                             alt="{{ $user->prenom }}"
+                                             class="h-12 w-12 shrink-0 rounded-full object-cover">
+                                    @else
+                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-indigo-100 font-semibold text-indigo-700">
+                                            {{ strtoupper(substr($user->prenom, 0, 1)) }}
+                                        </div>
+                                    @endif
+
+                                    {{-- Conversation --}}
+                                    <div class="min-w-0 flex-1">
+
+                                        <div class="flex items-center justify-between gap-3">
+
+                                            <h3 class="font-semibold text-gray-900">
+                                                {{ $user->prenom }}
+                                                {{ $user->nom }}
+                                            </h3>
+
+                                            @if ($lastMessage)
+                                                <span class="shrink-0 text-xs text-gray-400">
+                                                    {{ $lastMessage->date_envoi->format('d/m/Y H:i') }}
+                                                </span>
+                                            @endif
+
+                                        </div>
+
+                                        <p class="mt-1 text-sm text-gray-500">
+                                            {{ $user->hasRole('provider') ? 'Prestataire' : 'Client' }}
+                                        </p>
+
+                                        @if ($lastMessage)
+
+                                            <p class="mt-2 truncate text-sm text-gray-600">
+                                                {{ $lastMessage->user_id === auth()->id() ? 'Vous : ' : '' }}
+                                                {{ $lastMessage->contenu }}
+                                            </p>
+
+                                        @else
+
+                                            <p class="mt-2 text-sm italic text-gray-400">
+                                                Aucun message pour le moment.
+                                            </p>
+
+                                        @endif
+
+                                    </div>
+
+                                    <span class="text-gray-400">
+                                        →
+                                    </span>
+
+                                </div>
+
+                            </a>
+
+                        @endforeach
+
+                    </div>
+
                 </div>
-            @endif
 
-            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <div class="mt-6">
+                    {{ $conversations->links() }}
+                </div>
 
-                <div class="border-b border-slate-200 px-6 py-5">
-                    <h3 class="text-lg font-bold text-slate-800">
-                        Liste des réservations
+            @else
+
+                <div class="rounded-xl bg-white p-12 text-center shadow-sm">
+
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+                        <span class="text-3xl">💬</span>
+                    </div>
+
+                    <h3 class="mt-5 text-lg font-semibold text-gray-900">
+                        Aucune conversation
                     </h3>
+
+                    <p class="mt-2 text-sm text-gray-500">
+                        Vous n'avez pas encore de conversation.
+                    </p>
+
+                    <a href="{{ route('services.index') }}"
+                       class="mt-6 inline-flex rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-700">
+                        Explorer les services
+                    </a>
+
                 </div>
 
-                @if ($reservations->count())
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-slate-200">
-                            <thead class="bg-slate-50">
-                                <tr>
-                                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                        Service
-                                    </th>
-
-                                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                        Date
-                                    </th>
-
-                                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                        Statut
-                                    </th>
-
-                                    <th class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                        Action
-                                    </th>
-                                </tr>
-                            </thead>
-
-                            <tbody class="divide-y divide-slate-200 bg-white">
-                                @foreach ($reservations as $reservation)
-                                    <tr class="hover:bg-slate-50">
-
-                                        <td class="px-6 py-4">
-                                            <div class="font-semibold text-slate-800">
-                                                {{ $reservation->service->titre }}
-                                            </div>
-
-                                            <div class="mt-1 text-sm text-slate-500">
-                                                {{ $reservation->service->ville }}
-                                            </div>
-                                        </td>
-
-                                        <td class="px-6 py-4 text-sm text-slate-600">
-                                            {{ $reservation->date->format('d/m/Y à H:i') }}
-                                        </td>
-
-                                        <td class="px-6 py-4">
-                                            @php
-                                                $statusClasses = [
-                                                    'en_attente' => 'bg-amber-100 text-amber-700',
-                                                    'acceptee' => 'bg-blue-100 text-blue-700',
-                                                    'refusee' => 'bg-red-100 text-red-700',
-                                                    'terminee' => 'bg-emerald-100 text-emerald-700',
-                                                    'annulee' => 'bg-slate-100 text-slate-600',
-                                                ];
-
-                                                $statusLabels = [
-                                                    'en_attente' => 'En attente',
-                                                    'acceptee' => 'Acceptée',
-                                                    'refusee' => 'Refusée',
-                                                    'terminee' => 'Terminée',
-                                                    'annulee' => 'Annulée',
-                                                ];
-                                            @endphp
-
-                                            <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold {{ $statusClasses[$reservation->statut] ?? 'bg-slate-100 text-slate-600' }}">
-                                                {{ $statusLabels[$reservation->statut] ?? $reservation->statut }}
-                                            </span>
-                                        </td>
-
-                                        <td class="px-6 py-4 text-right">
-                                            <a
-                                                href="{{ route('reservations.show', $reservation) }}"
-                                                class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
-                                            >
-                                                Voir
-                                            </a>
-                                        </td>
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="border-t border-slate-200 px-6 py-4">
-                        {{ $reservations->links() }}
-                    </div>
-                @else
-                    <div class="px-6 py-12 text-center">
-                        <h3 class="text-lg font-semibold text-slate-800">
-                            Aucune réservation
-                        </h3>
-
-                        <p class="mt-2 text-sm text-slate-500">
-                            Vous n'avez encore aucune réservation.
-                        </p>
-
-                        <a
-                            href="{{ route('reservations.create') }}"
-                            class="mt-5 inline-flex items-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
-                        >
-                            Réserver un service
-                        </a>
-                    </div>
-                @endif
-
-            </div>
+            @endif
 
         </div>
     </div>
+
 </x-app-layout>
