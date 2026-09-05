@@ -5,13 +5,11 @@ namespace App\Jobs;
 use App\Models\Reservation;
 use App\Notifications\ReservationCreatedNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Foundation\Queue\Queueable;
 
 class SendReservationNotification implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, SerializesModels;
+    use Queueable;
 
     public function __construct(
         public int $reservationId

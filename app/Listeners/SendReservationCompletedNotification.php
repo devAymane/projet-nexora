@@ -3,16 +3,15 @@
 namespace App\Listeners;
 
 use App\Events\ReservationCompleted;
-use App\Notifications\ReservationCompletedNotification;
+use App\Jobs\SendReservationNotification;
 
 class SendReservationCompletedNotification
 {
     public function handle(ReservationCompleted $event): void
     {
-        $reservation = $event->reservation->load('user');
-
-        $reservation->user->notify(
-            new ReservationCompletedNotification($reservation)
+        SendReservationNotification::dispatch(
+            $event->reservation->id,
+            'completed'
         );
     }
 }

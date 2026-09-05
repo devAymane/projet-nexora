@@ -3,16 +3,15 @@
 namespace App\Listeners;
 
 use App\Events\ReservationRefused;
-use App\Notifications\ReservationRefusedNotification;
+use App\Jobs\SendReservationNotification;
 
 class SendReservationRefusedNotification
 {
     public function handle(ReservationRefused $event): void
     {
-        $reservation = $event->reservation->load('user');
-
-        $reservation->user->notify(
-            new ReservationRefusedNotification($reservation)
+        SendReservationNotification::dispatch(
+            $event->reservation->id,
+            'refused'
         );
     }
 }

@@ -3,16 +3,15 @@
 namespace App\Listeners;
 
 use App\Events\ReservationAccepted;
-use App\Notifications\ReservationAcceptedNotification;
+use App\Jobs\SendReservationNotification;
 
 class SendReservationAcceptedNotification
 {
     public function handle(ReservationAccepted $event): void
     {
-        $reservation = $event->reservation->load('user');
-
-        $reservation->user->notify(
-            new ReservationAcceptedNotification($reservation)
+        SendReservationNotification::dispatch(
+            $event->reservation->id,
+            'accepted'
         );
     }
 }
