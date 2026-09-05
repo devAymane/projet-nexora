@@ -1,47 +1,16 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Listeners;
 
-use App\Models\Reservation;
-use App\Notifications\ReservationAcceptedNotification;
-use App\Notifications\ReservationCompletedNotification;
-use App\Notifications\ReservationCreatedNotification;
-use App\Notifications\ReservationRefusedNotification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
+use App\Events\ReservationCreated;
+use App\Jobs\SendReservationNotification;
 
-class SendReservationNotification implements ShouldQueue
+class QueueReservationNotification
 {
-    use Queueable;
-
-    public function __construct(
-        public int $reservationId,
-        public string $notificationType = 'created',
-    ) {
-    }
-
-    public function handle(): void
+    public function handle(ReservationCreated $event): void
     {
-        $reservation = Reservation::with([
-            'user',
-            'service.user',
-        ])->findOrFail($this->reservationId);
-
-        $notification = match ($this->notificationType) {
-            'created' => new ReservationCreatedNotification($reservation),
-            'accepted' => new ReservationAcceptedNotification($reservation),
-            'refused' => new ReservationRefusedNotification($reservation),
-            'completed' => new ReservationCompletedNotification($reservation),
-            default => throw new \InvalidArgumentException(
-                "Unknown reservation notification type: {$this->notificationType}"
-            ),
-        };
-
-        if ($this->notificationType === 'created') {
-            $reservation->service->user->notify($notification);
-            return;
-        }
-
-        $reservation->user->notify($notification);
+        SendReservationNotification::dispatch(
+            $event->reservation->id
+        );
     }
 }

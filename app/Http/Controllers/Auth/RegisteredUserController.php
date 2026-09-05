@@ -24,8 +24,19 @@ class RegisteredUserController extends Controller
         $request->validate([
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                'unique:' . User::class,
+            ],
+            'password' => [
+                'required',
+                'confirmed',
+                Rules\Password::defaults(),
+            ],
         ]);
 
         $user = User::create([
@@ -35,9 +46,13 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->addRole('client');
+     $clientRole = \App\Models\Role::where('name', 'client')->first();
 
-        event(new Registered($user));
+if ($clientRole) {
+    $user->roles()->attach($clientRole->id);
+}
+
+event(new Registered($user));
 
         Auth::login($user);
 
