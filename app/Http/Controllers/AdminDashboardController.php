@@ -15,12 +15,37 @@ class AdminDashboardController extends Controller
     {
         $stats = [
             'users' => User::count(),
+
             'services' => Service::count(),
+
+            'publishedServices' => Service::where('statut', 'publie')
+                ->count(),
+
             'categories' => Category::count(),
+
             'reservations' => Reservation::count(),
+
+            'pendingReservations' => Reservation::where('statut', 'en_attente')
+                ->count(),
+
+            'completedReservations' => Reservation::where('statut', 'terminee')
+                ->count(),
+
             'reviews' => Avis::count(),
         ];
 
-        return view('dashboards.admin', compact('stats'));
+        $recentReservations = Reservation::with([
+            'user',
+            'service',
+            'service.user',
+        ])
+            ->latest('created_at')
+            ->limit(8)
+            ->get();
+
+        return view('dashboards.admin', compact(
+            'stats',
+            'recentReservations'
+        ));
     }
 }

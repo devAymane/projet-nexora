@@ -1,384 +1,309 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="text-2xl font-bold text-gray-800">
-                    Admin Dashboard
+                <h2 class="text-xl font-semibold text-gray-800">
+                    Dashboard Administrateur
                 </h2>
 
-                <p class="mt-1 text-sm text-gray-500">
-                    Gérez et surveillez la plateforme Nexora.
+                <p class="text-sm text-gray-500">
+                    Gérez les utilisateurs, services, catégories et réservations.
                 </p>
             </div>
 
-            <span class="rounded-full bg-gray-900 px-4 py-2 text-sm font-semibold text-white">
-                Administrateur
-            </span>
+            <a href="{{ route('users.index') }}"
+               class="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
+                Gérer les utilisateurs
+            </a>
         </div>
     </x-slot>
 
     <div class="py-8">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-            {{-- Welcome --}}
-            <div class="mb-8 rounded-2xl bg-gradient-to-r from-gray-900 to-gray-700 p-6 text-white shadow-sm">
-                <h3 class="text-xl font-bold">
-                    Bienvenue, {{ auth()->user()->prenom }} 👋
-                </h3>
-
-                <p class="mt-2 text-sm text-gray-300">
-                    Voici un aperçu global de l'activité de Nexora.
-                </p>
-            </div>
-
+        <div class="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
 
             {{-- Statistics --}}
-            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
                 {{-- Users --}}
-                <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
-                    <div class="flex items-center justify-between">
+                <div class="rounded-xl bg-white p-6 shadow-sm">
+                    <p class="text-sm font-medium text-gray-500">
+                        Utilisateurs
+                    </p>
 
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">
-                                Utilisateurs
-                            </p>
-
-                            <p class="mt-2 text-3xl font-bold text-gray-900">
-                                {{ $stats['users'] }}
-                            </p>
-                        </div>
-
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-2xl">
-                            👥
-                        </div>
-
-                    </div>
+                    <p class="mt-2 text-3xl font-bold text-gray-900">
+                        {{ $stats['users'] }}
+                    </p>
 
                     <a href="{{ route('users.index') }}"
-                       class="mt-4 inline-block text-sm font-semibold text-blue-600 hover:text-blue-800">
-                        Gérer les utilisateurs →
+                       class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                        Gérer →
                     </a>
                 </div>
-
 
                 {{-- Services --}}
-                <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
-                    <div class="flex items-center justify-between">
+                <div class="rounded-xl bg-white p-6 shadow-sm">
+                    <p class="text-sm font-medium text-gray-500">
+                        Services
+                    </p>
 
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">
-                                Services
-                            </p>
+                    <p class="mt-2 text-3xl font-bold text-gray-900">
+                        {{ $stats['services'] }}
+                    </p>
 
-                            <p class="mt-2 text-3xl font-bold text-gray-900">
-                                {{ $stats['services'] }}
-                            </p>
-                        </div>
-
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-2xl">
-                            🛠️
-                        </div>
-
-                    </div>
-
-                    <a href="{{ route('services.index') }}"
-                       class="mt-4 inline-block text-sm font-semibold text-purple-600 hover:text-purple-800">
-                        Voir les services →
-                    </a>
+                    <p class="mt-2 text-sm text-gray-500">
+                        {{ $stats['publishedServices'] }} publiés
+                    </p>
                 </div>
-
 
                 {{-- Categories --}}
-                <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
-                    <div class="flex items-center justify-between">
+                <div class="rounded-xl bg-white p-6 shadow-sm">
+                    <p class="text-sm font-medium text-gray-500">
+                        Catégories
+                    </p>
 
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">
-                                Catégories
-                            </p>
-
-                            <p class="mt-2 text-3xl font-bold text-gray-900">
-                                {{ $stats['categories'] }}
-                            </p>
-                        </div>
-
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-2xl">
-                            📂
-                        </div>
-
-                    </div>
+                    <p class="mt-2 text-3xl font-bold text-gray-900">
+                        {{ $stats['categories'] }}
+                    </p>
 
                     <a href="{{ route('categories.index') }}"
-                       class="mt-4 inline-block text-sm font-semibold text-green-600 hover:text-green-800">
-                        Gérer les catégories →
+                       class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                        Gérer →
                     </a>
                 </div>
-
 
                 {{-- Reservations --}}
-                <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
-                    <div class="flex items-center justify-between">
+                <div class="rounded-xl bg-white p-6 shadow-sm">
+                    <p class="text-sm font-medium text-gray-500">
+                        Réservations
+                    </p>
 
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">
-                                Réservations
-                            </p>
+                    <p class="mt-2 text-3xl font-bold text-gray-900">
+                        {{ $stats['reservations'] }}
+                    </p>
 
-                            <p class="mt-2 text-3xl font-bold text-gray-900">
-                                {{ $stats['reservations'] }}
-                            </p>
-                        </div>
-
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-2xl">
-                            📅
-                        </div>
-
-                    </div>
-
-                    <a href="{{ route('reservations.index') }}"
-                       class="mt-4 inline-block text-sm font-semibold text-orange-600 hover:text-orange-800">
-                        Voir les réservations →
-                    </a>
+                    <p class="mt-2 text-sm text-yellow-600">
+                        {{ $stats['pendingReservations'] }} en attente
+                    </p>
                 </div>
 
+                {{-- Completed --}}
+                <div class="rounded-xl bg-white p-6 shadow-sm">
+                    <p class="text-sm font-medium text-gray-500">
+                        Terminées
+                    </p>
+
+                    <p class="mt-2 text-3xl font-bold text-green-600">
+                        {{ $stats['completedReservations'] }}
+                    </p>
+
+                    <p class="mt-2 text-sm text-gray-500">
+                        Réservations complétées
+                    </p>
+                </div>
 
                 {{-- Reviews --}}
-                <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
-                    <div class="flex items-center justify-between">
+                <div class="rounded-xl bg-white p-6 shadow-sm">
+                    <p class="text-sm font-medium text-gray-500">
+                        Avis
+                    </p>
 
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">
-                                Avis
-                            </p>
-
-                            <p class="mt-2 text-3xl font-bold text-gray-900">
-                                {{ $stats['reviews'] }}
-                            </p>
-                        </div>
-
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-100 text-2xl">
-                            ⭐
-                        </div>
-
-                    </div>
+                    <p class="mt-2 text-3xl font-bold text-yellow-500">
+                        {{ $stats['reviews'] }}
+                    </p>
 
                     <a href="{{ route('avis.index') }}"
-                       class="mt-4 inline-block text-sm font-semibold text-yellow-600 hover:text-yellow-800">
+                       class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
                         Voir les avis →
                     </a>
                 </div>
 
             </div>
 
+            {{-- Quick actions --}}
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
 
-            {{-- Quick Actions --}}
-            <div class="mt-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+                <a href="{{ route('users.index') }}"
+                   class="rounded-xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
 
-                <div class="mb-6">
-                    <h3 class="text-lg font-bold text-gray-900">
-                        Actions rapides
+                    <div class="text-2xl">👥</div>
+
+                    <h3 class="mt-3 font-semibold text-gray-900">
+                        Utilisateurs
                     </h3>
 
                     <p class="mt-1 text-sm text-gray-500">
-                        Accédez rapidement aux principales fonctionnalités d'administration.
+                        Consulter et gérer les comptes utilisateurs.
                     </p>
-                </div>
 
-                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                </a>
 
-                    <a href="{{ route('users.index') }}"
-                       class="group rounded-xl border border-gray-200 p-5 transition hover:border-blue-300 hover:bg-blue-50">
+                <a href="{{ route('categories.index') }}"
+                   class="rounded-xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
 
-                        <div class="text-2xl">👥</div>
+                    <div class="text-2xl">📂</div>
 
-                        <h4 class="mt-3 font-semibold text-gray-900">
-                            Utilisateurs
-                        </h4>
+                    <h3 class="mt-3 font-semibold text-gray-900">
+                        Catégories
+                    </h3>
 
-                        <p class="mt-1 text-sm text-gray-500">
-                            Gérer les comptes et les rôles.
-                        </p>
+                    <p class="mt-1 text-sm text-gray-500">
+                        Ajouter, modifier ou supprimer des catégories.
+                    </p>
 
-                    </a>
+                </a>
 
+                <a href="{{ route('reservations.index') }}"
+                   class="rounded-xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
 
-                    <a href="{{ route('categories.index') }}"
-                       class="group rounded-xl border border-gray-200 p-5 transition hover:border-green-300 hover:bg-green-50">
+                    <div class="text-2xl">📅</div>
 
-                        <div class="text-2xl">📂</div>
+                    <h3 class="mt-3 font-semibold text-gray-900">
+                        Réservations
+                    </h3>
 
-                        <h4 class="mt-3 font-semibold text-gray-900">
-                            Catégories
-                        </h4>
+                    <p class="mt-1 text-sm text-gray-500">
+                        Consulter toutes les réservations de la plateforme.
+                    </p>
 
-                        <p class="mt-1 text-sm text-gray-500">
-                            Ajouter ou modifier les catégories.
-                        </p>
-
-                    </a>
-
-
-                    <a href="{{ route('services.index') }}"
-                       class="group rounded-xl border border-gray-200 p-5 transition hover:border-purple-300 hover:bg-purple-50">
-
-                        <div class="text-2xl">🛠️</div>
-
-                        <h4 class="mt-3 font-semibold text-gray-900">
-                            Services
-                        </h4>
-
-                        <p class="mt-1 text-sm text-gray-500">
-                            Consulter les services publiés.
-                        </p>
-
-                    </a>
-
-
-                    <a href="{{ route('reservations.index') }}"
-                       class="group rounded-xl border border-gray-200 p-5 transition hover:border-orange-300 hover:bg-orange-50">
-
-                        <div class="text-2xl">📅</div>
-
-                        <h4 class="mt-3 font-semibold text-gray-900">
-                            Réservations
-                        </h4>
-
-                        <p class="mt-1 text-sm text-gray-500">
-                            Consulter les réservations.
-                        </p>
-
-                    </a>
-
-                </div>
+                </a>
 
             </div>
 
+            {{-- Recent reservations --}}
+            <div class="overflow-hidden rounded-xl bg-white shadow-sm">
 
-            {{-- Platform Overview --}}
-            <div class="mt-8 grid gap-6 lg:grid-cols-2">
+                <div class="flex flex-col gap-3 border-b border-gray-200 p-6 sm:flex-row sm:items-center sm:justify-between">
 
-                <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">
+                            Dernières réservations
+                        </h3>
 
-                    <h3 class="text-lg font-bold text-gray-900">
-                        État de la plateforme
-                    </h3>
-
-                    <div class="mt-6 space-y-5">
-
-                        <div>
-                            <div class="mb-2 flex justify-between text-sm">
-                                <span class="text-gray-600">
-                                    Utilisateurs
-                                </span>
-
-                                <span class="font-semibold text-gray-900">
-                                    {{ $stats['users'] }}
-                                </span>
-                            </div>
-
-                            <div class="h-2 rounded-full bg-gray-100">
-                                <div class="h-2 rounded-full bg-blue-500"
-                                     style="width: {{ min($stats['users'] * 5, 100) }}%">
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div>
-                            <div class="mb-2 flex justify-between text-sm">
-                                <span class="text-gray-600">
-                                    Services
-                                </span>
-
-                                <span class="font-semibold text-gray-900">
-                                    {{ $stats['services'] }}
-                                </span>
-                            </div>
-
-                            <div class="h-2 rounded-full bg-gray-100">
-                                <div class="h-2 rounded-full bg-purple-500"
-                                     style="width: {{ min($stats['services'] * 5, 100) }}%">
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div>
-                            <div class="mb-2 flex justify-between text-sm">
-                                <span class="text-gray-600">
-                                    Réservations
-                                </span>
-
-                                <span class="font-semibold text-gray-900">
-                                    {{ $stats['reservations'] }}
-                                </span>
-                            </div>
-
-                            <div class="h-2 rounded-full bg-gray-100">
-                                <div class="h-2 rounded-full bg-orange-500"
-                                     style="width: {{ min($stats['reservations'] * 5, 100) }}%">
-                                </div>
-                            </div>
-                        </div>
-
+                        <p class="text-sm text-gray-500">
+                            Les dernières activités de réservation.
+                        </p>
                     </div>
+
+                    <a href="{{ route('reservations.index') }}"
+                       class="text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                        Toutes les réservations →
+                    </a>
 
                 </div>
 
+                @if ($recentReservations->count())
 
-                <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+                    <div class="divide-y divide-gray-200">
 
-                    <h3 class="text-lg font-bold text-gray-900">
-                        Informations
-                    </h3>
+                        @foreach ($recentReservations as $reservation)
 
-                    <div class="mt-6 space-y-4">
+                            <div class="p-6">
 
-                        <div class="flex items-center justify-between border-b border-gray-100 pb-4">
-                            <span class="text-sm text-gray-500">
-                                Rôle actuel
-                            </span>
+                                <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
-                            <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
-                                Administrateur
-                            </span>
-                        </div>
+                                    <div>
 
-                        <div class="flex items-center justify-between border-b border-gray-100 pb-4">
-                            <span class="text-sm text-gray-500">
-                                Utilisateurs inscrits
-                            </span>
+                                        <div class="flex flex-wrap items-center gap-2">
 
-                            <span class="font-semibold text-gray-900">
-                                {{ $stats['users'] }}
-                            </span>
-                        </div>
+                                            <h4 class="font-semibold text-gray-900">
+                                                {{ $reservation->service->titre }}
+                                            </h4>
 
-                        <div class="flex items-center justify-between border-b border-gray-100 pb-4">
-                            <span class="text-sm text-gray-500">
-                                Services disponibles
-                            </span>
+                                            @if ($reservation->statut === 'en_attente')
+                                                <span class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700">
+                                                    En attente
+                                                </span>
+                                            @elseif ($reservation->statut === 'acceptee')
+                                                <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+                                                    Acceptée
+                                                </span>
+                                            @elseif ($reservation->statut === 'terminee')
+                                                <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                                                    Terminée
+                                                </span>
+                                            @elseif ($reservation->statut === 'refusee')
+                                                <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
+                                                    Refusée
+                                                </span>
+                                            @elseif ($reservation->statut === 'annulee')
+                                                <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+                                                    Annulée
+                                                </span>
+                                            @endif
 
-                            <span class="font-semibold text-gray-900">
-                                {{ $stats['services'] }}
-                            </span>
-                        </div>
+                                        </div>
 
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">
-                                Avis clients
-                            </span>
+                                        <div class="mt-2 space-y-1 text-sm text-gray-500">
 
-                            <span class="font-semibold text-gray-900">
-                                {{ $stats['reviews'] }}
-                            </span>
-                        </div>
+                                            <p>
+                                                Client :
+                                                <span class="font-medium text-gray-700">
+                                                    {{ $reservation->user->prenom }}
+                                                    {{ $reservation->user->nom }}
+                                                </span>
+                                            </p>
+
+                                            <p>
+                                                Prestataire :
+                                                <span class="font-medium text-gray-700">
+                                                    {{ $reservation->service->user->prenom }}
+                                                    {{ $reservation->service->user->nom }}
+                                                </span>
+                                            </p>
+
+                                            <p>
+                                                Date :
+                                                <span class="font-medium text-gray-700">
+                                                    {{ $reservation->date->format('d/m/Y à H:i') }}
+                                                </span>
+                                            </p>
+
+                                            <p>
+                                                Prix :
+                                                <span class="font-medium text-gray-700">
+                                                    {{ number_format($reservation->service->prix, 2) }} MAD
+                                                </span>
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div>
+                                        <a href="{{ route('reservations.show', $reservation) }}"
+                                           class="inline-flex rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                            Voir détails
+                                        </a>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        @endforeach
 
                     </div>
 
-                </div>
+                @else
+
+                    <div class="p-10 text-center">
+
+                        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
+                            <span class="text-2xl">📅</span>
+                        </div>
+
+                        <h4 class="mt-4 font-semibold text-gray-900">
+                            Aucune réservation
+                        </h4>
+
+                        <p class="mt-1 text-sm text-gray-500">
+                            Aucune réservation n'est disponible.
+                        </p>
+
+                    </div>
+
+                @endif
 
             </div>
 
