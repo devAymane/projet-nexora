@@ -1,115 +1,186 @@
 <x-app-layout>
 
-    <div class="min-h-screen bg-slate-50 py-8">
+    <x-slot name="header">
+        <div class="flex flex-col gap-1">
+            <h2 class="text-xl font-semibold text-gray-800">
+                Notifications
+            </h2>
+
+            <p class="text-sm text-gray-500">
+                Retrouvez toutes vos notifications.
+            </p>
+        </div>
+    </x-slot>
+
+    <div class="py-8">
         <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
 
-            <div class="mb-8 flex items-center justify-between gap-4">
-
-                <div>
-                    <h1 class="text-3xl font-bold text-slate-900">
-                        Notifications
-                    </h1>
-
-                    <p class="mt-2 text-sm text-slate-500">
-                        Retrouvez toutes vos notifications.
-                    </p>
-                </div>
-
-                @if(auth()->user()->unreadNotifications->count())
-                    <form
-                        method="POST"
-                        action="{{ route('notifications.readAll') }}"
-                    >
-                        @csrf
-                        @method('PATCH')
-
-                        <button
-                            type="submit"
-                            class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
-                        >
-                            Tout marquer comme lu
-                        </button>
-                    </form>
-                @endif
-
-            </div>
-
-            @if(session('success'))
-                <div class="mb-6 rounded-xl bg-green-50 p-4 text-sm text-green-700">
+            @if (session('success'))
+                <div class="mb-6 rounded-lg bg-green-50 p-4 text-sm text-green-700">
                     {{ session('success') }}
                 </div>
             @endif
 
-            @if($notifications->count())
+            @if ($notifications->count())
 
-                <div class="space-y-3">
+                <div class="mb-4 flex justify-end">
+                    @if (auth()->user()->unreadNotifications->count())
+                        <form method="POST"
+                              action="{{ route('notifications.read-all') }}">
+                            @csrf
+                            @method('PATCH')
 
-                    @foreach($notifications as $notification)
+                            <button type="submit"
+                                    class="text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                                Tout marquer comme lu
+                            </button>
+                        </form>
+                    @endif
+                </div>
 
-                        @php
-                            $data = $notification->data;
-                        @endphp
+                <div class="overflow-hidden rounded-xl bg-white shadow-sm">
 
-                        <div
-                            class="rounded-2xl border p-5 shadow-sm
-                            {{ $notification->read_at
-                                ? 'border-slate-200 bg-white'
-                                : 'border-indigo-200 bg-indigo-50'
-                            }}"
-                        >
+                    <div class="divide-y divide-gray-200">
 
-                            <div class="flex items-start justify-between gap-4">
+                        @foreach ($notifications as $notification)
 
-                                <div class="flex gap-4">
+                            @php
+                                $data = $notification->data;
+                                $type = $data['type'] ?? 'notification';
+                                $message = $data['message'] ?? 'Vous avez une nouvelle notification.';
+                            @endphp
 
-                                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-lg">
-                                        🔔
+                            <div class="{{ $notification->read_at ? 'bg-white' : 'bg-indigo-50/50' }} p-5">
+
+                                <div class="flex items-start gap-4">
+
+                                    {{-- Icon --}}
+                                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full
+                                        {{ $notification->read_at ? 'bg-gray-100' : 'bg-indigo-100' }}">
+
+                                        @if ($type === 'new_message')
+                                            <span class="text-xl">💬</span>
+
+                                        @elseif ($type === 'reservation_created')
+                                            <span class="text-xl">📅</span>
+
+                                        @elseif ($type === 'reservation_accepted')
+                                            <span class="text-xl">✅</span>
+
+                                        @elseif ($type === 'reservation_refused')
+                                            <span class="text-xl">❌</span>
+
+                                        @elseif ($type === 'reservation_completed')
+                                            <span class="text-xl">🎉</span>
+
+                                        @else
+                                            <span class="text-xl">🔔</span>
+                                        @endif
+
                                     </div>
 
-                                    <div>
+                                    {{-- Content --}}
+                                    <div class="min-w-0 flex-1">
 
-                                        <h2 class="font-semibold text-slate-900">
-                                            {{ $data['message'] ?? 'Nouvelle notification' }}
-                                        </h2>
+                                        <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
 
-                                        <p class="mt-1 text-xs text-slate-500">
-                                            {{ $notification->created_at->format('d/m/Y H:i') }}
-                                        </p>
+                                            <div>
+
+                                                @if ($type === 'new_message')
+                                                    <h3 class="font-semibold text-gray-900">
+                                                        Nouveau message
+                                                    </h3>
+
+                                                @elseif ($type === 'reservation_created')
+                                                    <h3 class="font-semibold text-gray-900">
+                                                        Nouvelle réservation
+                                                    </h3>
+
+                                                @elseif ($type === 'reservation_accepted')
+                                                    <h3 class="font-semibold text-gray-900">
+                                                        Réservation acceptée
+                                                    </h3>
+
+                                                @elseif ($type === 'reservation_refused')
+                                                    <h3 class="font-semibold text-gray-900">
+                                                        Réservation refusée
+                                                    </h3>
+
+                                                @elseif ($type === 'reservation_completed')
+                                                    <h3 class="font-semibold text-gray-900">
+                                                        Réservation terminée
+                                                    </h3>
+
+                                                @else
+                                                    <h3 class="font-semibold text-gray-900">
+                                                        Notification
+                                                    </h3>
+                                                @endif
+
+                                                <p class="mt-1 text-sm text-gray-600">
+                                                    {{ $message }}
+                                                </p>
+
+                                            </div>
+
+                                            @if (!$notification->read_at)
+                                                <span class="inline-flex w-fit rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700">
+                                                    Nouveau
+                                                </span>
+                                            @endif
+
+                                        </div>
+
+                                        <div class="mt-3 flex flex-wrap items-center gap-3">
+
+                                            <span class="text-xs text-gray-400">
+                                                {{ $notification->created_at->format('d/m/Y à H:i') }}
+                                            </span>
+
+                                            @if (!$notification->read_at)
+
+                                                <form method="POST"
+                                                      action="{{ route('notifications.read', $notification) }}">
+
+                                                    @csrf
+                                                    @method('PATCH')
+
+                                                    <button type="submit"
+                                                            class="text-xs font-medium text-indigo-600 hover:text-indigo-800">
+                                                        Marquer comme lu
+                                                    </button>
+
+                                                </form>
+
+                                            @endif
+
+                                            @if ($type === 'new_message' && isset($data['conversation_id']))
+
+                                                <a href="{{ route('conversations.show', $data['conversation_id']) }}"
+                                                   class="text-xs font-medium text-gray-600 hover:text-gray-900">
+                                                    Voir la conversation →
+                                                </a>
+
+                                            @elseif (isset($data['reservation_id']))
+
+                                                <a href="{{ route('reservations.show', $data['reservation_id']) }}"
+                                                   class="text-xs font-medium text-gray-600 hover:text-gray-900">
+                                                    Voir la réservation →
+                                                </a>
+
+                                            @endif
+
+                                        </div>
 
                                     </div>
 
                                 </div>
 
-                                @if(!$notification->read_at)
-
-                                    <form
-                                        method="POST"
-                                        action="{{ route('notifications.read', $notification) }}"
-                                    >
-                                        @csrf
-                                        @method('PATCH')
-
-                                        <button
-                                            type="submit"
-                                            class="text-sm font-medium text-indigo-600 hover:text-indigo-800"
-                                        >
-                                            Marquer comme lu
-                                        </button>
-                                    </form>
-
-                                @else
-
-                                    <span class="text-xs text-slate-400">
-                                        Lu
-                                    </span>
-
-                                @endif
-
                             </div>
 
-                        </div>
+                        @endforeach
 
-                    @endforeach
+                    </div>
 
                 </div>
 
@@ -119,18 +190,18 @@
 
             @else
 
-                <div class="rounded-2xl border border-slate-200 bg-white p-12 text-center">
+                <div class="rounded-xl bg-white p-12 text-center shadow-sm">
 
-                    <div class="text-5xl">
-                        🔔
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+                        <span class="text-3xl">🔔</span>
                     </div>
 
-                    <h2 class="mt-4 text-xl font-bold text-slate-900">
+                    <h3 class="mt-5 text-lg font-semibold text-gray-900">
                         Aucune notification
-                    </h2>
+                    </h3>
 
-                    <p class="mt-2 text-sm text-slate-500">
-                        Vous n'avez aucune notification pour le moment.
+                    <p class="mt-2 text-sm text-gray-500">
+                        Vous n'avez aucune nouvelle notification.
                     </p>
 
                 </div>

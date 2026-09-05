@@ -15,6 +15,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ClientDashboardController;
 use App\Http\Controllers\ProviderDashboardController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -261,6 +262,15 @@ Route::patch('/notifications/{notification}/read', [NotificationController::clas
 Route::patch('/notifications/read-all', [NotificationController::class, 'readAll'])
     ->name('notifications.readAll');
 
+
+    Route::get('/notifications', [NotificationController::class, 'index'])
+    ->name('notifications.index');
+
+Route::patch('/notifications/{notification}/read', [NotificationController::class, 'read'])
+    ->name('notifications.read');
+
+Route::patch('/notifications/read-all', [NotificationController::class, 'readAll'])
+    ->name('notifications.read-all');
 
 
 });
