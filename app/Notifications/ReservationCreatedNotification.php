@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use App\Models\Reservation;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class ReservationCreatedNotification extends Notification
