@@ -1,165 +1,215 @@
 <x-app-layout>
-
-    @php
-        $otherUser = auth()->id() === $conversation->client_id
-            ? $conversation->provider
-            : $conversation->client;
-    @endphp
-
     <x-slot name="header">
         <div class="flex items-center gap-3">
-
-            <a href="{{ route('conversations.index') }}"
+            <a href="{{ route('reservations.index') }}"
                class="text-gray-500 hover:text-gray-900">
                 ←
             </a>
 
-            @if ($otherUser->photo)
-                <img src="{{ asset('storage/' . $otherUser->photo) }}"
-                     alt="{{ $otherUser->prenom }}"
-                     class="h-10 w-10 rounded-full object-cover">
-            @else
-                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 font-semibold text-indigo-700">
-                    {{ strtoupper(substr($otherUser->prenom, 0, 1)) }}
-                </div>
-            @endif
-
             <div>
-                <h2 class="font-semibold text-gray-800">
-                    {{ $otherUser->prenom }}
-                    {{ $otherUser->nom }}
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    Détails de la réservation
                 </h2>
 
-                <p class="text-xs text-gray-500">
-                    {{ $otherUser->hasRole('provider') ? 'Prestataire' : 'Client' }}
+                <p class="text-sm text-gray-500">
+                    Réservation #{{ $reservation->id }}
                 </p>
             </div>
-
         </div>
     </x-slot>
 
     <div class="py-8">
+        <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-6">
 
-        <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            {{-- Success message --}}
+            @if (session('success'))
+                <div class="rounded-lg bg-green-50 p-4 text-sm text-green-700">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-            <div class="flex h-[650px] flex-col overflow-hidden rounded-xl bg-white shadow-sm">
+            {{-- Error message --}}
+            @if (session('error'))
+                <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700">
+                    {{ session('error') }}
+                </div>
+            @endif
 
-                {{-- Chat header --}}
+            {{-- Reservation information --}}
+            <div class="overflow-hidden rounded-xl bg-white shadow-sm">
                 <div class="border-b border-gray-200 px-6 py-4">
-
                     <h3 class="font-semibold text-gray-900">
-                        Conversation
+                        Informations de la réservation
                     </h3>
-
-                    <p class="text-sm text-gray-500">
-                        Échangez directement avec {{ $otherUser->prenom }}.
-                    </p>
-
                 </div>
 
-                {{-- Messages --}}
-                <div id="messages"
-                     class="flex-1 space-y-4 overflow-y-auto bg-gray-50 p-6">
+                <div class="grid gap-6 p-6 md:grid-cols-2">
 
-                    @forelse ($conversation->messages as $message)
+                    {{-- Service --}}
+                    <div>
+                        <p class="text-sm text-gray-500">Service</p>
 
-                        @php
-                            $isMine = $message->user_id === auth()->id();
-                        @endphp
+                        <p class="mt-1 font-semibold text-gray-900">
+                            {{ $reservation->service->titre }}
+                        </p>
+                    </div>
 
-                        <div class="flex {{ $isMine ? 'justify-end' : 'justify-start' }}">
+                    {{-- Provider --}}
+                    <div>
+                        <p class="text-sm text-gray-500">Prestataire</p>
 
-                            <div class="max-w-[80%]">
+                        <p class="mt-1 font-semibold text-gray-900">
+                            {{ $reservation->service->user->prenom }}
+                            {{ $reservation->service->user->nom }}
+                        </p>
+                    </div>
 
-                                <div class="{{ $isMine
-                                    ? 'rounded-2xl rounded-br-md bg-indigo-600 text-white'
-                                    : 'rounded-2xl rounded-bl-md bg-white text-gray-800 border border-gray-200'
-                                }} px-4 py-3 shadow-sm">
+                    {{-- Client --}}
+                    <div>
+                        <p class="text-sm text-gray-500">Client</p>
 
-                                    <p class="whitespace-pre-wrap text-sm leading-6">
-                                        {{ $message->contenu }}
-                                    </p>
+                        <p class="mt-1 font-semibold text-gray-900">
+                            {{ $reservation->user->prenom }}
+                            {{ $reservation->user->nom }}
+                        </p>
+                    </div>
 
-                                </div>
+                    {{-- Date --}}
+                    <div>
+                        <p class="text-sm text-gray-500">Date</p>
 
-                                <div class="mt-1 px-1 text-xs text-gray-400 {{ $isMine ? 'text-right' : 'text-left' }}">
-                                    {{ $message->date_envoi->format('d/m/Y H:i') }}
+                        <p class="mt-1 font-semibold text-gray-900">
+                            {{ $reservation->date->format('d/m/Y H:i') }}
+                        </p>
+                    </div>
 
-                                    @if ($isMine)
-                                        · {{ $message->lu ? 'Lu' : 'Envoyé' }}
-                                    @endif
-                                </div>
+                    {{-- Price --}}
+                    <div>
+                        <p class="text-sm text-gray-500">Prix</p>
 
-                            </div>
+                        <p class="mt-1 font-semibold text-gray-900">
+                            {{ number_format($reservation->service->prix, 2, ',', ' ') }} DH
+                        </p>
+                    </div>
 
-                        </div>
+                    {{-- Status --}}
+                    <div>
+                        <p class="text-sm text-gray-500">Statut</p>
 
-                    @empty
+                        <span class="mt-1 inline-flex rounded-full px-3 py-1 text-sm font-medium
+                            @switch($reservation->statut)
+                                @case('en_attente')
+                                    bg-yellow-100 text-yellow-800
+                                    @break
 
-                        <div class="flex h-full items-center justify-center text-center">
+                                @case('acceptee')
+                                    bg-blue-100 text-blue-800
+                                    @break
 
-                            <div>
-                                <div class="text-4xl">💬</div>
+                                @case('refusee')
+                                    bg-red-100 text-red-800
+                                    @break
 
-                                <h3 class="mt-3 font-semibold text-gray-900">
-                                    Aucun message
-                                </h3>
+                                @case('terminee')
+                                    bg-green-100 text-green-800
+                                    @break
 
-                                <p class="mt-1 text-sm text-gray-500">
-                                    Envoyez votre premier message.
-                                </p>
-                            </div>
+                                @case('annulee')
+                                    bg-gray-100 text-gray-800
+                                    @break
 
-                        </div>
-
-                    @endforelse
+                                @default
+                                    bg-gray-100 text-gray-800
+                            @endswitch
+                        ">
+                            {{ ucfirst(str_replace('_', ' ', $reservation->statut)) }}
+                        </span>
+                    </div>
 
                 </div>
+            </div>
 
-                {{-- Send message --}}
-                <div class="border-t border-gray-200 bg-white p-4">
+            {{-- Client message --}}
+            @if ($reservation->message)
+                <div class="overflow-hidden rounded-xl bg-white shadow-sm">
+                    <div class="border-b border-gray-200 px-6 py-4">
+                        <h3 class="font-semibold text-gray-900">
+                            Message du client
+                        </h3>
+                    </div>
 
-                    @if ($errors->any())
-                        <div class="mb-3 rounded-lg bg-red-50 p-3 text-sm text-red-700">
-                            {{ $errors->first() }}
-                        </div>
-                    @endif
+                    <div class="p-6">
+                        <p class="whitespace-pre-wrap text-sm leading-6 text-gray-700">
+                            {{ $reservation->message }}
+                        </p>
+                    </div>
+                </div>
+            @endif
 
+            {{-- Actions --}}
+            <div class="flex flex-wrap gap-3">
+
+                {{-- Client can cancel pending reservation --}}
+                @if (auth()->id() === $reservation->user_id && $reservation->statut === 'en_attente')
                     <form method="POST"
-                          action="{{ route('messages.store', $conversation) }}"
-                          class="flex items-end gap-3">
-
+                          action="{{ route('reservations.cancel', $reservation) }}">
                         @csrf
-
-                        <div class="flex-1">
-
-                            <label for="contenu" class="sr-only">
-                                Message
-                            </label>
-
-                            <textarea name="contenu"
-                                      id="contenu"
-                                      rows="2"
-                                      required
-                                      maxlength="2000"
-                                      placeholder="Écrivez votre message..."
-                                      class="w-full resize-none rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">{{ old('contenu') }}</textarea>
-
-                        </div>
+                        @method('PATCH')
 
                         <button type="submit"
-                                class="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700">
-                            Envoyer
+                                class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">
+                            Annuler la réservation
                         </button>
+                    </form>
+                @endif
 
+                {{-- Provider actions --}}
+                @if (
+                    auth()->id() === $reservation->service->user_id
+                    && $reservation->statut === 'en_attente'
+                )
+                    <form method="POST"
+                          action="{{ route('reservations.accept', $reservation) }}">
+                        @csrf
+                        @method('PATCH')
+
+                        <button type="submit"
+                                class="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700">
+                            Accepter
+                        </button>
                     </form>
 
-                </div>
+                    <form method="POST"
+                          action="{{ route('reservations.refuse', $reservation) }}">
+                        @csrf
+                        @method('PATCH')
+
+                        <button type="submit"
+                                class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">
+                            Refuser
+                        </button>
+                    </form>
+                @endif
+
+                {{-- Provider can complete accepted reservation --}}
+                @if (
+                    auth()->id() === $reservation->service->user_id
+                    && $reservation->statut === 'acceptee'
+                )
+                    <form method="POST"
+                          action="{{ route('reservations.complete', $reservation) }}">
+                        @csrf
+                        @method('PATCH')
+
+                        <button type="submit"
+                                class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
+                            Marquer comme terminée
+                        </button>
+                    </form>
+                @endif
 
             </div>
 
         </div>
-
     </div>
-
 </x-app-layout>

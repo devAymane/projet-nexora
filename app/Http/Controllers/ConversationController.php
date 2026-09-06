@@ -52,16 +52,23 @@ class ConversationController extends Controller
         return redirect()->route('conversations.show', $conversation);
     }
 
-    public function show(Conversation $conversation): View
-    {
-        Gate::authorize('view', $conversation);
+public function show(Conversation $conversation): View
+{
+    Gate::authorize('view', $conversation);
 
-        $conversation->load([
-            'client',
-            'provider',
-            'messages.user',
+    $conversation->load([
+        'client',
+        'provider',
+        'messages.user',
+    ]);
+
+    $conversation->messages()
+        ->where('user_id', '!=', auth()->id())
+        ->where('lu', false)
+        ->update([
+            'lu' => true,
         ]);
 
-        return view('conversations.show', compact('conversation'));
-    }
+    return view('conversations.show', compact('conversation'));
+}
 }

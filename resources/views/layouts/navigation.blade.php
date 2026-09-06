@@ -8,7 +8,7 @@
 
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ auth()->check() ? route('dashboard') : route('services.index') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
@@ -16,9 +16,21 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
 
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                    @auth
+                        <x-nav-link
+                            :href="route('dashboard')"
+                            :active="request()->routeIs('dashboard')"
+                        >
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                    @else
+                        <x-nav-link
+                            :href="route('services.index')"
+                            :active="request()->routeIs('services.index')"
+                        >
+                            {{ __('Services') }}
+                        </x-nav-link>
+                    @endauth
 
                 </div>
 
@@ -27,107 +39,131 @@
             <!-- Right Side -->
             <div class="hidden sm:flex sm:items-center sm:ms-6 gap-4">
 
-                <!-- Notifications -->
-                <a href="{{ route('notifications.index') }}"
-                   class="relative inline-flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition">
+                @auth
 
-                    <span class="text-lg">🔔</span>
+                    <!-- Notifications -->
+                    <a href="{{ route('notifications.index') }}"
+                       class="relative inline-flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition">
 
-                    <span>Notifications</span>
+                        <span class="text-lg">🔔</span>
 
-                    @php
-                        $unreadNotificationsCount = auth()->user()->unreadNotifications()->count();
-                    @endphp
+                        <span>Notifications</span>
 
-                    @if ($unreadNotificationsCount > 0)
-                        <span class="inline-flex min-w-[20px] h-5 items-center justify-center rounded-full bg-red-600 px-1.5 text-xs font-bold text-white">
-                            {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
-                        </span>
-                    @endif
+                        @php
+                            $unreadNotificationsCount = auth()->user()
+                                ->unreadNotifications()
+                                ->count();
+                        @endphp
 
-                </a>
+                        @if ($unreadNotificationsCount > 0)
+                            <span class="inline-flex min-w-[20px] h-5 items-center justify-center rounded-full bg-red-600 px-1.5 text-xs font-bold text-white">
+                                {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
+                            </span>
+                        @endif
 
-                <!-- Settings Dropdown -->
-                <x-dropdown align="right" width="48">
+                    </a>
 
-                    <x-slot name="trigger">
+                    <!-- Settings Dropdown -->
+                    <x-dropdown align="right" width="48">
 
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                        <x-slot name="trigger">
 
-                            <div>
-                                {{ Auth::user()->prenom }} {{ Auth::user()->nom }}
-                            </div>
+                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
 
-                            <div class="ms-1">
+                                <div>
+                                    {{ Auth::user()->prenom }} {{ Auth::user()->nom }}
+                                </div>
 
-                                <svg class="fill-current h-4 w-4"
-                                     xmlns="http://www.w3.org/2000/svg"
-                                     viewBox="0 0 20 20">
+                                <div class="ms-1">
 
-                                    <path fill-rule="evenodd"
-                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                          clip-rule="evenodd" />
+                                    <svg class="fill-current h-4 w-4"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 20 20">
 
-                                </svg>
+                                        <path fill-rule="evenodd"
+                                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                              clip-rule="evenodd" />
 
-                            </div>
+                                    </svg>
 
-                        </button>
+                                </div>
 
-                    </x-slot>
+                            </button>
 
-                    <x-slot name="content">
+                        </x-slot>
 
-                        <!-- Profile -->
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                        <x-slot name="content">
 
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-
-                                {{ __('Log Out') }}
-
+                            <!-- Profile -->
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
                             </x-dropdown-link>
 
-                        </form>
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logout') }}">
 
-                    </x-slot>
+                                @csrf
 
-                </x-dropdown>
+                                <x-dropdown-link
+                                    :href="route('logout')"
+                                    onclick="event.preventDefault(); this.closest('form').submit();"
+                                >
+                                    {{ __('Log Out') }}
+                                </x-dropdown-link>
+
+                            </form>
+
+                        </x-slot>
+
+                    </x-dropdown>
+
+                @else
+
+                    <!-- Guest Actions -->
+                    <a href="{{ route('login') }}"
+                       class="text-sm font-medium text-gray-700 hover:text-gray-900">
+                        {{ __('Log In') }}
+                    </a>
+
+                    <a href="{{ route('register') }}"
+                       class="text-sm font-medium text-gray-700 hover:text-gray-900">
+                        {{ __('Register') }}
+                    </a>
+
+                @endauth
 
             </div>
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
 
-                <button @click="open = ! open"
-                        class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                <button
+                    @click="open = ! open"
+                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                >
 
                     <svg class="h-6 w-6"
                          stroke="currentColor"
                          fill="none"
                          viewBox="0 0 24 24">
 
-                        <path :class="{'hidden': open, 'inline-flex': ! open }"
-                              class="inline-flex"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M4 6h16M4 12h16M4 18h16" />
+                        <path
+                            :class="{'hidden': open, 'inline-flex': ! open }"
+                            class="inline-flex"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
 
-                        <path :class="{'hidden': ! open, 'inline-flex': open }"
-                              class="hidden"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M6 18L18 6M6 6l12 12" />
+                        <path
+                            :class="{'hidden': ! open, 'inline-flex': open }"
+                            class="hidden"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
 
                     </svg>
 
@@ -140,95 +176,119 @@
 
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}"
-         class="hidden sm:hidden">
+    <div
+        :class="{'block': open, 'hidden': ! open}"
+        class="hidden sm:hidden"
+    >
 
         <div class="pt-2 pb-3 space-y-1">
 
-            <x-responsive-nav-link :href="route('dashboard')"
-                                   :active="request()->routeIs('dashboard')">
+            @auth
 
-                {{ __('Dashboard') }}
+                <x-responsive-nav-link
+                    :href="route('dashboard')"
+                    :active="request()->routeIs('dashboard')"
+                >
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
 
-            </x-responsive-nav-link>
+                <!-- Mobile Notifications -->
+                <x-responsive-nav-link
+                    :href="route('notifications.index')"
+                    :active="request()->routeIs('notifications.*')"
+                >
 
+                    <div class="flex items-center justify-between w-full">
 
-            <!-- Mobile Notifications -->
-            <x-responsive-nav-link :href="route('notifications.index')"
-                                   :active="request()->routeIs('notifications.*')">
-
-                <div class="flex items-center justify-between w-full">
-
-                    <span class="flex items-center gap-2">
-                        <span>🔔</span>
-                        <span>Notifications</span>
-                    </span>
-
-                    @php
-                        $unreadNotificationsCount = auth()->user()->unreadNotifications()->count();
-                    @endphp
-
-                    @if ($unreadNotificationsCount > 0)
-
-                        <span class="inline-flex min-w-[20px] h-5 items-center justify-center rounded-full bg-red-600 px-1.5 text-xs font-bold text-white">
-
-                            {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
-
+                        <span class="flex items-center gap-2">
+                            <span>🔔</span>
+                            <span>Notifications</span>
                         </span>
 
-                    @endif
+                        @php
+                            $unreadNotificationsCount = auth()->user()
+                                ->unreadNotifications()
+                                ->count();
+                        @endphp
 
-                </div>
+                        @if ($unreadNotificationsCount > 0)
 
-            </x-responsive-nav-link>
+                            <span class="inline-flex min-w-[20px] h-5 items-center justify-center rounded-full bg-red-600 px-1.5 text-xs font-bold text-white">
+                                {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
+                            </span>
 
-        </div>
+                        @endif
 
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-
-            <div class="px-4">
-
-                <div class="font-medium text-base text-gray-800">
-                    {{ Auth::user()->prenom }} {{ Auth::user()->nom }}
-                </div>
-
-                <div class="font-medium text-sm text-gray-500">
-                    {{ Auth::user()->email }}
-                </div>
-
-            </div>
-
-            <div class="mt-3 space-y-1">
-
-                <!-- Profile -->
-                <x-responsive-nav-link :href="route('profile.edit')">
-
-                    {{ __('Profile') }}
+                    </div>
 
                 </x-responsive-nav-link>
 
+            @else
 
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
+                <x-responsive-nav-link
+                    :href="route('services.index')"
+                    :active="request()->routeIs('services.index')"
+                >
+                    {{ __('Services') }}
+                </x-responsive-nav-link>
 
-                    @csrf
+                <x-responsive-nav-link :href="route('login')">
+                    {{ __('Log In') }}
+                </x-responsive-nav-link>
 
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
+                <x-responsive-nav-link :href="route('register')">
+                    {{ __('Register') }}
+                </x-responsive-nav-link>
 
-                        {{ __('Log Out') }}
-
-                    </x-responsive-nav-link>
-
-                </form>
-
-            </div>
+            @endauth
 
         </div>
 
+
+        @auth
+
+            <!-- Responsive Settings Options -->
+            <div class="pt-4 pb-1 border-t border-gray-200">
+
+                <div class="px-4">
+
+                    <div class="font-medium text-base text-gray-800">
+                        {{ Auth::user()->prenom }} {{ Auth::user()->nom }}
+                    </div>
+
+                    <div class="font-medium text-sm text-gray-500">
+                        {{ Auth::user()->email }}
+                    </div>
+
+                </div>
+
+                <div class="mt-3 space-y-1">
+
+                    <!-- Profile -->
+                    <x-responsive-nav-link :href="route('profile.edit')">
+                        {{ __('Profile') }}
+                    </x-responsive-nav-link>
+
+                    <!-- Authentication -->
+                    <form method="POST" action="{{ route('logout') }}">
+
+                        @csrf
+
+                        <x-responsive-nav-link
+                            :href="route('logout')"
+                            onclick="event.preventDefault(); this.closest('form').submit();"
+                        >
+                            {{ __('Log Out') }}
+                        </x-responsive-nav-link>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        @endauth
+
     </div>
 
-</nav>  
+</nav>

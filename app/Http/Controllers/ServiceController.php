@@ -94,14 +94,14 @@ class ServiceController extends Controller
     /**
      * Show the form for creating a new service.
      */
-    public function create(): View
-    {
-        $this->authorize('create', Service::class);
+public function create(): View
+{
+    $this->authorize('create', Service::class);
 
-        $categories = Category::orderBy('nom')->get();
+    $categories = Category::orderBy('nom')->get();
 
-        return view('services.create', compact('categories'));
-    }
+    return view('services.create', compact('categories'));
+}
 
     /**
      * Store a newly created service.

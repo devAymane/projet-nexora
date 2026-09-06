@@ -19,7 +19,7 @@ class MessageController extends Controller
         Gate::authorize('create', Message::class);
 
         $validated = $request->validate([
-            'contenu' => ['required', 'string', 'max:5000'],
+            'contenu' => ['required', 'string', 'max:2000'],
         ]);
 
         $message = $conversation->messages()->create([
@@ -29,7 +29,6 @@ class MessageController extends Controller
             'date_envoi' => now(),
         ]);
 
-        // Notification pour l'autre participant
         if ($request->user()->id === $conversation->client_id) {
             $recipient = $conversation->provider;
         } else {
@@ -40,7 +39,9 @@ class MessageController extends Controller
             new NewMessageNotification($message)
         );
 
-        return back()->with('success', 'Message envoyé.');
+        return redirect()
+            ->route('conversations.show', $conversation)
+            ->with('success', 'Message envoyé.');
     }
 
     public function read(
