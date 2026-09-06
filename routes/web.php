@@ -29,17 +29,17 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 | Services
 |--------------------------------------------------------------------------
-| La liste et le détail des services publiés sont accessibles
-| sans authentification.
-|
-| IMPORTANT :
-| Les routes statiques comme /services/create doivent être
-| déclarées AVANT /services/{service}.
+| Liste et détail des services publiés accessibles publiquement.
+| Les actions de création/modification/suppression nécessitent une
+| authentification.
 |--------------------------------------------------------------------------
 */
 
 Route::get('/services', [ServiceController::class, 'index'])
     ->name('services.index');
+
+Route::get('/services/{service}', [ServiceController::class, 'show'])
+    ->name('services.show');
 
 Route::middleware('auth')->group(function () {
 
@@ -59,12 +59,9 @@ Route::middleware('auth')->group(function () {
         ->name('services.destroy');
 });
 
-Route::get('/services/{service}', [ServiceController::class, 'show'])
-    ->name('services.show');
-
 /*
 |--------------------------------------------------------------------------
-| Dashboard
+| Dashboard Redirect
 |--------------------------------------------------------------------------
 */
 
@@ -84,7 +81,7 @@ Route::get('/dashboard', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Profile Routes
+| Profile
 |--------------------------------------------------------------------------
 */
 
@@ -102,46 +99,7 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Admin Test Route
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth', 'nexora.role:admin'])->group(function () {
-
-    Route::get('/admin/test', function () {
-        return 'Admin access OK';
-    })->name('admin.test');
-});
-
-/*
-|--------------------------------------------------------------------------
-| Client Test Route
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth', 'nexora.role:client'])->group(function () {
-
-    Route::get('/client/test', function () {
-        return 'Client access OK';
-    })->name('client.test');
-});
-
-/*
-|--------------------------------------------------------------------------
-| Provider Test Route
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth', 'nexora.role:provider'])->group(function () {
-
-    Route::get('/provider/test', function () {
-        return 'Provider access OK';
-    })->name('provider.test');
-});
-
-/*
-|--------------------------------------------------------------------------
-| Authentication Routes
+| Authentication
 |--------------------------------------------------------------------------
 */
 
@@ -149,7 +107,7 @@ require __DIR__ . '/auth.php';
 
 /*
 |--------------------------------------------------------------------------
-| Categories Routes
+| Categories - Admin
 |--------------------------------------------------------------------------
 */
 
@@ -160,7 +118,7 @@ Route::middleware(['auth', 'nexora.role:admin'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Users Routes
+| Users - Admin
 |--------------------------------------------------------------------------
 */
 
@@ -174,7 +132,7 @@ Route::middleware(['auth', 'nexora.role:admin'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Reservations Routes
+| Reservations
 |--------------------------------------------------------------------------
 */
 
@@ -207,7 +165,7 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Avis / Reviews Routes
+| Avis / Reviews
 |--------------------------------------------------------------------------
 */
 
@@ -225,7 +183,7 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Favorites Routes
+| Favorites
 |--------------------------------------------------------------------------
 */
 
@@ -243,7 +201,7 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Conversations & Messages Routes
+| Conversations & Messages
 |--------------------------------------------------------------------------
 */
 
@@ -267,7 +225,7 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Notifications Routes
+| Notifications
 |--------------------------------------------------------------------------
 */
 
@@ -277,10 +235,7 @@ Route::middleware('auth')->group(function () {
         ->name('notifications.index');
 
     /*
-    |--------------------------------------------------------------------------
-    | IMPORTANT:
-    | read-all must come BEFORE /{notification}/read
-    |--------------------------------------------------------------------------
+    | read-all doit être déclaré avant /{notification}/read
     */
 
     Route::patch('/notifications/read-all', [NotificationController::class, 'readAll'])
@@ -310,23 +265,3 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('nexora.role:admin')
         ->name('admin.dashboard');
 });
-
-/*
-|--------------------------------------------------------------------------
-| Admin User Management
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth', 'verified', 'nexora.role:admin'])
-    ->prefix('admin')
-    ->group(function () {
-
-        Route::get('/users', [UserController::class, 'index'])
-            ->name('admin.users.index');
-
-        Route::patch('/users/{user}/role', [UserController::class, 'updateRole'])
-            ->name('admin.users.update-role');
-
-        Route::delete('/users/{user}', [UserController::class, 'destroy'])
-            ->name('admin.users.destroy');
-    });
