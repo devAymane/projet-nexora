@@ -1,58 +1,118 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Nexora — Smart Freelance Marketplace
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <strong>Plateforme web de mise en relation entre clients et prestataires</strong>
 </p>
 
-## About Laravel
+<p align="center">
+  Laravel • PHP • Blade • TailwindCSS • JavaScript • MySQL
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📌 À propos du projet
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Nexora** est une plateforme web multi-services développée dans le cadre d'un **Projet Fil Rouge Full-Stack**.
 
-## Learning Laravel
+L'objectif de la plateforme est de permettre à des **clients** de rechercher et réserver des services proposés par des **prestataires**, tout en offrant un espace d'administration permettant de gérer les utilisateurs, les catégories, les services, les réservations et les avis.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Le projet met en œuvre une architecture **MVC** basée sur Laravel, avec une interface responsive développée avec **Blade, TailwindCSS et JavaScript**.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 🎯 Objectifs
 
-## Agentic Development
+Nexora a pour objectifs de :
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- mettre en relation clients et prestataires ;
+- permettre la publication et la recherche de services ;
+- gérer le cycle complet des réservations ;
+- faciliter la communication entre clients et prestataires ;
+- permettre l'évaluation des services ;
+- proposer des espaces dédiés aux différents rôles ;
+- garantir une gestion sécurisée des accès ;
+- mettre en œuvre les Events, Listeners, Jobs, Queues et Notifications ;
+- assurer la qualité du code grâce aux tests automatisés ;
+- préparer l'application au déploiement avec Docker et CI/CD.
 
-```bash
-composer require laravel/boost --dev
+---
 
-php artisan boost:install
-```
+## 👥 Rôles utilisateurs
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Nexora repose sur trois rôles principaux.
 
-## Contributing
+### 👤 Client
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Le client peut :
 
-## Code of Conduct
+- créer un compte ;
+- se connecter ;
+- gérer son profil ;
+- rechercher des services ;
+- consulter les détails d'un service ;
+- effectuer une réservation ;
+- suivre ses réservations ;
+- annuler une réservation ;
+- ajouter des services aux favoris ;
+- discuter avec les prestataires ;
+- consulter et rédiger des avis ;
+- consulter ses notifications.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 💼 Prestataire
 
-## Security Vulnerabilities
+Le prestataire peut :
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- gérer son profil ;
+- créer des services ;
+- modifier ses services ;
+- supprimer ses services ;
+- gérer les réservations reçues ;
+- accepter ou refuser une réservation ;
+- terminer une réservation ;
+- communiquer avec les clients ;
+- consulter les avis ;
+- consulter ses notifications.
 
-## License
+### 🛡️ Administrateur
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+L'administrateur dispose d'un espace dédié permettant de :
+
+- consulter les statistiques ;
+- gérer les utilisateurs ;
+- gérer les rôles ;
+- gérer les catégories ;
+- gérer les services ;
+- gérer les réservations ;
+- gérer les avis.
+
+---
+
+# ✨ Fonctionnalités
+
+## 🔐 Authentification
+
+L'authentification est basée sur **Laravel Breeze**.
+
+Fonctionnalités :
+
+- inscription ;
+- connexion ;
+- déconnexion ;
+- vérification de l'adresse e-mail ;
+- mot de passe oublié ;
+- réinitialisation du mot de passe ;
+- gestion du profil ;
+- protection des routes.
+
+---
+
+## 🔑 Rôles et permissions
+
+La gestion des rôles utilise **Laratrust**.
+
+Rôles :
+
+```text
+client
+provider
+admin
