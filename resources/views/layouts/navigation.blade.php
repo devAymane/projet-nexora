@@ -1,53 +1,181 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-
-    <!-- Primary Navigation Menu -->
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-200 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        <div class="flex justify-between items-center h-20">
 
-            <div class="flex">
+            {{-- LEFT --}}
+            <div class="flex items-center gap-10">
 
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ auth()->check() ? route('dashboard') : route('services.index') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
-                </div>
+                {{-- Logo --}}
+                <a href="{{ route('services.index') }}" class="flex items-center gap-2 shrink-0">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">N</span>
+                    </div>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <span class="text-2xl font-bold text-gray-900">
+                        Nexora
+                    </span>
+                </a>
 
+                {{-- Desktop Navigation --}}
+                <div class="hidden lg:flex items-center gap-7">
+
+                    {{-- Guest --}}
+                    @guest
+                        <a href="{{ route('services.index') }}"
+                           class="text-sm font-medium transition
+                           {{ request()->routeIs('services.index') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                            Services
+                        </a>
+
+                        <a href="{{ route('login') }}"
+                           class="text-sm font-medium text-gray-600 hover:text-indigo-600 transition">
+                            Comment ça marche
+                        </a>
+                    @endguest
+
+
+                    {{-- Client --}}
                     @auth
-                        <x-nav-link
-                            :href="route('dashboard')"
-                            :active="request()->routeIs('dashboard')"
-                        >
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
-                    @else
-                        <x-nav-link
-                            :href="route('services.index')"
-                            :active="request()->routeIs('services.index')"
-                        >
-                            {{ __('Services') }}
-                        </x-nav-link>
+                        @if(auth()->user()->hasRole('client'))
+
+                            <a href="{{ route('services.index') }}"
+                               class="text-sm font-medium transition
+                               {{ request()->routeIs('services.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                                Services
+                            </a>
+
+                            <a href="{{ route('reservations.index') }}"
+                               class="text-sm font-medium transition
+                               {{ request()->routeIs('reservations.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                                Réservations
+                            </a>
+
+                            <a href="{{ route('favorites.index') }}"
+                               class="text-sm font-medium transition
+                               {{ request()->routeIs('favorites.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                                Favoris
+                            </a>
+
+                            <a href="{{ route('conversations.index') }}"
+                               class="text-sm font-medium transition
+                               {{ request()->routeIs('conversations.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                                Messages
+                            </a>
+
+                        @elseif(auth()->user()->hasRole('provider'))
+
+                            {{-- Provider --}}
+
+                            <a href="{{ route('services.index') }}"
+                               class="text-sm font-medium transition
+                               {{ request()->routeIs('services.index') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                                Services
+                            </a>
+
+                            <a href="{{ route('services.create') }}"
+                               class="text-sm font-medium transition
+                               {{ request()->routeIs('services.create') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                                Mes services
+                            </a>
+
+                            <a href="{{ route('reservations.index') }}"
+                               class="text-sm font-medium transition
+                               {{ request()->routeIs('reservations.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                                Réservations
+                            </a>
+
+                            <a href="{{ route('conversations.index') }}"
+                               class="text-sm font-medium transition
+                               {{ request()->routeIs('conversations.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                                Messages
+                            </a>
+
+                        @elseif(auth()->user()->hasRole('admin'))
+
+                            {{-- Admin --}}
+
+                            <a href="{{ route('admin.dashboard') }}"
+                               class="text-sm font-medium transition
+                               {{ request()->routeIs('admin.dashboard') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                                Dashboard
+                            </a>
+
+                            <a href="{{ route('users.index') }}"
+                               class="text-sm font-medium transition
+                               {{ request()->routeIs('users.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                                Utilisateurs
+                            </a>
+
+                            <a href="{{ route('categories.index') }}"
+                               class="text-sm font-medium transition
+                               {{ request()->routeIs('categories.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                                Catégories
+                            </a>
+
+                            <a href="{{ route('services.index') }}"
+                               class="text-sm font-medium text-gray-600 hover:text-indigo-600 transition">
+                                Services
+                            </a>
+
+                            <a href="{{ route('reservations.index') }}"
+                               class="text-sm font-medium text-gray-600 hover:text-indigo-600 transition">
+                                Réservations
+                            </a>
+
+                            <a href="{{ route('avis.index') }}"
+                               class="text-sm font-medium transition
+                               {{ request()->routeIs('avis.*') ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600' }}">
+                                Avis
+                            </a>
+
+                        @endif
                     @endauth
 
                 </div>
-
             </div>
 
-            <!-- Right Side -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6 gap-4">
 
-                @auth
+            {{-- RIGHT --}}
+            <div class="hidden lg:flex items-center gap-5">
 
-                    <!-- Notifications -->
+                @guest
+
+                    {{-- Guest --}}
+                    <a href="{{ route('login') }}"
+                       class="text-sm font-semibold text-gray-700 hover:text-indigo-600 transition">
+                        Connexion
+                    </a>
+
+                    <a href="{{ route('register') }}"
+                       class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition shadow-sm">
+                        S'inscrire
+                    </a>
+
+                @else
+
+                    {{-- Notifications --}}
                     <a href="{{ route('notifications.index') }}"
-                       class="relative inline-flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition">
+                       class="relative w-10 h-10 rounded-xl flex items-center justify-center
+                              text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition">
 
-                        <span class="text-lg">🔔</span>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             fill="none"
+                             viewBox="0 0 24 24"
+                             stroke-width="1.8"
+                             stroke="currentColor"
+                             class="w-5 h-5">
 
-                        <span>Notifications</span>
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M14.857 17.082a23.848 23.848 0 0 1-5.714 0
+                                     A3.375 3.375 0 0 1 6.75 13.77V10.5
+                                     a5.25 5.25 0 0 1 10.5 0v3.27
+                                     a3.375 3.375 0 0 1-2.393 3.312Z" />
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M9.75 17.25a2.25 2.25 0 0 0 4.5 0" />
+                        </svg>
 
                         @php
                             $unreadNotificationsCount = auth()->user()
@@ -55,116 +183,156 @@
                                 ->count();
                         @endphp
 
-                        @if ($unreadNotificationsCount > 0)
-                            <span class="inline-flex min-w-[20px] h-5 items-center justify-center rounded-full bg-red-600 px-1.5 text-xs font-bold text-white">
+                        @if($unreadNotificationsCount > 0)
+                            <span class="absolute -top-1 -right-1 min-w-[19px] h-[19px]
+                                         px-1 rounded-full bg-red-500 text-white
+                                         text-[10px] font-bold flex items-center justify-center">
                                 {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
                             </span>
                         @endif
-
                     </a>
 
-                    <!-- Settings Dropdown -->
-                    <x-dropdown align="right" width="48">
+
+                    {{-- User Dropdown --}}
+                    <x-dropdown align="right" width="56">
 
                         <x-slot name="trigger">
 
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            <button
+                                class="flex items-center gap-3 px-2 py-1.5 rounded-xl
+                                       hover:bg-gray-50 transition focus:outline-none">
 
-                                <div>
-                                    {{ Auth::user()->prenom }} {{ Auth::user()->nom }}
+                                {{-- Avatar --}}
+                                <div class="w-10 h-10 rounded-xl bg-indigo-100
+                                            flex items-center justify-center">
+
+                                    <span class="text-indigo-700 font-bold">
+                                        {{ strtoupper(substr(auth()->user()->prenom, 0, 1)) }}
+                                    </span>
                                 </div>
 
-                                <div class="ms-1">
+                                {{-- Name --}}
+                                <div class="text-left hidden xl:block">
 
-                                    <svg class="fill-current h-4 w-4"
-                                         xmlns="http://www.w3.org/2000/svg"
-                                         viewBox="0 0 20 20">
+                                    <div class="text-sm font-semibold text-gray-900">
+                                        {{ auth()->user()->prenom }} {{ auth()->user()->nom }}
+                                    </div>
 
-                                        <path fill-rule="evenodd"
-                                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                              clip-rule="evenodd" />
-
-                                    </svg>
+                                    <div class="text-xs text-gray-500">
+                                        @if(auth()->user()->hasRole('admin'))
+                                            Administrateur
+                                        @elseif(auth()->user()->hasRole('provider'))
+                                            Freelance
+                                        @else
+                                            Client
+                                        @endif
+                                    </div>
 
                                 </div>
+
+                                <svg class="w-4 h-4 text-gray-400"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     viewBox="0 0 24 24">
+
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M19 9l-7 7-7-7" />
+                                </svg>
 
                             </button>
 
                         </x-slot>
 
+
                         <x-slot name="content">
 
-                            <!-- Profile -->
-                            <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
+                            {{-- User header --}}
+                            <div class="px-4 py-3 border-b border-gray-100">
+
+                                <p class="text-sm font-semibold text-gray-900">
+                                    {{ auth()->user()->prenom }} {{ auth()->user()->nom }}
+                                </p>
+
+                                <p class="text-xs text-gray-500 mt-1">
+                                    {{ auth()->user()->email }}
+                                </p>
+
+                            </div>
+
+
+                            {{-- Dashboard --}}
+                            <x-dropdown-link :href="route('dashboard')">
+                                📊 Dashboard
                             </x-dropdown-link>
 
-                            <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
 
+                            {{-- Profile --}}
+                            <x-dropdown-link :href="route('profile.edit')">
+                                👤 Mon profil
+                            </x-dropdown-link>
+
+
+                            {{-- Notifications --}}
+                            <x-dropdown-link :href="route('notifications.index')">
+                                🔔 Notifications
+                            </x-dropdown-link>
+
+
+                            {{-- Logout --}}
+                            <form method="POST" action="{{ route('logout') }}">
                                 @csrf
 
                                 <x-dropdown-link
                                     :href="route('logout')"
                                     onclick="event.preventDefault(); this.closest('form').submit();"
                                 >
-                                    {{ __('Log Out') }}
+                                    🚪 Déconnexion
                                 </x-dropdown-link>
-
                             </form>
 
                         </x-slot>
 
                     </x-dropdown>
 
-                @else
-
-                    <!-- Guest Actions -->
-                    <a href="{{ route('login') }}"
-                       class="text-sm font-medium text-gray-700 hover:text-gray-900">
-                        {{ __('Log In') }}
-                    </a>
-
-                    <a href="{{ route('register') }}"
-                       class="text-sm font-medium text-gray-700 hover:text-gray-900">
-                        {{ __('Register') }}
-                    </a>
-
-                @endauth
+                @endguest
 
             </div>
 
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
+
+            {{-- Mobile button --}}
+            <div class="lg:hidden">
 
                 <button
-                    @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
-                >
+                    @click="open = !open"
+                    class="w-10 h-10 rounded-xl flex items-center justify-center
+                           text-gray-600 hover:bg-gray-100 transition">
 
-                    <svg class="h-6 w-6"
-                         stroke="currentColor"
+                    <svg x-show="!open"
+                         xmlns="http://www.w3.org/2000/svg"
                          fill="none"
-                         viewBox="0 0 24 24">
+                         viewBox="0 0 24 24"
+                         stroke-width="2"
+                         stroke="currentColor"
+                         class="w-6 h-6">
 
-                        <path
-                            :class="{'hidden': open, 'inline-flex': ! open }"
-                            class="inline-flex"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"
-                        />
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
 
-                        <path
-                            :class="{'hidden': ! open, 'inline-flex': open }"
-                            class="hidden"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        />
+                    <svg x-show="open"
+                         xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="2"
+                         stroke="currentColor"
+                         class="w-6 h-6">
 
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M6 18L18 6M6 6l12 12" />
                     </svg>
 
                 </button>
@@ -175,120 +343,154 @@
     </div>
 
 
-    <!-- Responsive Navigation Menu -->
+    {{-- MOBILE MENU --}}
     <div
-        :class="{'block': open, 'hidden': ! open}"
-        class="hidden sm:hidden"
-    >
+        x-show="open"
+        x-transition
+        class="lg:hidden border-t border-gray-100 bg-white">
 
-        <div class="pt-2 pb-3 space-y-1">
+        <div class="px-4 py-5 space-y-2">
 
-            @auth
+            @guest
 
-                <x-responsive-nav-link
-                    :href="route('dashboard')"
-                    :active="request()->routeIs('dashboard')"
-                >
-                    {{ __('Dashboard') }}
-                </x-responsive-nav-link>
+                <a href="{{ route('services.index') }}"
+                   class="block px-4 py-3 rounded-xl text-sm font-medium
+                          text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                    Services
+                </a>
 
-                <!-- Mobile Notifications -->
-                <x-responsive-nav-link
-                    :href="route('notifications.index')"
-                    :active="request()->routeIs('notifications.*')"
-                >
+                <a href="{{ route('login') }}"
+                   class="block px-4 py-3 rounded-xl text-sm font-medium
+                          text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                    Connexion
+                </a>
 
-                    <div class="flex items-center justify-between w-full">
-
-                        <span class="flex items-center gap-2">
-                            <span>🔔</span>
-                            <span>Notifications</span>
-                        </span>
-
-                        @php
-                            $unreadNotificationsCount = auth()->user()
-                                ->unreadNotifications()
-                                ->count();
-                        @endphp
-
-                        @if ($unreadNotificationsCount > 0)
-
-                            <span class="inline-flex min-w-[20px] h-5 items-center justify-center rounded-full bg-red-600 px-1.5 text-xs font-bold text-white">
-                                {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
-                            </span>
-
-                        @endif
-
-                    </div>
-
-                </x-responsive-nav-link>
+                <a href="{{ route('register') }}"
+                   class="block px-4 py-3 rounded-xl bg-indigo-600 text-white text-sm font-semibold">
+                    S'inscrire
+                </a>
 
             @else
 
-                <x-responsive-nav-link
-                    :href="route('services.index')"
-                    :active="request()->routeIs('services.index')"
-                >
-                    {{ __('Services') }}
-                </x-responsive-nav-link>
+                {{-- Dashboard --}}
+                <a href="{{ route('dashboard') }}"
+                   class="block px-4 py-3 rounded-xl text-sm font-medium
+                          text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                    📊 Dashboard
+                </a>
 
-                <x-responsive-nav-link :href="route('login')">
-                    {{ __('Log In') }}
-                </x-responsive-nav-link>
+                {{-- Services --}}
+                <a href="{{ route('services.index') }}"
+                   class="block px-4 py-3 rounded-xl text-sm font-medium
+                          text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                    🛍️ Services
+                </a>
 
-                <x-responsive-nav-link :href="route('register')">
-                    {{ __('Register') }}
-                </x-responsive-nav-link>
+                {{-- Client --}}
+                @if(auth()->user()->hasRole('client'))
 
-            @endauth
+                    <a href="{{ route('reservations.index') }}"
+                       class="block px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        📅 Réservations
+                    </a>
 
-        </div>
+                    <a href="{{ route('favorites.index') }}"
+                       class="block px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        ❤️ Favoris
+                    </a>
+
+                    <a href="{{ route('conversations.index') }}"
+                       class="block px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        💬 Messages
+                    </a>
+
+                {{-- Provider --}}
+                @elseif(auth()->user()->hasRole('provider'))
+
+                    <a href="{{ route('services.create') }}"
+                       class="block px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        ➕ Mes services
+                    </a>
+
+                    <a href="{{ route('reservations.index') }}"
+                       class="block px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        📅 Réservations
+                    </a>
+
+                    <a href="{{ route('conversations.index') }}"
+                       class="block px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        💬 Messages
+                    </a>
+
+                {{-- Admin --}}
+                @elseif(auth()->user()->hasRole('admin'))
+
+                    <a href="{{ route('users.index') }}"
+                       class="block px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        👥 Utilisateurs
+                    </a>
+
+                    <a href="{{ route('categories.index') }}"
+                       class="block px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        📂 Catégories
+                    </a>
+
+                    <a href="{{ route('reservations.index') }}"
+                       class="block px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        📅 Réservations
+                    </a>
+
+                    <a href="{{ route('avis.index') }}"
+                       class="block px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        ⭐ Avis
+                    </a>
+
+                @endif
 
 
-        @auth
+                <div class="border-t border-gray-100 pt-3 mt-3">
 
-            <!-- Responsive Settings Options -->
-            <div class="pt-4 pb-1 border-t border-gray-200">
+                    <a href="{{ route('notifications.index') }}"
+                       class="block px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        🔔 Notifications
+                        @if($unreadNotificationsCount > 0)
+                            <span class="ml-2 text-xs bg-red-500 text-white px-2 py-1 rounded-full">
+                                {{ $unreadNotificationsCount }}
+                            </span>
+                        @endif
+                    </a>
 
-                <div class="px-4">
+                    <a href="{{ route('profile.edit') }}"
+                       class="block px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        👤 Mon profil
+                    </a>
 
-                    <div class="font-medium text-base text-gray-800">
-                        {{ Auth::user()->prenom }} {{ Auth::user()->nom }}
-                    </div>
-
-                    <div class="font-medium text-sm text-gray-500">
-                        {{ Auth::user()->email }}
-                    </div>
-
-                </div>
-
-                <div class="mt-3 space-y-1">
-
-                    <!-- Profile -->
-                    <x-responsive-nav-link :href="route('profile.edit')">
-                        {{ __('Profile') }}
-                    </x-responsive-nav-link>
-
-                    <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">
-
                         @csrf
 
-                        <x-responsive-nav-link
-                            :href="route('logout')"
-                            onclick="event.preventDefault(); this.closest('form').submit();"
-                        >
-                            {{ __('Log Out') }}
-                        </x-responsive-nav-link>
-
+                        <button type="submit"
+                                class="w-full text-left px-4 py-3 rounded-xl text-sm
+                                       font-medium text-red-600 hover:bg-red-50">
+                            🚪 Déconnexion
+                        </button>
                     </form>
 
                 </div>
 
-            </div>
+            @endguest
 
-        @endauth
-
+        </div>
     </div>
-
 </nav>

@@ -1,112 +1,148 @@
 <x-guest-layout>
-    <div class="min-h-screen bg-slate-50 flex">
 
-        {{-- LEFT SIDE --}}
-        <div class="hidden lg:flex lg:w-1/2 bg-indigo-600 relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800"></div>
+    <div class="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10">
 
-            <div class="relative z-10 flex flex-col justify-center px-16 text-white">
-                <div class="mb-10">
-                    <div class="flex items-center gap-3 mb-8">
-                        <div class="w-11 h-11 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                            <span class="text-2xl font-bold">N</span>
+        <div class="w-full max-w-5xl grid lg:grid-cols-2 bg-white rounded-3xl shadow-2xl overflow-hidden">
+
+            {{-- LEFT SIDE --}}
+            <div class="hidden lg:flex relative bg-indigo-600 p-12 text-white flex-col justify-between overflow-hidden">
+
+                {{-- Decorative circles --}}
+                <div class="absolute -top-32 -right-32 w-80 h-80 bg-white/10 rounded-full"></div>
+                <div class="absolute bottom-[-120px] left-[-100px] w-72 h-72 bg-purple-500/30 rounded-full"></div>
+
+                <div class="relative z-10">
+
+                    {{-- Logo --}}
+                    <a href="{{ url('/') }}" class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center">
+                            <span class="text-white font-bold text-2xl">N</span>
                         </div>
 
-                        <span class="text-2xl font-bold tracking-tight">
+                        <span class="text-2xl font-bold">
                             Nexora
                         </span>
+                    </a>
+
+                    <div class="mt-24">
+
+                        <p class="text-indigo-200 text-sm font-semibold uppercase tracking-widest">
+                            Smart Freelance Marketplace
+                        </p>
+
+                        <h1 class="mt-5 text-5xl font-bold leading-tight">
+                            Bienvenue
+                            <br>
+                            sur <span class="text-indigo-200">Nexora.</span>
+                        </h1>
+
+                        <p class="mt-6 text-indigo-100 text-lg leading-8 max-w-md">
+                            Connectez-vous pour découvrir des services,
+                            gérer vos réservations et collaborer avec des
+                            prestataires talentueux.
+                        </p>
+
+                        {{-- Benefits --}}
+                        <div class="mt-10 space-y-5">
+
+                            <div class="flex items-center gap-4">
+                                <div class="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center">
+                                    ✓
+                                </div>
+
+                                <span class="text-indigo-100">
+                                    Trouvez les services adaptés à vos besoins
+                                </span>
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                <div class="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center">
+                                    ✓
+                                </div>
+
+                                <span class="text-indigo-100">
+                                    Réservez facilement vos services
+                                </span>
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                <div class="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center">
+                                    ✓
+                                </div>
+
+                                <span class="text-indigo-100">
+                                    Échangez directement avec les freelances
+                                </span>
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <h1 class="text-4xl xl:text-5xl font-bold leading-tight mb-6">
-                        Bienvenue sur
-                        <span class="text-indigo-200">Nexora</span>
-                    </h1>
-
-                    <p class="text-lg text-indigo-100 max-w-lg leading-relaxed">
-                        Connectez-vous pour découvrir des services,
-                        gérer vos réservations et collaborer avec des
-                        prestataires talentueux.
-                    </p>
                 </div>
 
-                <div class="space-y-4 text-indigo-100">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                            ✓
-                        </div>
-                        <span>Trouvez les services adaptés à vos besoins</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                            ✓
-                        </div>
-                        <span>Réservez facilement vos services</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                            ✓
-                        </div>
-                        <span>Échangez directement avec les prestataires</span>
-                    </div>
+                <div class="relative z-10 text-sm text-indigo-200">
+                    © {{ date('Y') }} Nexora. Tous droits réservés.
                 </div>
+
             </div>
 
-            {{-- Decorative elements --}}
-            <div class="absolute -bottom-24 -right-24 w-72 h-72 rounded-full bg-violet-500/30"></div>
-            <div class="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-indigo-400/20"></div>
-        </div>
 
-        {{-- RIGHT SIDE --}}
-        <div class="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
-            <div class="w-full max-w-md">
+            {{-- RIGHT SIDE --}}
+            <div class="p-8 sm:p-12 lg:p-14 flex items-center">
 
-                {{-- Logo mobile --}}
-                <div class="flex items-center justify-center gap-2 mb-8 lg:hidden">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center">
-                        <span class="text-xl font-bold">N</span>
+                <div class="w-full max-w-md mx-auto">
+
+                    {{-- Header --}}
+                    <div class="mb-8">
+
+                        <div class="lg:hidden flex items-center gap-3 mb-8">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center">
+                                <span class="text-white font-bold text-xl">N</span>
+                            </div>
+
+                            <span class="text-2xl font-bold text-slate-900">
+                                Nexora
+                            </span>
+                        </div>
+
+                        <h2 class="text-3xl font-bold text-slate-900">
+                            Bon retour 👋
+                        </h2>
+
+                        <p class="mt-2 text-slate-500">
+                            Connectez-vous à votre compte Nexora
+                        </p>
+
                     </div>
 
-                    <span class="text-2xl font-bold text-slate-900">
-                        Nexora
-                    </span>
-                </div>
 
-                {{-- Header --}}
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold text-slate-900">
-                        Bon retour 👋
-                    </h2>
+                    {{-- Session status --}}
+                    <x-auth-session-status
+                        class="mb-4"
+                        :status="session('status')"
+                    />
 
-                    <p class="mt-2 text-slate-500">
-                        Connectez-vous à votre compte Nexora
-                    </p>
-                </div>
 
-                {{-- Session Status --}}
-                <x-auth-session-status
-                    class="mb-4"
-                    :status="session('status')"
-                />
+                    {{-- LOGIN FORM --}}
+                    <form method="POST" action="{{ route('login') }}" class="space-y-6">
 
-                {{-- Login Card --}}
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-
-                    <form method="POST" action="{{ route('login') }}">
                         @csrf
 
                         {{-- Email --}}
                         <div>
+
                             <x-input-label
                                 for="email"
-                                :value="__('Email')"
-                                class="text-slate-700 font-medium"
+                                value="Adresse email"
+                                class="text-sm font-semibold text-slate-700"
                             />
 
                             <x-text-input
                                 id="email"
-                                class="block mt-2 w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500"
+                                class="block mt-2 w-full rounded-xl border-slate-300
+                                       focus:border-indigo-500 focus:ring-indigo-500
+                                       py-3"
                                 type="email"
                                 name="email"
                                 :value="old('email')"
@@ -120,30 +156,39 @@
                                 :messages="$errors->get('email')"
                                 class="mt-2"
                             />
+
                         </div>
 
+
                         {{-- Password --}}
-                        <div class="mt-5">
+                        <div>
+
                             <div class="flex items-center justify-between">
+
                                 <x-input-label
                                     for="password"
-                                    :value="__('Mot de passe')"
-                                    class="text-slate-700 font-medium"
+                                    value="Mot de passe"
+                                    class="text-sm font-semibold text-slate-700"
                                 />
 
                                 @if (Route::has('password.request'))
+
                                     <a
                                         href="{{ route('password.request') }}"
-                                        class="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+                                        class="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition"
                                     >
                                         Mot de passe oublié ?
                                     </a>
+
                                 @endif
+
                             </div>
 
                             <x-text-input
                                 id="password"
-                                class="block mt-2 w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500"
+                                class="block mt-2 w-full rounded-xl border-slate-300
+                                       focus:border-indigo-500 focus:ring-indigo-500
+                                       py-3"
                                 type="password"
                                 name="password"
                                 required
@@ -155,60 +200,72 @@
                                 :messages="$errors->get('password')"
                                 class="mt-2"
                             />
+
                         </div>
 
-                        {{-- Remember Me --}}
-                        <div class="mt-5">
-                            <label
-                                for="remember_me"
-                                class="inline-flex items-center cursor-pointer"
-                            >
+
+                        {{-- Remember --}}
+                        <div class="flex items-center">
+
+                            <label for="remember" class="inline-flex items-center cursor-pointer">
+
                                 <input
-                                    id="remember_me"
+                                    id="remember"
                                     type="checkbox"
-                                    class="rounded border-slate-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                     name="remember"
+                                    class="rounded border-slate-300 text-indigo-600
+                                           shadow-sm focus:ring-indigo-500"
                                 >
 
                                 <span class="ms-2 text-sm text-slate-600">
                                     Se souvenir de moi
                                 </span>
+
                             </label>
+
                         </div>
 
-                        {{-- Submit --}}
-                        <div class="mt-7">
-                            <button
-                                type="submit"
-                                class="w-full inline-flex items-center justify-center px-4 py-3 bg-indigo-600 border border-transparent rounded-xl font-semibold text-sm text-white tracking-wide hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition"
-                            >
-                                Se connecter
-                            </button>
-                        </div>
+
+                        {{-- Button --}}
+                        <button
+                            type="submit"
+                            class="w-full py-3.5 px-6 rounded-xl
+                                   bg-indigo-600 text-white font-semibold
+                                   hover:bg-indigo-700
+                                   focus:outline-none focus:ring-2
+                                   focus:ring-indigo-500 focus:ring-offset-2
+                                   transition duration-200
+                                   shadow-lg shadow-indigo-200"
+                        >
+                            Se connecter
+                        </button>
+
                     </form>
 
+
                     {{-- Register --}}
-                    <div class="mt-7 pt-6 border-t border-slate-100 text-center">
+                    <div class="mt-8 pt-7 border-t border-slate-100 text-center">
+
                         <p class="text-sm text-slate-500">
                             Vous n'avez pas encore de compte ?
-                            <a
-                                href="{{ route('register') }}"
-                                class="font-semibold text-indigo-600 hover:text-indigo-700"
-                            >
-                                Créer un compte
-                            </a>
                         </p>
+
+                        <a
+                            href="{{ route('register') }}"
+                            class="inline-block mt-2 text-sm font-semibold
+                                   text-indigo-600 hover:text-indigo-700 transition"
+                        >
+                            Créer un compte →
+                        </a>
+
                     </div>
 
                 </div>
 
-                {{-- Footer --}}
-                <p class="text-center text-xs text-slate-400 mt-6">
-                    © {{ date('Y') }} Nexora. Tous droits réservés.
-                </p>
-
             </div>
+
         </div>
 
     </div>
+
 </x-guest-layout>
