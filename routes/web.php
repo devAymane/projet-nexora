@@ -13,6 +13,7 @@ use App\Http\Controllers\ProviderDashboardController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,9 +39,6 @@ Route::get('/', function () {
 Route::get('/services', [ServiceController::class, 'index'])
     ->name('services.index');
 
-Route::get('/services/{service}', [ServiceController::class, 'show'])
-    ->name('services.show');
-
 Route::middleware('auth')->group(function () {
 
     Route::get('/services/create', [ServiceController::class, 'create'])
@@ -59,6 +57,9 @@ Route::middleware('auth')->group(function () {
         ->name('services.destroy');
 });
 
+Route::get('/services/{service}', [ServiceController::class, 'show'])
+    ->name('services.show');
+
 /*
 |--------------------------------------------------------------------------
 | Dashboard Redirect
@@ -66,6 +67,7 @@ Route::middleware('auth')->group(function () {
 */
 
 Route::get('/dashboard', function () {
+
     $user = request()->user();
 
     if ($user->hasRole('admin')) {
@@ -77,6 +79,7 @@ Route::get('/dashboard', function () {
     }
 
     return redirect()->route('client.dashboard');
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 /*
@@ -114,6 +117,7 @@ require __DIR__ . '/auth.php';
 Route::middleware(['auth', 'nexora.role:admin'])->group(function () {
 
     Route::resource('categories', CategoryController::class);
+
 });
 
 /*
@@ -128,6 +132,7 @@ Route::middleware(['auth', 'nexora.role:admin'])->group(function () {
 
     Route::patch('/users/{user}/role', [UserController::class, 'updateRole'])
         ->name('users.update-role');
+
 });
 
 /*
@@ -161,6 +166,7 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/reservations/{reservation}/complete', [ReservationController::class, 'complete'])
         ->name('reservations.complete');
+
 });
 
 /*
@@ -179,6 +185,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/avis', [AvisController::class, 'store'])
         ->name('avis.store');
+
 });
 
 /*
@@ -197,6 +204,7 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/services/{service}/favorite', [FavoriteController::class, 'destroy'])
         ->name('favorites.destroy');
+
 });
 
 /*
@@ -221,6 +229,7 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/messages/{message}/read', [MessageController::class, 'read'])
         ->name('messages.read');
+
 });
 
 /*
@@ -243,6 +252,7 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/notifications/{notification}/read', [NotificationController::class, 'read'])
         ->name('notifications.read');
+
 });
 
 /*
@@ -264,4 +274,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
         ->middleware('nexora.role:admin')
         ->name('admin.dashboard');
+
 });
