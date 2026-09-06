@@ -29,7 +29,7 @@ beforeEach(function () {
     ]);
 });
 
-function createAdmin(): User
+function createReservationAdmin(): User
 {
     $user = User::factory()->create();
     $user->addRole('admin');
@@ -37,7 +37,7 @@ function createAdmin(): User
     return $user;
 }
 
-function createClient(): User
+function createReservationClient(): User
 {
     $user = User::factory()->create();
     $user->addRole('client');
@@ -45,7 +45,7 @@ function createClient(): User
     return $user;
 }
 
-function createProvider(): User
+function createReservationProvider(): User
 {
     $user = User::factory()->create();
     $user->addRole('provider');
@@ -65,8 +65,11 @@ function createService(User $provider): Service
     ]);
 }
 
-function createReservation(User $client, Service $service, string $status = 'en_attente'): Reservation
-{
+function createReservation(
+    User $client,
+    Service $service,
+    string $status = 'en_attente'
+): Reservation {
     return Reservation::factory()->create([
         'user_id' => $client->id,
         'service_id' => $service->id,
@@ -74,13 +77,18 @@ function createReservation(User $client, Service $service, string $status = 'en_
     ]);
 }
 
+/*
+|--------------------------------------------------------------------------
+| Access
+|--------------------------------------------------------------------------
+*/
+
 it('allows admin to view all reservations', function () {
-    $admin = createAdmin();
+    $admin = createReservationAdmin();
+    $client = createReservationClient();
+    $provider = createReservationProvider();
 
-    $client = createClient();
-    $provider = createProvider();
     $service = createService($provider);
-
     createReservation($client, $service);
 
     $response = $this->actingAs($admin)
@@ -92,10 +100,10 @@ it('allows admin to view all reservations', function () {
 });
 
 it('allows admin to view reservation details', function () {
-    $admin = createAdmin();
+    $admin = createReservationAdmin();
+    $client = createReservationClient();
+    $provider = createReservationProvider();
 
-    $client = createClient();
-    $provider = createProvider();
     $service = createService($provider);
     $reservation = createReservation($client, $service);
 
@@ -107,11 +115,17 @@ it('allows admin to view reservation details', function () {
     $response->assertViewHas('reservation');
 });
 
-it('allows admin to accept a pending reservation', function () {
-    $admin = createAdmin();
+/*
+|--------------------------------------------------------------------------
+| Status Management
+|--------------------------------------------------------------------------
+*/
 
-    $client = createClient();
-    $provider = createProvider();
+it('allows admin to accept a pending reservation', function () {
+    $admin = createReservationAdmin();
+    $client = createReservationClient();
+    $provider = createReservationProvider();
+
     $service = createService($provider);
     $reservation = createReservation($client, $service, 'en_attente');
 
@@ -120,14 +134,15 @@ it('allows admin to accept a pending reservation', function () {
 
     $response->assertRedirect(route('reservations.index'));
 
-    expect($reservation->fresh()->statut)->toBe('acceptee');
+    expect($reservation->fresh()->statut)
+        ->toBe('acceptee');
 });
 
 it('allows admin to refuse a pending reservation', function () {
-    $admin = createAdmin();
+    $admin = createReservationAdmin();
+    $client = createReservationClient();
+    $provider = createReservationProvider();
 
-    $client = createClient();
-    $provider = createProvider();
     $service = createService($provider);
     $reservation = createReservation($client, $service, 'en_attente');
 
@@ -136,14 +151,15 @@ it('allows admin to refuse a pending reservation', function () {
 
     $response->assertRedirect(route('reservations.index'));
 
-    expect($reservation->fresh()->statut)->toBe('refusee');
+    expect($reservation->fresh()->statut)
+        ->toBe('refusee');
 });
 
 it('allows admin to complete an accepted reservation', function () {
-    $admin = createAdmin();
+    $admin = createReservationAdmin();
+    $client = createReservationClient();
+    $provider = createReservationProvider();
 
-    $client = createClient();
-    $provider = createProvider();
     $service = createService($provider);
     $reservation = createReservation($client, $service, 'acceptee');
 
@@ -152,14 +168,21 @@ it('allows admin to complete an accepted reservation', function () {
 
     $response->assertRedirect(route('reservations.index'));
 
-    expect($reservation->fresh()->statut)->toBe('terminee');
+    expect($reservation->fresh()->statut)
+        ->toBe('terminee');
 });
 
-it('blocks client from managing a reservation', function () {
-    $client = createClient();
+/*
+|--------------------------------------------------------------------------
+| Authorization
+|--------------------------------------------------------------------------
+*/
 
-    $reservationOwner = createClient();
-    $provider = createProvider();
+it('blocks client from managing a reservation', function () {
+    $client = createReservationClient();
+    $reservationOwner = createReservationClient();
+    $provider = createReservationProvider();
+
     $service = createService($provider);
 
     $reservation = createReservation(
@@ -173,29 +196,35 @@ it('blocks client from managing a reservation', function () {
 
     $response->assertForbidden();
 
-    expect($reservation->fresh()->statut)->toBe('en_attente');
+    expect($reservation->fresh()->statut)
+        ->toBe('en_attente');
 });
 
 it('allows provider to manage reservation of their own service', function () {
-    $client = createClient();
-    $provider = createProvider();
-    $service = createService($provider);
+    $client = createReservationClient();
+    $provider = createReservationProvider();
 
-    $reservation = createReservation($client, $service, 'en_attente');
+    $service = createService($provider);
+    $reservation = createReservation(
+        $client,
+        $service,
+        'en_attente'
+    );
 
     $response = $this->actingAs($provider)
         ->patch(route('reservations.accept', $reservation));
 
     $response->assertRedirect(route('reservations.index'));
 
-    expect($reservation->fresh()->statut)->toBe('acceptee');
+    expect($reservation->fresh()->statut)
+        ->toBe('acceptee');
 });
 
 it('blocks provider from managing another provider reservation', function () {
-    $client = createClient();
+    $client = createReservationClient();
 
-    $providerOne = createProvider();
-    $providerTwo = createProvider();
+    $providerOne = createReservationProvider();
+    $providerTwo = createReservationProvider();
 
     $service = createService($providerOne);
 
@@ -210,5 +239,6 @@ it('blocks provider from managing another provider reservation', function () {
 
     $response->assertForbidden();
 
-    expect($reservation->fresh()->statut)->toBe('en_attente');
+    expect($reservation->fresh()->statut)
+        ->toBe('en_attente');
 });
