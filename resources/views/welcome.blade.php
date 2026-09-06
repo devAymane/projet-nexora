@@ -13,21 +13,21 @@
 
     {{-- NAVBAR --}}
     <header class="fixed top-0 left-0 right-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
+        <div class="mx-auto flex h-16 sm:h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
             {{-- Logo --}}
-            <a href="{{ url('/') }}" class="flex items-center gap-2">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-lg font-bold text-white">
+            <a href="{{ url('/') }}" class="flex items-center gap-2 shrink-0">
+                <div class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-indigo-600 text-base sm:text-lg font-bold text-white">
                     N
                 </div>
 
-                <span class="text-2xl font-bold tracking-tight text-slate-900">
+                <span class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
                     Nexora
                 </span>
             </a>
 
             {{-- Desktop navigation --}}
-            <nav class="hidden items-center gap-8 md:flex">
+            <nav class="hidden items-center gap-6 lg:gap-8 md:flex">
                 <a href="{{ url('/') }}"
                    class="text-sm font-medium text-indigo-600">
                     Accueil
@@ -47,10 +47,10 @@
             </nav>
 
             {{-- Auth --}}
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3">
                 @auth
                     <a href="{{ route('dashboard') }}"
-                       class="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">
+                       class="rounded-xl bg-indigo-600 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition hover:bg-indigo-700 whitespace-nowrap">
                         Dashboard
                     </a>
                 @else
@@ -61,7 +61,7 @@
 
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}"
-                           class="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">
+                           class="rounded-xl bg-indigo-600 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition hover:bg-indigo-700 whitespace-nowrap">
                             S'inscrire
                         </a>
                     @endif
@@ -72,28 +72,28 @@
 
 
     {{-- HERO --}}
-    <main class="pt-20">
+    <main class="pt-16 sm:pt-20">
 
         <section class="relative overflow-hidden bg-white">
-            <div class="absolute -left-40 -top-40 h-96 w-96 rounded-full bg-indigo-100 blur-3xl"></div>
-            <div class="absolute -right-40 top-20 h-96 w-96 rounded-full bg-violet-100 blur-3xl"></div>
+            <div class="absolute -left-40 -top-40 h-64 sm:h-96 w-64 sm:w-96 rounded-full bg-indigo-100 blur-3xl"></div>
+            <div class="absolute -right-40 top-20 h-64 sm:h-96 w-64 sm:w-96 rounded-full bg-violet-100 blur-3xl"></div>
 
-            <div class="relative mx-auto max-w-7xl px-6 py-24 lg:px-8 lg:py-32">
+            <div class="relative mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-24 lg:px-8 lg:py-32">
 
                 <div class="mx-auto max-w-4xl text-center">
 
-                    <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-700">
-                        <span class="h-2 w-2 rounded-full bg-indigo-600"></span>
-                        La plateforme freelance nouvelle génération
+                    <div class="mb-5 sm:mb-6 inline-flex max-w-full items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-indigo-700">
+                        <span class="h-2 w-2 shrink-0 rounded-full bg-indigo-600"></span>
+                        <span>La plateforme freelance nouvelle génération</span>
                     </div>
 
-                    <h1 class="text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
+                    <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl xl:text-7xl">
                         Trouvez les
                         <span class="text-indigo-600"> meilleurs talents </span>
                         pour vos projets.
                     </h1>
 
-                    <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+                    <p class="mx-auto mt-5 sm:mt-6 max-w-2xl text-base sm:text-lg leading-7 sm:leading-8 text-slate-600">
                         Nexora connecte clients et freelances qualifiés pour
                         transformer vos idées en projets réussis.
                     </p>
@@ -102,10 +102,10 @@
                     {{-- Search --}}
                     <form action="{{ route('services.index') }}"
                           method="GET"
-                          class="mx-auto mt-10 flex max-w-3xl flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl shadow-slate-200/50 sm:flex-row">
+                          class="mx-auto mt-8 sm:mt-10 flex max-w-3xl flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-2 sm:p-3 shadow-xl shadow-slate-200/50">
 
-                        <div class="flex flex-1 items-center gap-3 px-3">
-                            <svg class="h-5 w-5 text-slate-400"
+                        <div class="flex min-w-0 flex-1 items-center gap-3 px-2 sm:px-3">
+                            <svg class="h-5 w-5 shrink-0 text-slate-400"
                                  fill="none"
                                  stroke="currentColor"
                                  viewBox="0 0 24 24">
@@ -119,18 +119,18 @@
                                 type="text"
                                 name="search"
                                 placeholder="Quel service recherchez-vous ?"
-                                class="w-full border-0 bg-transparent py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:ring-0"
+                                class="w-full min-w-0 border-0 bg-transparent py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:ring-0"
                             >
                         </div>
 
                         <button type="submit"
-                                class="rounded-xl bg-indigo-600 px-7 py-3 font-semibold text-white transition hover:bg-indigo-700">
+                                class="w-full rounded-xl bg-indigo-600 px-7 py-3 font-semibold text-white transition hover:bg-indigo-700 sm:w-auto">
                             Rechercher
                         </button>
                     </form>
 
 
-                    <div class="mt-6 flex flex-wrap justify-center gap-3 text-sm text-slate-500">
+                    <div class="mt-5 sm:mt-6 flex flex-wrap justify-center gap-x-3 gap-y-2 text-xs sm:text-sm text-slate-500">
                         <span>Populaire :</span>
 
                         <a href="{{ route('services.index') }}"
@@ -159,32 +159,32 @@
 
 
         {{-- CATEGORIES --}}
-        <section class="bg-slate-50 py-20">
-            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <section class="bg-slate-50 py-14 sm:py-20">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-                <div class="mb-12 flex items-end justify-between">
+                <div class="mb-8 sm:mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                         <p class="mb-2 text-sm font-semibold uppercase tracking-wider text-indigo-600">
                             Explorez
                         </p>
 
-                        <h2 class="text-3xl font-bold tracking-tight text-slate-900">
+                        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
                             Découvrez nos catégories
                         </h2>
 
-                        <p class="mt-3 text-slate-600">
+                        <p class="mt-3 text-sm sm:text-base text-slate-600">
                             Trouvez rapidement le service dont vous avez besoin.
                         </p>
                     </div>
 
                     <a href="{{ route('services.index') }}"
-                       class="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-700 sm:block">
+                       class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 sm:block">
                         Voir tous les services →
                     </a>
                 </div>
 
 
-                <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
 
                     @php
                         $categories = [
@@ -201,9 +201,9 @@
 
                     @foreach ($categories as $category)
                         <a href="{{ route('services.index') }}"
-                           class="group rounded-2xl border border-slate-200 bg-white p-6 transition duration-200 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg">
+                           class="group rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 transition duration-200 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg">
 
-                            <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-2xl">
+                            <div class="mb-4 sm:mb-5 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-indigo-50 text-xl sm:text-2xl">
                                 {{ $category['icon'] }}
                             </div>
 
@@ -223,64 +223,64 @@
 
 
         {{-- WHY NEXORA --}}
-        <section class="bg-white py-20">
-            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <section class="bg-white py-14 sm:py-20">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
                 <div class="mx-auto max-w-2xl text-center">
                     <p class="mb-2 text-sm font-semibold uppercase tracking-wider text-indigo-600">
                         Pourquoi Nexora ?
                     </p>
 
-                    <h2 class="text-3xl font-bold tracking-tight text-slate-900">
+                    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
                         Tout ce qu'il vous faut pour réussir
                     </h2>
                 </div>
 
 
-                <div class="mt-14 grid gap-8 md:grid-cols-3">
+                <div class="mt-10 sm:mt-14 grid grid-cols-1 gap-5 sm:gap-8 md:grid-cols-3">
 
-                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-8">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
                         <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-2xl">
                             🔎
                         </div>
 
-                        <h3 class="text-xl font-bold text-slate-900">
+                        <h3 class="text-lg sm:text-xl font-bold text-slate-900">
                             Trouvez facilement
                         </h3>
 
-                        <p class="mt-3 leading-7 text-slate-600">
+                        <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600">
                             Recherchez parmi une large sélection de services
                             proposés par des freelances qualifiés.
                         </p>
                     </div>
 
 
-                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-8">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
                         <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-2xl">
                             🛡️
                         </div>
 
-                        <h3 class="text-xl font-bold text-slate-900">
+                        <h3 class="text-lg sm:text-xl font-bold text-slate-900">
                             Des profils fiables
                         </h3>
 
-                        <p class="mt-3 leading-7 text-slate-600">
+                        <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600">
                             Consultez les profils, services et avis avant
                             de choisir votre prestataire.
                         </p>
                     </div>
 
 
-                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-8">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
                         <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-2xl">
                             💬
                         </div>
 
-                        <h3 class="text-xl font-bold text-slate-900">
+                        <h3 class="text-lg sm:text-xl font-bold text-slate-900">
                             Communiquez directement
                         </h3>
 
-                        <p class="mt-3 leading-7 text-slate-600">
+                        <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600">
                             Échangez avec les freelances grâce à notre
                             système de messagerie intégré.
                         </p>
@@ -293,27 +293,27 @@
 
         {{-- CTA --}}
         <section class="bg-indigo-600">
-            <div class="mx-auto max-w-7xl px-6 py-20 text-center lg:px-8">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-20 text-center lg:px-8">
 
-                <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white sm:text-4xl">
                     Prêt à lancer votre prochain projet ?
                 </h2>
 
-                <p class="mx-auto mt-4 max-w-2xl text-indigo-100">
+                <p class="mx-auto mt-4 max-w-2xl text-sm sm:text-base text-indigo-100">
                     Trouvez le freelance idéal ou proposez vos services
                     à des clients qui recherchent vos compétences.
                 </p>
 
-                <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+                <div class="mt-7 sm:mt-8 flex flex-col justify-center gap-3 sm:gap-4 sm:flex-row">
 
                     <a href="{{ route('services.index') }}"
-                       class="rounded-xl bg-white px-7 py-3.5 font-semibold text-indigo-600 transition hover:bg-indigo-50">
+                       class="w-full rounded-xl bg-white px-7 py-3.5 font-semibold text-indigo-600 transition hover:bg-indigo-50 sm:w-auto">
                         Explorer les services
                     </a>
 
                     @guest
                         <a href="{{ route('register') }}"
-                           class="rounded-xl border border-white/30 bg-indigo-500 px-7 py-3.5 font-semibold text-white transition hover:bg-indigo-400">
+                           class="w-full rounded-xl border border-white/30 bg-indigo-500 px-7 py-3.5 font-semibold text-white transition hover:bg-indigo-400 sm:w-auto">
                             Créer un compte
                         </a>
                     @endguest
@@ -327,9 +327,9 @@
 
     {{-- FOOTER --}}
     <footer class="border-t border-slate-200 bg-white">
-        <div class="mx-auto max-w-7xl px-6 py-10 lg:px-8">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 py-8 sm:py-10 lg:px-8">
 
-            <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
+            <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
 
                 <div>
                     <div class="flex items-center gap-2">
@@ -348,7 +348,7 @@
                 </div>
 
 
-                <div class="flex gap-6 text-sm text-slate-500">
+                <div class="flex flex-wrap gap-x-5 gap-y-3 text-sm text-slate-500">
                     <a href="{{ route('services.index') }}"
                        class="hover:text-indigo-600">
                         Services

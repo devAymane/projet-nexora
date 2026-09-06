@@ -1,13 +1,13 @@
 <x-app-layout>
 
-    <div class="min-h-screen bg-slate-50 py-8">
+    <div class="min-h-screen bg-slate-50 py-4 sm:py-6 lg:py-8">
 
-        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-6xl px-3 sm:px-6 lg:px-8">
 
             {{-- =====================================================
                 TOP NAVIGATION
             ====================================================== --}}
-            <div class="mb-6 flex items-center justify-between">
+            <div class="mb-5 flex items-center justify-between gap-3 sm:mb-6">
 
                 <a
                     href="{{ route('reservations.index') }}"
@@ -122,7 +122,7 @@
                         Réservation #{{ $reservation->id }}
                     </p>
 
-                    <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+                    <h1 class="mt-2 text-2xl font-bold sm:text-3xl tracking-tight text-slate-900">
                         Détails de la réservation
                     </h1>
 
@@ -221,13 +221,13 @@
             {{-- =====================================================
                 MAIN GRID
             ====================================================== --}}
-            <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 sm:gap-4 sm:p-6 lg:grid-cols-3">
 
 
                 {{-- =================================================
                     LEFT CONTENT
                 ================================================== --}}
-                <div class="space-y-6 lg:col-span-2">
+                <div class="space-y-4 sm:space-y-6 lg:col-span-2">
 
 
                     {{-- =============================================
@@ -235,7 +235,7 @@
                     ============================================== --}}
                     <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-                        <div class="border-b border-slate-100 px-6 py-5">
+                        <div class="border-b border-slate-100 px-4 py-4 sm:px-6 sm:py-5">
 
                             <div class="flex items-center justify-between gap-4">
 
@@ -265,13 +265,13 @@
                         </div>
 
 
-                        <div class="p-6">
+                        <div class="p-4 sm:p-6">
 
-                            <div class="grid gap-5 sm:grid-cols-2">
+                            <div class="grid gap-3 sm:gap-5 sm:grid-cols-2">
 
 
                                 {{-- Price --}}
-                                <div class="rounded-xl bg-slate-50 p-4">
+                                <div class="rounded-xl bg-slate-50 p-3 sm:p-4">
 
                                     <div class="flex items-center gap-3">
 
@@ -314,7 +314,7 @@
 
 
                                 {{-- Date --}}
-                                <div class="rounded-xl bg-slate-50 p-4">
+                                <div class="rounded-xl bg-slate-50 p-3 sm:p-4">
 
                                     <div class="flex items-center gap-3">
 
@@ -358,7 +358,7 @@
 
 
                                 {{-- City --}}
-                                <div class="rounded-xl bg-slate-50 p-4">
+                                <div class="rounded-xl bg-slate-50 p-3 sm:p-4">
 
                                     <div class="flex items-center gap-3">
 
@@ -405,7 +405,7 @@
 
 
                                 {{-- Created --}}
-                                <div class="rounded-xl bg-slate-50 p-4">
+                                <div class="rounded-xl bg-slate-50 p-3 sm:p-4">
 
                                     <div class="flex items-center gap-3">
 
@@ -454,7 +454,7 @@
                     {{-- =============================================
                         PEOPLE
                     ============================================== --}}
-                    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
 
                         <div class="mb-6">
 
@@ -469,11 +469,11 @@
                         </div>
 
 
-                        <div class="grid gap-5 md:grid-cols-2">
+                        <div class="grid gap-3 sm:gap-5 md:grid-cols-2">
 
 
                             {{-- Client --}}
-                            <div class="rounded-xl border border-slate-100 p-5">
+                            <div class="rounded-xl border border-slate-100 p-4 sm:p-5">
 
                                 <div class="flex items-center gap-4">
 
@@ -506,7 +506,7 @@
 
 
                             {{-- Provider --}}
-                            <div class="rounded-xl border border-slate-100 p-5">
+                            <div class="rounded-xl border border-slate-100 p-4 sm:p-5">
 
                                 <div class="flex items-center gap-4">
 
@@ -578,7 +578,7 @@
 
                         <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-                            <div class="border-b border-slate-100 px-6 py-5">
+                            <div class="border-b border-slate-100 px-4 py-4 sm:px-6 sm:py-5">
 
                                 <div class="flex items-center gap-3">
 
@@ -617,11 +617,11 @@
                             </div>
 
 
-                            <div class="p-6">
+                            <div class="p-4 sm:p-6">
 
-                                <div class="rounded-xl bg-slate-50 p-5">
+                                <div class="rounded-xl bg-slate-50 p-4 sm:p-5">
 
-                                    <p class="whitespace-pre-wrap text-sm leading-7 text-slate-700">
+                                    <p class="whitespace-pre-wrap break-words text-sm leading-7 text-slate-700">
                                         {{ $reservation->message }}
                                     </p>
 
@@ -639,7 +639,7 @@
                     ============================================== --}}
                     @if($reservation->statut === 'terminee' && $reservation->avis)
 
-                        <div class="rounded-2xl border border-green-200 bg-green-50 p-6">
+                        <div class="rounded-2xl border border-green-200 bg-green-50 p-4 sm:p-6">
 
                             <div class="flex items-start gap-4">
 
@@ -695,7 +695,7 @@
 
                     @elseif($reservation->statut === 'terminee' && auth()->id() === $reservation->user_id)
 
-                        <div class="rounded-2xl border border-indigo-200 bg-indigo-50 p-6">
+                        <div class="rounded-2xl border border-indigo-200 bg-indigo-50 p-4 sm:p-6">
 
                             <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
 
@@ -736,7 +736,7 @@
 
                                 <a
                                     href="{{ route('avis.create', $reservation) }}"
-                                    class="inline-flex shrink-0 items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700"
+                                    class="inline-flex w-full shrink-0 items-center justify-center sm:w-auto rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700"
                                 >
                                     Laisser un avis
                                 </a>
@@ -755,13 +755,13 @@
                 ================================================== --}}
                 <div>
 
-                    <div class="sticky top-24 space-y-5">
+                    <div class="space-y-4 sm:space-y-5 lg:sticky lg:top-24">
 
 
                         {{-- =========================================
                             STATUS CARD
                         ========================================== --}}
-                        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                        <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
 
                             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
                                 État de la réservation
@@ -867,7 +867,7 @@
                         {{-- =========================================
                             ACTIONS
                         ========================================== --}}
-                        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                        <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
 
                             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
                                 Actions
@@ -1109,7 +1109,7 @@
                         {{-- =========================================
                             TRUST CARD
                         ========================================== --}}
-                        <div class="rounded-2xl bg-indigo-600 p-5 text-white shadow-sm">
+                        <div class="rounded-2xl bg-indigo-600 p-4 sm:p-5 text-white shadow-sm">
 
                             <div class="flex items-start gap-3">
 

@@ -13,84 +13,89 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-
-
-
-
 class ReservationController extends Controller
 {
-   public function index(Request $request): View
-{
-    $this->authorize('viewAny', Reservation::class);
+    public function index(Request $request): View
+    {
+        $this->authorize('viewAny', Reservation::class);
 
-    $user = $request->user();
+        $user = $request->user();
 
-    $query = Reservation::with([
-        'user',
-        'service.category',
-        'service.user',
-    ]);
+        $query = Reservation::with([
+            'user',
+            'service.category',
+            'service.user',
+        ]);
 
-    if ($user->hasRole('admin')) {
-        // Admin voit toutes les réservations
-    } elseif ($user->hasRole('provider')) {
-        $query->whereHas('service', function ($query) use ($user) {
+        if ($user->hasRole('admin')) {
+            // Admin voit toutes les réservations.
+        } elseif ($user->hasRole('provider')) {
+            $query->whereHas('service', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            });
+        } else {
             $query->where('user_id', $user->id);
-        });
-    } else {
-        $query->where('user_id', $user->id);
+        }
+
+        // Clone avant paginate pour calculer les statistiques sur
+        // toutes les réservations visibles par l'utilisateur.
+        $statsQuery = clone $query;
+
+        $stats = [
+            'total' => (clone $statsQuery)->count(),
+            'pending' => (clone $statsQuery)->where('statut', 'en_attente')->count(),
+            'accepted' => (clone $statsQuery)->where('statut', 'acceptee')->count(),
+            'completed' => (clone $statsQuery)->where('statut', 'terminee')->count(),
+        ];
+
+        $reservations = $query
+            ->latest('date')
+            ->paginate(10);
+
+        return view('reservations.index', compact('reservations', 'stats'));
     }
 
-    $reservations = $query
-        ->latest('date')
-        ->paginate(10);
+    public function create(Request $request): View
+    {
+        $this->authorize('create', Reservation::class);
 
-    return view('reservations.index', compact('reservations'));
-}
+        $service = null;
 
-public function create(Request $request): View
-{
-    $this->authorize('create', Reservation::class);
+        if ($request->filled('service_id')) {
+            $service = Service::with(['category', 'user'])
+                ->where('id', $request->input('service_id'))
+                ->where('statut', 'publie')
+                ->where('disponibilite', true)
+                ->firstOrFail();
+        }
 
-    $service = null;
-
-    if ($request->filled('service_id')) {
-        $service = Service::with(['category', 'user'])
-            ->where('id', $request->input('service_id'))
+        $services = Service::with('category')
             ->where('statut', 'publie')
             ->where('disponibilite', true)
-            ->firstOrFail();
+            ->latest()
+            ->get();
+
+        return view('reservations.create', compact('services', 'service'));
     }
 
-    $services = Service::with('category')
-        ->where('statut', 'publie')
-        ->where('disponibilite', true)
-        ->latest()
-        ->get();
+    public function store(StoreReservationRequest $request): RedirectResponse
+    {
+        $this->authorize('create', Reservation::class);
 
-    return view('reservations.create', compact('services', 'service'));
-}
+        $reservation = Reservation::create([
+            'user_id' => $request->user()->id,
+            'service_id' => $request->validated('service_id'),
+            'date' => $request->validated('date'),
+            'message' => $request->validated('message'),
+            'statut' => 'en_attente',
+        ]);
 
-public function store(StoreReservationRequest $request): RedirectResponse
-{
-    $this->authorize('create', Reservation::class);
+        event(new ReservationCreated($reservation));
 
-    $reservation = Reservation::create([
-        'user_id' => $request->user()->id,
-        'service_id' => $request->validated('service_id'),
-        'date' => $request->validated('date'),
-        'message' => $request->validated('message'),
-        'statut' => 'en_attente',
-    ]);
-
-    event(new ReservationCreated($reservation));
-
-    return redirect()
-        ->route('reservations.index')
-        ->with('success', 'Réservation créée avec succès.');
-}
-
-
+        return redirect()
+            ->route('reservations.index')
+            ->with('success', 'Réservation créée avec succès.');
+    }
 
     public function show(Reservation $reservation): View
     {

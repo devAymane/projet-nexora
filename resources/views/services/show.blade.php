@@ -5,7 +5,7 @@
         {{-- HEADER / BACK --}}
         <div class="border-b border-slate-200 bg-white">
 
-            <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
 
                 <a
                     href="{{ route('services.index') }}"
@@ -19,18 +19,18 @@
         </div>
 
 
-        <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
 
 
             {{-- ALERTS --}}
             @if(session('success'))
 
-                <div class="mb-6 flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
-                    <span class="flex h-7 w-7 items-center justify-center rounded-full bg-green-100">
+                <div class="mb-6 flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
+                    <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-100">
                         ✓
                     </span>
 
-                    {{ session('success') }}
+                    <span>{{ session('success') }}</span>
                 </div>
 
             @endif
@@ -38,32 +38,32 @@
 
             @if(session('error'))
 
-                <div class="mb-6 flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-                    <span class="flex h-7 w-7 items-center justify-center rounded-full bg-red-100">
+                <div class="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                    <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-100">
                         !
                     </span>
 
-                    {{ session('error') }}
+                    <span>{{ session('error') }}</span>
                 </div>
 
             @endif
 
 
-            <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
 
 
                 {{-- ================================================= --}}
                 {{-- LEFT --}}
                 {{-- ================================================= --}}
-                <div class="lg:col-span-2 space-y-8">
+                <div class="min-w-0 space-y-6 sm:space-y-8 lg:col-span-2">
 
 
                     {{-- SERVICE --}}
-                    <article class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                    <article class="overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-200 bg-white shadow-sm">
 
 
                         {{-- IMAGE --}}
-                        <div class="relative h-72 overflow-hidden bg-slate-100 sm:h-[430px]">
+                        <div class="relative h-56 overflow-hidden bg-slate-100 sm:h-80 lg:h-[430px]">
 
                             @if($service->image)
 
@@ -79,7 +79,7 @@
 
                                     <div class="text-center">
 
-                                        <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-white text-4xl shadow-sm">
+                                        <div class="mx-auto flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl sm:rounded-3xl bg-white text-3xl sm:text-4xl shadow-sm">
                                             💼
                                         </div>
 
@@ -95,9 +95,9 @@
 
 
                             {{-- Category --}}
-                            <div class="absolute left-5 top-5">
+                            <div class="absolute left-3 top-3 sm:left-5 sm:top-5">
 
-                                <span class="rounded-full bg-white/95 px-4 py-2 text-xs font-bold text-indigo-600 shadow-lg backdrop-blur">
+                                <span class="inline-flex max-w-[calc(100vw-7rem)] rounded-full bg-white/95 px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-indigo-600 shadow-lg backdrop-blur">
                                     {{ $service->category->nom }}
                                 </span>
 
@@ -105,17 +105,17 @@
 
 
                             {{-- Availability --}}
-                            <div class="absolute right-5 top-5">
+                            <div class="absolute right-3 top-3 sm:right-5 sm:top-5">
 
                                 @if($service->disponibilite)
 
-                                    <span class="rounded-full bg-green-500 px-4 py-2 text-xs font-bold text-white shadow-lg">
+                                    <span class="rounded-full bg-green-500 px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-white shadow-lg">
                                         ● Disponible
                                     </span>
 
                                 @else
 
-                                    <span class="rounded-full bg-red-500 px-4 py-2 text-xs font-bold text-white shadow-lg">
+                                    <span class="rounded-full bg-red-500 px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-white shadow-lg">
                                         ● Indisponible
                                     </span>
 
@@ -127,17 +127,17 @@
 
 
                         {{-- CONTENT --}}
-                        <div class="p-6 sm:p-8">
+                        <div class="p-5 sm:p-8">
 
 
                             {{-- META --}}
-                            <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-500">
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-slate-500">
 
                                 <span>
                                     📍 {{ $service->ville }}
                                 </span>
 
-                                <span>
+                                <span class="hidden min-[400px]:inline">
                                     •
                                 </span>
 
@@ -149,15 +149,15 @@
 
 
                             {{-- TITLE --}}
-                            <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                            <h1 class="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
                                 {{ $service->titre }}
                             </h1>
 
 
                             {{-- DESCRIPTION --}}
-                            <div class="mt-8">
+                            <div class="mt-6 sm:mt-8">
 
-                                <h2 class="text-xl font-bold text-slate-900">
+                                <h2 class="text-lg sm:text-xl font-bold text-slate-900">
                                     Description
                                 </h2>
 
@@ -169,35 +169,35 @@
 
 
                             {{-- PROVIDER --}}
-                            <div class="mt-10 border-t border-slate-100 pt-8">
+                            <div class="mt-8 sm:mt-10 border-t border-slate-100 pt-6 sm:pt-8">
 
-                                <h2 class="text-xl font-bold text-slate-900">
+                                <h2 class="text-lg sm:text-xl font-bold text-slate-900">
                                     À propos du prestataire
                                 </h2>
 
 
-                                <div class="mt-5 flex items-center gap-4">
+                                <div class="mt-5 flex items-center gap-3 sm:gap-4">
 
                                     @if($service->user->photo)
 
                                         <img
                                             src="{{ asset('storage/' . $service->user->photo) }}"
                                             alt="{{ $service->user->prenom }}"
-                                            class="h-16 w-16 rounded-2xl object-cover"
+                                            class="h-14 w-14 shrink-0 rounded-2xl object-cover sm:h-16 sm:w-16"
                                         >
 
                                     @else
 
-                                        <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-100 text-xl font-bold text-indigo-600">
+                                        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-indigo-100 text-lg font-bold text-indigo-600 sm:h-16 sm:w-16 sm:text-xl">
                                             {{ strtoupper(substr($service->user->prenom, 0, 1)) }}
                                         </div>
 
                                     @endif
 
 
-                                    <div>
+                                    <div class="min-w-0">
 
-                                        <p class="text-lg font-bold text-slate-900">
+                                        <p class="truncate text-base sm:text-lg font-bold text-slate-900">
                                             {{ $service->user->prenom }}
                                             {{ $service->user->nom }}
                                         </p>
@@ -231,7 +231,7 @@
 
                                 @if(auth()->id() === $service->user_id || auth()->user()->hasRole('admin'))
 
-                                    <div class="mt-8 flex flex-col gap-3 border-t border-slate-100 pt-8 sm:flex-row">
+                                    <div class="mt-6 sm:mt-8 flex flex-col gap-3 border-t border-slate-100 pt-6 sm:pt-8 sm:flex-row">
 
                                         <a
                                             href="{{ route('services.edit', $service) }}"
@@ -274,7 +274,7 @@
                     {{-- ================================================= --}}
                     {{-- REVIEWS --}}
                     {{-- ================================================= --}}
-                    <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                    <section class="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-5 sm:p-8 shadow-sm">
 
                         <div class="flex flex-col gap-5 border-b border-slate-100 pb-6 sm:flex-row sm:items-center sm:justify-between">
 
@@ -284,7 +284,7 @@
                                     Témoignages
                                 </span>
 
-                                <h2 class="mt-2 text-2xl font-bold text-slate-900">
+                                <h2 class="mt-2 text-xl sm:text-2xl font-bold text-slate-900">
                                     Avis clients
                                 </h2>
 
@@ -297,7 +297,7 @@
 
                             @if($service->avis->count() > 0)
 
-                                <div class="rounded-2xl bg-slate-50 px-5 py-3 text-center">
+                                <div class="self-start rounded-2xl bg-slate-50 px-5 py-3 text-center sm:self-auto">
 
                                     <div class="flex items-center justify-center gap-2">
 
@@ -319,7 +319,7 @@
 
                             @else
 
-                                <span class="rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-500">
+                                <span class="self-start rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-500">
                                     Aucun avis
                                 </span>
 
@@ -336,30 +336,30 @@
 
                                     <div class="py-6 first:pt-7 last:pb-0">
 
-                                        <div class="flex items-start justify-between gap-4">
+                                        <div class="flex flex-col gap-3 min-[400px]:flex-row min-[400px]:items-start min-[400px]:justify-between">
 
-                                            <div class="flex items-center gap-3">
+                                            <div class="flex min-w-0 items-center gap-3">
 
                                                 @if($avis->user->photo)
 
                                                     <img
                                                         src="{{ asset('storage/' . $avis->user->photo) }}"
                                                         alt="{{ $avis->user->prenom }}"
-                                                        class="h-11 w-11 rounded-full object-cover"
+                                                        class="h-11 w-11 shrink-0 rounded-full object-cover"
                                                     >
 
                                                 @else
 
-                                                    <div class="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-100 font-bold text-indigo-600">
+                                                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-indigo-100 font-bold text-indigo-600">
                                                         {{ strtoupper(substr($avis->user->prenom, 0, 1)) }}
                                                     </div>
 
                                                 @endif
 
 
-                                                <div>
+                                                <div class="min-w-0">
 
-                                                    <p class="font-semibold text-slate-900">
+                                                    <p class="truncate font-semibold text-slate-900">
                                                         {{ $avis->user->prenom }}
                                                         {{ $avis->user->nom }}
                                                     </p>
@@ -401,7 +401,7 @@
 
                         @else
 
-                            <div class="py-12 text-center">
+                            <div class="py-10 sm:py-12 text-center">
 
                                 <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-2xl">
                                     ⭐
@@ -429,11 +429,11 @@
                 {{-- ================================================= --}}
                 <aside class="lg:col-span-1">
 
-                    <div class="sticky top-24 space-y-6">
+                    <div class="space-y-5 sm:space-y-6 lg:sticky lg:top-24">
 
 
                         {{-- BOOKING CARD --}}
-                        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                        <div class="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm">
 
                             <p class="text-sm font-medium text-slate-400">
                                 Prix du service
@@ -441,7 +441,7 @@
 
                             <div class="mt-1 flex items-baseline gap-2">
 
-                                <span class="text-4xl font-bold text-indigo-600">
+                                <span class="text-3xl sm:text-4xl font-bold text-indigo-600">
                                     {{ number_format($service->prix, 2, ',', ' ') }}
                                 </span>
 
@@ -461,14 +461,14 @@
 
                                         <a
                                             href="{{ route('reservations.create', ['service_id' => $service->id]) }}"
-                                            class="mt-7 flex w-full items-center justify-center rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
+                                            class="mt-6 sm:mt-7 flex w-full items-center justify-center rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
                                         >
                                             📅 Réserver ce service
                                         </a>
 
                                     @else
 
-                                        <div class="mt-7 rounded-xl bg-slate-100 px-5 py-3.5 text-center text-sm font-semibold text-slate-500">
+                                        <div class="mt-6 sm:mt-7 rounded-xl bg-slate-100 px-5 py-3.5 text-center text-sm font-semibold text-slate-500">
                                             Service indisponible
                                         </div>
 
@@ -565,7 +565,7 @@
 
                                     <a
                                         href="{{ route('login') }}"
-                                        class="mt-7 flex w-full items-center justify-center rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
+                                        class="mt-6 sm:mt-7 flex w-full items-center justify-center rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
                                     >
                                         Se connecter pour réserver
                                     </a>
@@ -582,7 +582,7 @@
 
 
                         {{-- INFORMATION --}}
-                        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                        <div class="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm">
 
                             <h2 class="text-lg font-bold text-slate-900">
                                 Informations
@@ -591,33 +591,33 @@
 
                             <div class="mt-5 divide-y divide-slate-100">
 
-                                <div class="flex items-center justify-between py-4 first:pt-0">
+                                <div class="flex items-start justify-between gap-4 py-4 first:pt-0">
 
                                     <span class="text-sm text-slate-500">
                                         Catégorie
                                     </span>
 
-                                    <span class="text-sm font-bold text-slate-700">
+                                    <span class="text-right text-sm font-bold text-slate-700">
                                         {{ $service->category->nom }}
                                     </span>
 
                                 </div>
 
 
-                                <div class="flex items-center justify-between py-4">
+                                <div class="flex items-start justify-between gap-4 py-4">
 
                                     <span class="text-sm text-slate-500">
                                         Ville
                                     </span>
 
-                                    <span class="text-sm font-bold text-slate-700">
+                                    <span class="text-right text-sm font-bold text-slate-700">
                                         {{ $service->ville }}
                                     </span>
 
                                 </div>
 
 
-                                <div class="flex items-center justify-between py-4">
+                                <div class="flex items-start justify-between gap-4 py-4">
 
                                     <span class="text-sm text-slate-500">
                                         Disponibilité
@@ -625,13 +625,13 @@
 
                                     @if($service->disponibilite)
 
-                                        <span class="text-sm font-bold text-green-600">
+                                        <span class="text-right text-sm font-bold text-green-600">
                                             Disponible
                                         </span>
 
                                     @else
 
-                                        <span class="text-sm font-bold text-red-600">
+                                        <span class="text-right text-sm font-bold text-red-600">
                                             Indisponible
                                         </span>
 
@@ -640,13 +640,13 @@
                                 </div>
 
 
-                                <div class="flex items-center justify-between py-4 last:pb-0">
+                                <div class="flex items-start justify-between gap-4 py-4 last:pb-0">
 
                                     <span class="text-sm text-slate-500">
                                         Statut
                                     </span>
 
-                                    <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
+                                    <span class="max-w-[55%] rounded-full bg-slate-100 px-3 py-1 text-right text-xs font-bold text-slate-600">
                                         {{ ucfirst($service->statut) }}
                                     </span>
 
@@ -658,11 +658,11 @@
 
 
                         {{-- TRUST CARD --}}
-                        <div class="rounded-3xl border border-indigo-100 bg-indigo-50 p-6">
+                        <div class="rounded-2xl sm:rounded-3xl border border-indigo-100 bg-indigo-50 p-5 sm:p-6">
 
                             <div class="flex items-center gap-3">
 
-                                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-lg shadow-sm">
+                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-lg shadow-sm">
                                     🛡️
                                 </div>
 

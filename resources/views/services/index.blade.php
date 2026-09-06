@@ -5,7 +5,7 @@
         {{-- HERO --}}
         <section class="bg-white border-b border-slate-200">
 
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
 
                 <div class="max-w-3xl">
 
@@ -13,12 +13,12 @@
                         NEXORA MARKETPLACE
                     </span>
 
-                    <h1 class="mt-4 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+                    <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
                         Trouvez le service
                         <span class="text-indigo-600">qu'il vous faut.</span>
                     </h1>
 
-                    <p class="mt-4 text-lg leading-7 text-slate-500">
+                    <p class="mt-4 text-base sm:text-lg leading-7 text-slate-500">
                         Découvrez des services proposés par des freelances
                         qualifiés et trouvez le talent idéal pour votre projet.
                     </p>
@@ -30,12 +30,12 @@
                 <form
                     method="GET"
                     action="{{ route('services.index') }}"
-                    class="mt-8"
+                    class="mt-6 sm:mt-8"
                 >
 
-                    <div class="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-lg shadow-slate-200/50 md:flex-row">
+                    <div class="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-2.5 sm:p-3 shadow-lg shadow-slate-200/50 md:flex-row">
 
-                        <div class="relative flex-1">
+                        <div class="relative min-w-0 flex-1">
 
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                                 🔍
@@ -53,7 +53,7 @@
 
                         <button
                             type="submit"
-                            class="rounded-xl bg-indigo-600 px-8 py-3.5 text-sm font-bold text-white transition hover:bg-indigo-700"
+                            class="w-full rounded-xl bg-indigo-600 px-8 py-3.5 text-sm font-bold text-white transition hover:bg-indigo-700 md:w-auto"
                         >
                             Rechercher
                         </button>
@@ -68,14 +68,14 @@
 
 
         {{-- MAIN --}}
-        <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
 
             {{-- FLASH MESSAGES --}}
             @if(session('success'))
 
-                <div class="mb-6 flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
-                    <span>✓</span>
-                    {{ session('success') }}
+                <div class="mb-6 flex items-start sm:items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
+                    <span class="shrink-0">✓</span>
+                    <span>{{ session('success') }}</span>
                 </div>
 
             @endif
@@ -98,15 +98,15 @@
             @endif
 
 
-            <div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
+            <div class="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-4">
 
 
                 {{-- FILTERS --}}
                 <aside class="lg:col-span-1">
 
-                    <div class="sticky top-24 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm lg:sticky lg:top-24">
 
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between gap-3">
 
                             <h2 class="text-lg font-bold text-slate-900">
                                 Filtres
@@ -114,7 +114,7 @@
 
                             <a
                                 href="{{ route('services.index') }}"
-                                class="text-xs font-semibold text-indigo-600 hover:text-indigo-700"
+                                class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 whitespace-nowrap"
                             >
                                 Réinitialiser
                             </a>
@@ -125,7 +125,7 @@
                         <form
                             method="GET"
                             action="{{ route('services.index') }}"
-                            class="mt-6 space-y-6"
+                            class="mt-5 sm:mt-6 space-y-5 sm:space-y-6"
                         >
 
                             {{-- Search --}}
@@ -217,7 +217,7 @@
                                     Prix
                                 </label>
 
-                                <div class="grid grid-cols-2 gap-3">
+                                <div class="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2">
 
                                     <input
                                         type="number"
@@ -259,13 +259,13 @@
 
 
                 {{-- SERVICES --}}
-                <section class="lg:col-span-3">
+                <section class="min-w-0 lg:col-span-3">
 
 
                     {{-- TOP BAR --}}
-                    <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-                        <div>
+                        <div class="min-w-0">
 
                             <p class="text-sm text-slate-500">
                                 {{ $services->total() }}
@@ -289,7 +289,7 @@
 
                                 <a
                                     href="{{ route('services.create') }}"
-                                    class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-700"
+                                    class="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-700"
                                 >
                                     + Ajouter un service
                                 </a>
@@ -305,12 +305,12 @@
 
 
                         {{-- GRID --}}
-                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                        <div class="grid grid-cols-1 gap-5 sm:gap-6 sm:grid-cols-2 xl:grid-cols-3">
 
                             @foreach($services as $service)
 
                                 <article
-                                    class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                                    class="group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
                                 >
 
                                     {{-- IMAGE --}}
@@ -319,7 +319,7 @@
                                         class="block"
                                     >
 
-                                        <div class="relative h-52 overflow-hidden bg-slate-100">
+                                        <div class="relative h-48 sm:h-52 overflow-hidden bg-slate-100">
 
                                             @if($service->image)
 
@@ -351,9 +351,9 @@
 
 
                                             {{-- Category --}}
-                                            <div class="absolute left-4 top-4">
+                                            <div class="absolute left-3 sm:left-4 top-3 sm:top-4">
 
-                                                <span class="inline-flex rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-indigo-600 shadow-sm backdrop-blur">
+                                                <span class="inline-flex max-w-[calc(100vw-3rem)] rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-indigo-600 shadow-sm backdrop-blur">
                                                     {{ $service->category->nom }}
                                                 </span>
 
@@ -365,13 +365,13 @@
 
 
                                     {{-- CONTENT --}}
-                                    <div class="flex flex-1 flex-col p-5">
+                                    <div class="flex flex-1 flex-col p-4 sm:p-5">
 
 
                                         {{-- TITLE --}}
                                         <a
                                             href="{{ route('services.show', $service) }}"
-                                            class="text-lg font-bold leading-6 text-slate-900 transition hover:text-indigo-600"
+                                            class="text-base sm:text-lg font-bold leading-6 text-slate-900 transition hover:text-indigo-600"
                                         >
                                             {{ $service->titre }}
                                         </a>
@@ -384,9 +384,9 @@
 
 
                                         {{-- PROVIDER --}}
-                                        <div class="mt-5 flex items-center gap-3">
+                                        <div class="mt-5 flex min-w-0 items-center gap-3">
 
-                                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 font-bold text-indigo-600">
+                                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-100 font-bold text-indigo-600">
 
                                                 {{ strtoupper(substr($service->user->prenom, 0, 1)) }}
 
@@ -409,7 +409,7 @@
 
 
                                         {{-- LOCATION --}}
-                                        <div class="mt-3 text-sm text-slate-500">
+                                        <div class="mt-3 text-sm text-slate-500 truncate">
                                             📍 {{ $service->ville }}
                                         </div>
 
@@ -420,13 +420,13 @@
                                         {{-- PRICE --}}
                                         <div class="mt-5 flex items-end justify-between border-t border-slate-100 pt-4">
 
-                                            <div>
+                                            <div class="min-w-0">
 
                                                 <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
                                                     À partir de
                                                 </p>
 
-                                                <p class="mt-1 text-2xl font-bold text-indigo-600">
+                                                <p class="mt-1 text-xl sm:text-2xl font-bold text-indigo-600">
                                                     {{ number_format($service->prix, 2, ',', ' ') }}
                                                     <span class="text-sm font-semibold">
                                                         DH
@@ -511,7 +511,7 @@
 
                                                 @if(auth()->id() === $service->user_id || auth()->user()->hasRole('admin'))
 
-                                                    <div class="grid grid-cols-2 gap-2">
+                                                    <div class="grid grid-cols-1 min-[400px]:grid-cols-2 gap-2">
 
                                                         <a
                                                             href="{{ route('services.edit', $service) }}"
@@ -559,7 +559,7 @@
                         {{-- PAGINATION --}}
                         @if($services->hasPages())
 
-                            <div class="mt-10">
+                            <div class="mt-8 sm:mt-10 overflow-x-auto">
                                 {{ $services->links() }}
                             </div>
 
@@ -569,7 +569,7 @@
                     @else
 
                         {{-- EMPTY STATE --}}
-                        <div class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-20 text-center">
+                        <div class="rounded-2xl border border-dashed border-slate-300 bg-white px-4 sm:px-6 py-14 sm:py-20 text-center">
 
                             <div class="mx-auto max-w-md">
 
@@ -577,7 +577,7 @@
                                     🔍
                                 </div>
 
-                                <h2 class="mt-5 text-2xl font-bold text-slate-900">
+                                <h2 class="mt-5 text-xl sm:text-2xl font-bold text-slate-900">
                                     Aucun service trouvé
                                 </h2>
 
@@ -588,7 +588,7 @@
 
                                 <a
                                     href="{{ route('services.index') }}"
-                                    class="mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-indigo-700"
+                                    class="mt-6 inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-indigo-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-indigo-700"
                                 >
                                     Voir tous les services
                                 </a>

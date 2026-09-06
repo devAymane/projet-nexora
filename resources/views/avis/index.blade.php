@@ -1,11 +1,11 @@
 <x-app-layout>
 
-    <div class="min-h-screen bg-slate-50 py-8">
+    <div class="min-h-screen bg-slate-50 py-4 sm:py-6 lg:py-8">
 
-        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-6xl px-3 sm:px-6 lg:px-8">
 
             {{-- Header --}}
-            <div class="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div class="mb-6 flex flex-col gap-4 sm:mb-8 sm:gap-5 sm:flex-row sm:items-end sm:justify-between">
 
                 <div>
 
@@ -26,7 +26,7 @@
 
                     </div>
 
-                    <h1 class="text-3xl font-bold tracking-tight text-slate-900">
+                    <h1 class="text-2xl font-bold sm:text-3xl tracking-tight text-slate-900">
                         Avis
                     </h1>
 
@@ -60,7 +60,7 @@
             {{-- Success --}}
             @if(session('success'))
 
-                <div class="mb-6 rounded-2xl border border-green-200 bg-green-50 px-5 py-4">
+                <div class="mb-4 rounded-2xl sm:mb-6 border border-green-200 bg-green-50 px-4 py-3 sm:px-5 sm:py-4">
 
                     <div class="flex items-center gap-3">
 
@@ -96,7 +96,7 @@
             {{-- Error --}}
             @if(session('error'))
 
-                <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4">
+                <div class="mb-4 rounded-2xl sm:mb-6 border border-red-200 bg-red-50 px-4 py-3 sm:px-5 sm:py-4">
 
                     <div class="flex items-center gap-3">
 
@@ -130,22 +130,22 @@
 
 
             {{-- Stats --}}
-            <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div class="mb-4 grid grid-cols-1 gap-3 sm:mb-6 sm:gap-4 sm:grid-cols-3">
 
-                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm">
 
                     <p class="text-sm font-medium text-slate-500">
                         Total des avis
                     </p>
 
-                    <p class="mt-2 text-3xl font-bold text-slate-900">
+                    <p class="mt-2 text-2xl font-bold sm:text-3xl text-slate-900">
                         {{ $avis->total() }}
                     </p>
 
                 </div>
 
 
-                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm">
 
                     <p class="text-sm font-medium text-slate-500">
                         Note moyenne
@@ -159,7 +159,7 @@
                                 : 0;
                         @endphp
 
-                        <span class="text-3xl font-bold text-slate-900">
+                        <span class="text-2xl font-bold sm:text-3xl text-slate-900">
                             {{ number_format($average, 1, ',', ' ') }}
                         </span>
 
@@ -172,7 +172,7 @@
                 </div>
 
 
-                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm">
 
                     <p class="text-sm font-medium text-slate-500">
                         Qualité
@@ -198,12 +198,12 @@
 
                     @foreach($avis as $review)
 
-                        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+                        <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm transition hover:shadow-md">
 
                             <div class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
 
                                 {{-- User --}}
-                                <div class="flex items-start gap-4">
+                                <div class="flex items-start gap-3 sm:gap-4">
 
                                     <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-lg font-bold text-indigo-700">
 
@@ -257,13 +257,13 @@
                             {{-- Service --}}
                             @if($review->service)
 
-                                <div class="mt-5 rounded-xl bg-slate-50 p-4">
+                                <div class="mt-4 rounded-xl bg-slate-50 p-3 sm:mt-5 sm:p-4">
 
                                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
                                         Service évalué
                                     </p>
 
-                                    <div class="mt-1 flex items-center justify-between gap-4">
+                                    <div class="mt-1 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center sm:gap-4">
 
                                         <p class="font-semibold text-slate-900">
                                             {{ $review->service->titre }}
@@ -288,7 +288,7 @@
 
                                 <div class="mt-5">
 
-                                    <p class="text-sm leading-7 text-slate-600">
+                                    <p class="text-sm leading-6 sm:leading-7 text-slate-600">
                                         "{{ $review->commentaire }}"
                                     </p>
 
@@ -321,7 +321,7 @@
             @else
 
                 {{-- Empty --}}
-                <div class="rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center shadow-sm">
+                <div class="rounded-2xl border border-slate-200 bg-white px-4 py-12 sm:px-6 sm:py-16 text-center shadow-sm">
 
                     <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
 

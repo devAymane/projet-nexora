@@ -1,23 +1,23 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-200 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-20">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center min-h-16 sm:h-20 py-2 sm:py-0">
 
             {{-- LEFT --}}
-            <div class="flex items-center gap-10">
+            <div class="flex items-center gap-4 sm:gap-10 min-w-0">
 
                 {{-- Logo --}}
                 <a href="{{ route('services.index') }}" class="flex items-center gap-2 shrink-0">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center">
-                        <span class="text-white font-bold text-xl">N</span>
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-600 flex items-center justify-center">
+                        <span class="text-white font-bold text-lg sm:text-xl">N</span>
                     </div>
 
-                    <span class="text-2xl font-bold text-gray-900">
+                    <span class="text-xl sm:text-2xl font-bold text-gray-900">
                         Nexora
                     </span>
                 </a>
 
                 {{-- Desktop Navigation --}}
-                <div class="hidden lg:flex items-center gap-7">
+                <div class="hidden lg:flex items-center gap-5 xl:gap-7">
 
                     {{-- Guest --}}
                     @guest
@@ -136,7 +136,7 @@
 
 
             {{-- RIGHT --}}
-            <div class="hidden lg:flex items-center gap-5">
+            <div class="hidden lg:flex items-center gap-3 xl:gap-5">
 
                 @guest
 
@@ -147,7 +147,7 @@
                     </a>
 
                     <a href="{{ route('register') }}"
-                       class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition shadow-sm">
+                       class="px-4 xl:px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition shadow-sm whitespace-nowrap">
                         S'inscrire
                     </a>
 
@@ -199,12 +199,12 @@
                         <x-slot name="trigger">
 
                             <button
-                                class="flex items-center gap-3 px-2 py-1.5 rounded-xl
+                                class="flex items-center gap-2 sm:gap-3 px-2 py-1.5 rounded-xl
                                        hover:bg-gray-50 transition focus:outline-none">
 
                                 {{-- Avatar --}}
-                                <div class="w-10 h-10 rounded-xl bg-indigo-100
-                                            flex items-center justify-center">
+                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-100
+                                            flex items-center justify-center shrink-0">
 
                                     <span class="text-indigo-700 font-bold">
                                         {{ strtoupper(substr(auth()->user()->prenom, 0, 1)) }}
@@ -255,7 +255,7 @@
                                     {{ auth()->user()->prenom }} {{ auth()->user()->nom }}
                                 </p>
 
-                                <p class="text-xs text-gray-500 mt-1">
+                                <p class="text-xs text-gray-500 mt-1 break-all">
                                     {{ auth()->user()->email }}
                                 </p>
 
@@ -302,12 +302,14 @@
 
 
             {{-- Mobile button --}}
-            <div class="lg:hidden">
+            <div class="lg:hidden shrink-0">
 
                 <button
                     @click="open = !open"
+                    :aria-expanded="open"
+                    aria-label="Ouvrir le menu"
                     class="w-10 h-10 rounded-xl flex items-center justify-center
-                           text-gray-600 hover:bg-gray-100 transition">
+                           text-gray-600 hover:bg-gray-100 active:bg-gray-200 transition">
 
                     <svg x-show="!open"
                          xmlns="http://www.w3.org/2000/svg"
@@ -347,26 +349,27 @@
     <div
         x-show="open"
         x-transition
-        class="lg:hidden border-t border-gray-100 bg-white">
+        class="lg:hidden border-t border-gray-100 bg-white shadow-sm">
 
-        <div class="px-4 py-5 space-y-2">
+        <div class="px-3 sm:px-4 py-4 sm:py-5 space-y-2 max-h-[calc(100vh-4rem)] overflow-y-auto">
 
             @guest
 
                 <a href="{{ route('services.index') }}"
                    class="block px-4 py-3 rounded-xl text-sm font-medium
-                          text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                          text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                     Services
                 </a>
 
                 <a href="{{ route('login') }}"
                    class="block px-4 py-3 rounded-xl text-sm font-medium
-                          text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                          text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                     Connexion
                 </a>
 
                 <a href="{{ route('register') }}"
-                   class="block px-4 py-3 rounded-xl bg-indigo-600 text-white text-sm font-semibold">
+                   class="block px-4 py-3 rounded-xl bg-indigo-600 text-white text-sm font-semibold
+                          hover:bg-indigo-700 active:bg-indigo-800 transition text-center">
                     S'inscrire
                 </a>
 
@@ -375,14 +378,14 @@
                 {{-- Dashboard --}}
                 <a href="{{ route('dashboard') }}"
                    class="block px-4 py-3 rounded-xl text-sm font-medium
-                          text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                          text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                     📊 Dashboard
                 </a>
 
                 {{-- Services --}}
                 <a href="{{ route('services.index') }}"
                    class="block px-4 py-3 rounded-xl text-sm font-medium
-                          text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                          text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                     🛍️ Services
                 </a>
 
@@ -391,19 +394,19 @@
 
                     <a href="{{ route('reservations.index') }}"
                        class="block px-4 py-3 rounded-xl text-sm font-medium
-                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                         📅 Réservations
                     </a>
 
                     <a href="{{ route('favorites.index') }}"
                        class="block px-4 py-3 rounded-xl text-sm font-medium
-                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                         ❤️ Favoris
                     </a>
 
                     <a href="{{ route('conversations.index') }}"
                        class="block px-4 py-3 rounded-xl text-sm font-medium
-                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                         💬 Messages
                     </a>
 
@@ -412,19 +415,19 @@
 
                     <a href="{{ route('services.create') }}"
                        class="block px-4 py-3 rounded-xl text-sm font-medium
-                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                         ➕ Mes services
                     </a>
 
                     <a href="{{ route('reservations.index') }}"
                        class="block px-4 py-3 rounded-xl text-sm font-medium
-                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                         📅 Réservations
                     </a>
 
                     <a href="{{ route('conversations.index') }}"
                        class="block px-4 py-3 rounded-xl text-sm font-medium
-                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                         💬 Messages
                     </a>
 
@@ -433,25 +436,25 @@
 
                     <a href="{{ route('users.index') }}"
                        class="block px-4 py-3 rounded-xl text-sm font-medium
-                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                         👥 Utilisateurs
                     </a>
 
                     <a href="{{ route('categories.index') }}"
                        class="block px-4 py-3 rounded-xl text-sm font-medium
-                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                         📂 Catégories
                     </a>
 
                     <a href="{{ route('reservations.index') }}"
                        class="block px-4 py-3 rounded-xl text-sm font-medium
-                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                         📅 Réservations
                     </a>
 
                     <a href="{{ route('avis.index') }}"
                        class="block px-4 py-3 rounded-xl text-sm font-medium
-                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                         ⭐ Avis
                     </a>
 
@@ -461,19 +464,21 @@
                 <div class="border-t border-gray-100 pt-3 mt-3">
 
                     <a href="{{ route('notifications.index') }}"
-                       class="block px-4 py-3 rounded-xl text-sm font-medium
-                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
-                        🔔 Notifications
+                       class="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
+
+                        <span>🔔 Notifications</span>
+
                         @if($unreadNotificationsCount > 0)
-                            <span class="ml-2 text-xs bg-red-500 text-white px-2 py-1 rounded-full">
-                                {{ $unreadNotificationsCount }}
+                            <span class="text-xs bg-red-500 text-white px-2 py-1 rounded-full">
+                                {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
                             </span>
                         @endif
                     </a>
 
                     <a href="{{ route('profile.edit') }}"
                        class="block px-4 py-3 rounded-xl text-sm font-medium
-                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                              text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100 transition">
                         👤 Mon profil
                     </a>
 
@@ -482,7 +487,7 @@
 
                         <button type="submit"
                                 class="w-full text-left px-4 py-3 rounded-xl text-sm
-                                       font-medium text-red-600 hover:bg-red-50">
+                                       font-medium text-red-600 hover:bg-red-50 active:bg-red-100 transition">
                             🚪 Déconnexion
                         </button>
                     </form>
