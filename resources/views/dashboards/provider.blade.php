@@ -1,310 +1,332 @@
 <x-app-layout>
+    <div class="min-h-screen bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6 py-10">
 
-    <x-slot name="header">
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                <h2 class="text-xl font-semibold text-gray-800">
-                    Dashboard Prestataire
-                </h2>
+            {{-- Header --}}
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
+                <div>
+                    <p class="text-sm font-medium text-indigo-600 mb-2">
+                        Espace prestataire
+                    </p>
 
-                <p class="text-sm text-gray-500">
-                    Gérez vos services et vos réservations.
-                </p>
+                    <h1 class="text-3xl md:text-4xl font-bold text-slate-900">
+                        Bonjour, {{ auth()->user()->prenom }} 👋
+                    </h1>
+
+                    <p class="mt-2 text-slate-500">
+                        Gérez vos services, réservations et avis depuis votre espace.
+                    </p>
+                </div>
+
+                <a href="{{ route('services.create') }}"
+                   class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition">
+                    <span>＋</span>
+                    Ajouter un service
+                </a>
             </div>
 
-            <a href="{{ route('services.create') }}"
-               class="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
-                + Ajouter un service
-            </a>
-        </div>
-    </x-slot>
+            {{-- Stats --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
 
-    <div class="py-8">
-        <div class="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
-
-            {{-- Success --}}
-            @if (session('success'))
-                <div class="rounded-lg bg-green-50 p-4 text-sm text-green-700">
-                    {{ session('success') }}
+                {{-- Services --}}
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <p class="text-sm text-slate-500">Mes services</p>
+                    <p class="text-3xl font-bold text-slate-900 mt-2">
+                        {{ $stats['services'] ?? 0 }}
+                    </p>
+                    <div class="mt-4 text-2xl">💼</div>
                 </div>
-            @endif
 
-            {{-- Error --}}
-            @if (session('error'))
-                <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700">
-                    {{ session('error') }}
+                {{-- Pending --}}
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <p class="text-sm text-slate-500">En attente</p>
+                    <p class="text-3xl font-bold text-amber-600 mt-2">
+                        {{ $stats['pending'] ?? 0 }}
+                    </p>
+                    <div class="mt-4 text-2xl">⏳</div>
                 </div>
-            @endif
 
-       {{-- Statistics --}}
-<div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {{-- Accepted --}}
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <p class="text-sm text-slate-500">Acceptées</p>
+                    <p class="text-3xl font-bold text-blue-600 mt-2">
+                        {{ $stats['accepted'] ?? 0 }}
+                    </p>
+                    <div class="mt-4 text-2xl">✓</div>
+                </div>
 
-    {{-- Services --}}
-    <div class="rounded-xl bg-white p-6 shadow-sm">
-        <p class="text-sm font-medium text-gray-500">
-            Mes services
-        </p>
+                {{-- Completed --}}
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <p class="text-sm text-slate-500">Terminées</p>
+                    <p class="text-3xl font-bold text-emerald-600 mt-2">
+                        {{ $stats['completed'] ?? 0 }}
+                    </p>
+                    <div class="mt-4 text-2xl">🏆</div>
+                </div>
 
-        <p class="mt-2 text-3xl font-bold text-gray-900">
-            {{ $stats['services'] }}
-        </p>
+                {{-- Reviews --}}
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <p class="text-sm text-slate-500">Avis reçus</p>
+                    <p class="text-3xl font-bold text-purple-600 mt-2">
+                        {{ $stats['reviews'] ?? 0 }}
+                    </p>
 
-        <a href="{{ route('services.index') }}"
-           class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
-            Voir mes services →
-        </a>
-    </div>
+                    <div class="mt-3 flex items-center gap-1">
+                        <span class="text-yellow-400">★</span>
+                        <span class="text-sm font-semibold text-slate-700">
+                            {{ number_format($stats['rating'] ?? 0, 1) }}
+                        </span>
+                    </div>
+                </div>
 
-    {{-- Pending --}}
-    <div class="rounded-xl bg-white p-6 shadow-sm">
-        <p class="text-sm font-medium text-gray-500">
-            En attente
-        </p>
+            </div>
 
-        <p class="mt-2 text-3xl font-bold text-yellow-600">
-            {{ $stats['pending'] }}
-        </p>
+            {{-- Main content --}}
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <a href="{{ route('reservations.index') }}"
-           class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
-            Gérer →
-        </a>
-    </div>
+                {{-- Services --}}
+                <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm">
 
-    {{-- Accepted --}}
-    <div class="rounded-xl bg-white p-6 shadow-sm">
-        <p class="text-sm font-medium text-gray-500">
-            Acceptées
-        </p>
+                    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-900">
+                                Mes services
+                            </h2>
 
-        <p class="mt-2 text-3xl font-bold text-blue-600">
-            {{ $stats['accepted'] }}
-        </p>
+                            <p class="text-sm text-slate-500 mt-1">
+                                Gérez vos services publiés sur Nexora.
+                            </p>
+                        </div>
 
-        <a href="{{ route('reservations.index') }}"
-           class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
-            Voir →
-        </a>
-    </div>
-
-    {{-- Completed --}}
-    <div class="rounded-xl bg-white p-6 shadow-sm">
-        <p class="text-sm font-medium text-gray-500">
-            Terminées
-        </p>
-
-        <p class="mt-2 text-3xl font-bold text-green-600">
-            {{ $stats['completed'] }}
-        </p>
-
-        <a href="{{ route('reservations.index') }}"
-           class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
-            Voir →
-        </a>
-    </div>
-
-    {{-- Reviews --}}
-    <div class="rounded-xl bg-white p-6 shadow-sm">
-        <p class="text-sm font-medium text-gray-500">
-            Avis reçus
-        </p>
-
-        <p class="mt-2 text-3xl font-bold text-purple-600">
-            {{ $stats['reviews'] }}
-        </p>
-
-        <a href="{{ route('avis.index') }}"
-           class="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
-            Voir les avis →
-        </a>
-    </div>
-
-    {{-- Rating --}}
-    <div class="rounded-xl bg-white p-6 shadow-sm">
-        <p class="text-sm font-medium text-gray-500">
-            Note moyenne
-        </p>
-
-        <p class="mt-2 text-3xl font-bold text-orange-500">
-            {{ number_format($stats['rating'], 1) }}/5
-        </p>
-
-        <p class="mt-3 text-sm text-gray-500">
-            Basée sur {{ $stats['reviews'] }} avis
-        </p>
-    </div>
-
-</div>
-            {{-- Recent reservations --}}
-            <div class="overflow-hidden rounded-xl bg-white shadow-sm">
-
-                <div class="flex flex-col gap-3 border-b border-gray-200 p-6 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900">
-                            Réservations récentes
-                        </h3>
-
-                        <p class="text-sm text-gray-500">
-                            Les dernières demandes reçues.
-                        </p>
+                        <a href="{{ route('services.index') }}"
+                           class="text-sm font-semibold text-indigo-600 hover:text-indigo-700">
+                            Voir tout →
+                        </a>
                     </div>
 
-                    <a href="{{ route('reservations.index') }}"
-                       class="text-sm font-medium text-indigo-600 hover:text-indigo-800">
-                        Toutes les réservations →
-                    </a>
-                </div>
+                    <div class="divide-y divide-slate-100">
 
-                @if ($recentReservations->count())
+                        @forelse ($services ?? [] as $service)
 
-                    <div class="divide-y divide-gray-200">
+                            <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
 
-                        @foreach ($recentReservations as $reservation)
+                                <div class="flex items-center gap-4">
 
-                            <div class="p-6">
-
-                                <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-
-                                    {{-- Reservation info --}}
-                                    <div class="min-w-0">
-
-                                        <div class="flex flex-wrap items-center gap-2">
-
-                                            <h4 class="font-semibold text-gray-900">
-                                                {{ $reservation->service->titre }}
-                                            </h4>
-
-                                            @if ($reservation->statut === 'en_attente')
-                                                <span class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700">
-                                                    En attente
-                                                </span>
-                                            @elseif ($reservation->statut === 'acceptee')
-                                                <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
-                                                    Acceptée
-                                                </span>
-                                            @elseif ($reservation->statut === 'terminee')
-                                                <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
-                                                    Terminée
-                                                </span>
-                                            @elseif ($reservation->statut === 'refusee')
-                                                <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
-                                                    Refusée
-                                                </span>
-                                            @elseif ($reservation->statut === 'annulee')
-                                                <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
-                                                    Annulée
-                                                </span>
-                                            @endif
-
+                                    @if ($service->image)
+                                        <img
+                                            src="{{ asset('storage/' . $service->image) }}"
+                                            alt="{{ $service->titre }}"
+                                            class="w-16 h-16 rounded-xl object-cover"
+                                        >
+                                    @else
+                                        <div class="w-16 h-16 rounded-xl bg-indigo-100 flex items-center justify-center text-2xl">
+                                            💼
                                         </div>
+                                    @endif
 
-                                        <div class="mt-2 space-y-1 text-sm text-gray-500">
+                                    <div>
+                                        <h3 class="font-semibold text-slate-900">
+                                            {{ $service->titre }}
+                                        </h3>
 
-                                            <p>
-                                                Client :
-                                                <span class="font-medium text-gray-700">
-                                                    {{ $reservation->user->prenom }}
-                                                    {{ $reservation->user->nom }}
-                                                </span>
-                                            </p>
+                                        <p class="text-sm text-slate-500 mt-1">
+                                            {{ $service->category->nom ?? 'Sans catégorie' }}
+                                        </p>
 
-                                            <p>
-                                                Date :
-                                                <span class="font-medium text-gray-700">
-                                                    {{ $reservation->date->format('d/m/Y à H:i') }}
-                                                </span>
-                                            </p>
-
-                                            @if ($reservation->message)
-                                                <p class="mt-2 text-gray-600">
-                                                    "{{ $reservation->message }}"
-                                                </p>
-                                            @endif
-
-                                        </div>
-
+                                        <p class="text-sm font-semibold text-indigo-600 mt-1">
+                                            {{ number_format($service->prix, 2) }} MAD
+                                        </p>
                                     </div>
 
-                                    {{-- Actions --}}
-                                    <div class="flex flex-wrap items-center gap-2">
+                                </div>
 
-                                        <a href="{{ route('reservations.show', $reservation) }}"
-                                           class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                            Détails
-                                        </a>
+                                <div class="flex items-center gap-3">
 
-                                        @if ($reservation->statut === 'en_attente')
+                                    @php
+                                        $serviceStatus = match($service->statut) {
+                                            'publie' => 'bg-emerald-100 text-emerald-700',
+                                            'brouillon' => 'bg-amber-100 text-amber-700',
+                                            'suspendu' => 'bg-red-100 text-red-700',
+                                            default => 'bg-slate-100 text-slate-600',
+                                        };
 
-                                            <form method="POST"
-                                                  action="{{ route('reservations.accept', $reservation) }}">
-                                                @csrf
-                                                @method('PATCH')
+                                        $serviceStatusLabel = match($service->statut) {
+                                            'publie' => 'Publié',
+                                            'brouillon' => 'Brouillon',
+                                            'suspendu' => 'Suspendu',
+                                            default => ucfirst($service->statut),
+                                        };
+                                    @endphp
 
-                                                <button type="submit"
-                                                        class="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700">
-                                                    Accepter
-                                                </button>
-                                            </form>
+                                    <span class="px-3 py-1.5 rounded-full text-xs font-semibold {{ $serviceStatus }}">
+                                        {{ $serviceStatusLabel }}
+                                    </span>
 
-                                            <form method="POST"
-                                                  action="{{ route('reservations.refuse', $reservation) }}">
-                                                @csrf
-                                                @method('PATCH')
-
-                                                <button type="submit"
-                                                        class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">
-                                                    Refuser
-                                                </button>
-                                            </form>
-
-                                        @elseif ($reservation->statut === 'acceptee')
-
-                                            <form method="POST"
-                                                  action="{{ route('reservations.complete', $reservation) }}">
-                                                @csrf
-                                                @method('PATCH')
-
-                                                <button type="submit"
-                                                        class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
-                                                    Marquer terminée
-                                                </button>
-                                            </form>
-
-                                        @endif
-
-                                    </div>
+                                    <a href="{{ route('services.edit', $service) }}"
+                                       class="text-sm font-semibold text-indigo-600 hover:text-indigo-700">
+                                        Modifier
+                                    </a>
 
                                 </div>
 
                             </div>
 
-                        @endforeach
+                        @empty
+
+                            <div class="p-12 text-center">
+
+                                <div class="text-4xl mb-4">
+                                    💼
+                                </div>
+
+                                <h3 class="font-semibold text-slate-900">
+                                    Aucun service
+                                </h3>
+
+                                <p class="text-sm text-slate-500 mt-2 mb-5">
+                                    Commencez par créer votre premier service.
+                                </p>
+
+                                <a href="{{ route('services.create') }}"
+                                   class="inline-flex px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">
+                                    Créer un service
+                                </a>
+
+                            </div>
+
+                        @endforelse
 
                     </div>
+                </div>
 
-                @else
+                {{-- Quick actions --}}
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
 
-                    <div class="p-10 text-center">
+                    <h2 class="text-lg font-bold text-slate-900">
+                        Gestion rapide
+                    </h2>
 
-                        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
-                            <span class="text-2xl">📅</span>
-                        </div>
+                    <p class="text-sm text-slate-500 mt-1 mb-5">
+                        Accédez rapidement à vos outils.
+                    </p>
 
-                        <h4 class="mt-4 font-semibold text-gray-900">
-                            Aucune réservation
-                        </h4>
+                    <div class="space-y-3">
 
-                        <p class="mt-1 text-sm text-gray-500">
-                            Vous n'avez pas encore reçu de réservation.
-                        </p>
+                        <a href="{{ route('services.create') }}"
+                           class="flex items-center gap-4 p-4 rounded-xl bg-slate-50 hover:bg-indigo-50 transition group">
+
+                            <span class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center text-xl">
+                                ＋
+                            </span>
+
+                            <div>
+                                <p class="font-semibold text-slate-900 group-hover:text-indigo-600">
+                                    Ajouter un service
+                                </p>
+                                <p class="text-xs text-slate-500">
+                                    Publier une nouvelle offre
+                                </p>
+                            </div>
+
+                        </a>
+
+                        <a href="{{ route('reservations.index') }}"
+                           class="flex items-center gap-4 p-4 rounded-xl bg-slate-50 hover:bg-amber-50 transition group">
+
+                            <span class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center text-xl">
+                                📅
+                            </span>
+
+                            <div>
+                                <p class="font-semibold text-slate-900 group-hover:text-amber-600">
+                                    Réservations
+                                </p>
+                                <p class="text-xs text-slate-500">
+                                    Gérer les demandes clients
+                                </p>
+                            </div>
+
+                        </a>
+
+                        <a href="{{ route('conversations.index') }}"
+                           class="flex items-center gap-4 p-4 rounded-xl bg-slate-50 hover:bg-emerald-50 transition group">
+
+                            <span class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-xl">
+                                💬
+                            </span>
+
+                            <div>
+                                <p class="font-semibold text-slate-900 group-hover:text-emerald-600">
+                                    Messages
+                                </p>
+                                <p class="text-xs text-slate-500">
+                                    Communiquer avec vos clients
+                                </p>
+                            </div>
+
+                        </a>
+
+                        <a href="{{ route('avis.index') }}"
+                           class="flex items-center gap-4 p-4 rounded-xl bg-slate-50 hover:bg-purple-50 transition group">
+
+                            <span class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-xl">
+                                ⭐
+                            </span>
+
+                            <div>
+                                <p class="font-semibold text-slate-900 group-hover:text-purple-600">
+                                    Mes avis
+                                </p>
+                                <p class="text-xs text-slate-500">
+                                    Consultez les retours clients
+                                </p>
+                            </div>
+
+                        </a>
+
+                        <a href="{{ route('notifications.index') }}"
+                           class="flex items-center gap-4 p-4 rounded-xl bg-slate-50 hover:bg-rose-50 transition group">
+
+                            <span class="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center text-xl">
+                                🔔
+                            </span>
+
+                            <div>
+                                <p class="font-semibold text-slate-900 group-hover:text-rose-600">
+                                    Notifications
+                                </p>
+                                <p class="text-xs text-slate-500">
+                                    Voir vos notifications
+                                </p>
+                            </div>
+
+                        </a>
 
                     </div>
+                </div>
 
-                @endif
+            </div>
+
+            {{-- CTA --}}
+            <div class="mt-6 rounded-2xl bg-slate-900 p-8 text-white flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+
+                <div>
+                    <h2 class="text-xl font-bold">
+                        Développez votre activité avec Nexora 🚀
+                    </h2>
+
+                    <p class="text-slate-300 mt-1">
+                        Publiez vos services et trouvez de nouveaux clients.
+                    </p>
+                </div>
+
+                <a href="{{ route('services.create') }}"
+                   class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-100 transition">
+                    Publier un service →
+                </a>
 
             </div>
 
         </div>
     </div>
-
 </x-app-layout>
