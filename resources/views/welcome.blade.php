@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Nexora — Smart Freelance Marketplace</title>
-
+    <!-- <title>Nexora — Smart Freelance Marketplace</title> -->
+<link rel="icon" type="image/png" href="https://i.ibb.co/r2ssZmf1/Chat-GPT-Image-Sep-6-2026-10-13-23-PM.png">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 

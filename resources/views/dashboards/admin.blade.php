@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="min-h-screen bg-slate-50">
         <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-
+   
             {{-- Header --}}
             <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -12,7 +12,7 @@
                         <span>/</span>
                         <span class="text-slate-700">Administration</span>
                     </div>
-
+ 
                     <h1 class="text-3xl font-bold tracking-tight text-slate-900">
                         Dashboard Admin
                     </h1>

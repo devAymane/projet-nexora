@@ -94,14 +94,14 @@ class ServiceController extends Controller
     /**
      * Show the form for creating a new service.
      */
-public function create(): View
-{
-    $this->authorize('create', Service::class);
+    public function create(): View
+    {
+        $this->authorize('create', Service::class);
 
-    $categories = Category::orderBy('nom')->get();
+        $categories = Category::orderBy('nom')->get();
 
-    return view('services.create', compact('categories'));
-}
+        return view('services.create', compact('categories'));
+    }
 
     /**
      * Store a newly created service.
@@ -111,22 +111,48 @@ public function create(): View
         $this->authorize('create', Service::class);
 
         $validated = $request->validate([
-            'category_id' => ['required', 'exists:categories,id'],
-            'titre' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'prix' => ['required', 'numeric', 'min:0'],
-            'ville' => ['required', 'string', 'max:255'],
-            'image' => ['nullable', 'image', 'max:2048'],
-            'disponibilite' => ['nullable', 'boolean'],
+            'category_id' => [
+                'required',
+                'exists:categories,id',
+            ],
+            'titre' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'description' => [
+                'required',
+                'string',
+            ],
+            'prix' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
+            'ville' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'image' => [
+                'nullable',
+                'image',
+                'max:2048',
+            ],
+            'disponibilite' => [
+                'nullable',
+                'boolean',
+            ],
         ]);
 
         $validated['user_id'] = $request->user()->id;
 
-        // Nouveau service = brouillon
-        $validated['statut'] = 'brouillon';
+        // Nouveau service publié directement
+        $validated['statut'] = 'publie';
 
-        $validated['disponibilite'] =
-            $request->boolean('disponibilite');
+        $validated['disponibilite'] = $request->boolean(
+            'disponibilite'
+        );
 
         // Upload image
         if ($request->hasFile('image')) {
@@ -150,7 +176,6 @@ public function create(): View
      */
     public function show(Service $service): View
     {
-        // Uniquement les services publiés sont accessibles publiquement.
         abort_unless(
             $service->statut === 'publie',
             404
@@ -197,49 +222,43 @@ public function create(): View
                 'required',
                 'exists:categories,id',
             ],
-
             'titre' => [
                 'required',
                 'string',
                 'max:255',
             ],
-
             'description' => [
                 'required',
                 'string',
             ],
-
             'prix' => [
                 'required',
                 'numeric',
                 'min:0',
             ],
-
             'ville' => [
                 'required',
                 'string',
                 'max:255',
             ],
-
             'image' => [
                 'nullable',
                 'image',
                 'max:2048',
             ],
-
             'disponibilite' => [
                 'nullable',
                 'boolean',
             ],
-
             'statut' => [
                 'required',
                 'in:brouillon,publie,suspendu',
             ],
         ]);
 
-        $validated['disponibilite'] =
-            $request->boolean('disponibilite');
+        $validated['disponibilite'] = $request->boolean(
+            'disponibilite'
+        );
 
         // Nouvelle image
         if ($request->hasFile('image')) {

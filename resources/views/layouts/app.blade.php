@@ -11,6 +11,8 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+         <link rel="icon" type="image/png" href="https://i.ibb.co/r2ssZmf1/Chat-GPT-Image-Sep-6-2026-10-13-23-PM.png">
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>

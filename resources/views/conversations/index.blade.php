@@ -16,7 +16,7 @@
                     <h1 class="text-3xl font-bold tracking-tight text-slate-900">
                         Mes conversations
                     </h1>
-
+   
                     <p class="mt-2 text-sm text-slate-500">
                         Retrouvez vos échanges avec les clients et prestataires.
                     </p>

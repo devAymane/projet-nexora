@@ -303,63 +303,67 @@
                                                     class="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
                                                 >
                                                     Modifier
-                                                </a>
+                                                </a>                                                @if(auth()->id() !== $user->id)
 
+                                                    {{-- Modifier le rôle --}}
+                                                    <details class="relative">
 
-                                                @if(auth()->id() !== $user->id)
-
-                                                    {{-- Role form --}}
-                                                    <form
-                                                        action="{{ route('users.update-role', $user) }}"
-                                                        method="POST"
-                                                        class="flex items-center gap-2"
-                                                    >
-
-                                                        @csrf
-
-                                                        @method('PATCH')
-
-
-                                                        <select
-                                                            name="role"
-                                                            class="rounded-lg border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                        <summary
+                                                            class="inline-flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-lg bg-indigo-600 text-white transition hover:bg-indigo-700 [&::-webkit-details-marker]:hidden"
+                                                            title="Modifier le rôle"
+                                                            aria-label="Modifier le rôle"
                                                         >
+                                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3l7 3v5c0 4.5-3 7.8-7 10-4-2.2-7-5.5-7-10V6l7-3z"/>
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.5 12l1.7 1.7L14.8 10"/>
+                                                            </svg>
+                                                        </summary>
 
-                                                            <option
-                                                                value="client"
-                                                                @selected($role === 'client')
-                                                            >
-                                                                Client
-                                                            </option>
+                                                        <div class="absolute right-0 z-30 mt-2 w-48 overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg">
 
-                                                            <option
-                                                                value="provider"
-                                                                @selected($role === 'provider')
-                                                            >
-                                                                Prestataire
-                                                            </option>
+                                                            <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                                                Changer le rôle
+                                                            </p>
 
-                                                            <option
-                                                                value="admin"
-                                                                @selected($role === 'admin')
-                                                            >
-                                                                Administrateur
-                                                            </option>
+                                                            @foreach([
+                                                                'client' => 'Client',
+                                                                'provider' => 'Prestataire',
+                                                                'admin' => 'Administrateur',
+                                                            ] as $roleValue => $roleLabel)
 
-                                                        </select>
+                                                                <form
+                                                                    action="{{ route('users.update-role', $user) }}"
+                                                                    method="POST"
+                                                                >
+                                                                    @csrf
+                                                                    @method('PATCH')
+
+                                                                    <input
+                                                                        type="hidden"
+                                                                        name="role"
+                                                                        value="{{ $roleValue }}"
+                                                                    >
+
+                                                                    <button
+                                                                        type="submit"
+                                                                        class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                                                                    >
+                                                                        <span>{{ $roleLabel }}</span>
+
+                                                                        @if($role === $roleValue)
+                                                                            <span class="font-bold text-indigo-600">✓</span>
+                                                                        @endif
+                                                                    </button>
+                                                                </form>
+
+                                                            @endforeach
+
+                                                        </div>
+
+                                                    </details>
 
 
-                                                        <button
-                                                            type="submit"
-                                                            class="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
-                                                        >
-                                                            Rôle
-                                                        </button>
-
-                                                    </form>
-
-
-                                                    {{-- Delete --}}
+                                                    {{-- Supprimer --}}
                                                     <form
                                                         action="{{ route('users.destroy', $user) }}"
                                                         method="POST"
@@ -367,14 +371,17 @@
                                                     >
 
                                                         @csrf
-
                                                         @method('DELETE')
 
                                                         <button
                                                             type="submit"
-                                                            class="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+                                                            class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-red-600 text-white transition hover:bg-red-700"
+                                                            title="Supprimer"
+                                                            aria-label="Supprimer"
                                                         >
-                                                            Supprimer
+                                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 7h16M10 11v6M14 11v6M9 7l1-2h4l1 2m-8 0l1 13h8l1-13"/>
+                                                            </svg>
                                                         </button>
 
                                                     </form>
